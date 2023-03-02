@@ -1,0 +1,12 @@
+{
+  "type": "watercore:enginners",
+  "generator": {
+    "type": "minecraft:noise",
+    "seed": -2034109890,
+    "settings": "minecraft:overworld",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "preset": "minecraft:overworld"
+    }
+  }
+}

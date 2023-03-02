@@ -1,0 +1,29 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.srrapero720.watercore.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "watercore.mixin-refmap.json",
+  "mixins": [
+    "me.srrapero720.watercore.mixin.BiomesLeak",
+    "me.srrapero720.watercore.mixin.PlayerListMixin",
+    "me.srrapero720.watercore.mixin.ServerGamePLMixin",
+    "me.srrapero720.watercore.mixin.TraceMixin",
+    "me.srrapero720.watercore.mixin.TraceMixinCategory"
+  ],
+  "client": [
+    "me.srrapero720.watercore.mixin.client.CrossHairLeak",
+    "me.srrapero720.watercore.mixin.client.MipmapReload",
+    "me.srrapero720.watercore.mixin.client.SpongeMixinLeak",
+    "me.srrapero720.watercore.mixin.client.TextureReloadLeak",
+    "me.srrapero720.watercore.mixin.client.screen.OptionsScreenMixin",
+    "me.srrapero720.watercore.mixin.client.screen.TitleScreenMixin",
+    "me.srrapero720.watercore.mixin.util.ModelManagerAccessor"
+  ],
+  "server": [
+    "me.srrapero720.watercore.mixin.server.SpongeMixinLeak"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

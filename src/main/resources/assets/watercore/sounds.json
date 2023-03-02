@@ -1,0 +1,22 @@
+{
+  "watercore": {
+    "subtitle": "subtitles.watermine",
+    "sounds": [
+      {
+        "name": "watercore:watermine",
+        "stream": true,
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "violin": {
+    "subtitle": "subtitles.watermine",
+    "sounds": [
+      {
+        "name": "watercore:violin",
+        "stream": false,
+        "attenuation_distance": 32
+      }
+    ]
+  }
+}

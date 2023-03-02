@@ -1,0 +1,12 @@
+{
+  "type": "watercore:magical",
+  "generator": {
+    "type": "minecraft:noise",
+    "seed": 24555483490,
+    "settings": "minecraft:overworld",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "preset": "minecraft:overworld"
+    }
+  }
+}

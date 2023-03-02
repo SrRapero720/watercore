@@ -1,0 +1,45 @@
+{
+
+  "__comment": "WATERCoRE Resources",
+  "itemGroup.watercore.MAIN": "WATERCoRE Util",
+  "itemGroup.watercore.ADMIN": "WATERCoRE Admin",
+  "watercore.response.banhammer": "Haz sido letalmente baneado por el martillo del BAN",
+  "watercore.command.setlobbyspawn.success": "§6Guardada la posicion en §c%s §c%s §c%s - Angulo: §c%s",
+  "watercore.command.setlobbyspawn.failed": "§cNo puedes cambiar la posicion en una dimension que no sea [watercore:lobby]",
+
+  "__comment": "WATERCoRE Pociones",
+  "item.minecraft.potion.effect.blessed_1": "Bendicion Divina",
+  "item.minecraft.splash_potion.effect.blessed_1": "Bendicion Divina arrojadiza",
+  "item.minecraft.lingering_potion.effect.blessed_1": "Bendicion Divina perceverante",
+  "item.minecraft.tipped_arrow.effect.blessed_1": "Flecha de Bendicion Divina",
+
+  "item.minecraft.potion.effect.blessed_2": "Bendicion Divina II",
+  "item.minecraft.splash_potion.effect.blessed_2": "Bendicion Divina arrojadiza II",
+  "item.minecraft.lingering_potion.effect.blessed_2": "Bendicion Divina perceverante II",
+  "item.minecraft.tipped_arrow.effect.blessed_2": "Flecha de Bendicion Divina II",
+
+  "item.minecraft.potion.effect.blessed_3": "Bendicion Divina III",
+  "item.minecraft.splash_potion.effect.blessed_3": "Bendicion Divina arrojadiza III",
+  "item.minecraft.lingering_potion.effect.blessed_3": "Bendicion Divina perceverante III",
+  "item.minecraft.tipped_arrow.effect.blessed_3": "Flecha de Bendicion Divina III",
+
+  "__comment": "WATERCoRE Items (Dinero)",
+  "item.watercore.coppercoin": "Gota de Cobre",
+  "item.watercore.ironcoin": "Gota de Hierro",
+  "item.watercore.goldencoin": "Gota de Oro",
+  "item.watercore.diamondcoin": "Gota de Diamante",
+  "item.watercore.emeraldcoin": "Gota de Esmeralda",
+  "item.watercore.netheritecoin": "Gota de Netherita",
+  "item.watercore.pendoritecoin": "Gota de Pendorita",
+
+
+  "__comment": "WATERCoRE Items (Herramientas)",
+  "item.watercore.godwand": "Centro de los Dioses",
+  "item.watercore.banhammer": "Martillo de baneos",
+  "item.watercore.small_violin": "Violin mas pequeño del mundo",
+  "item.watercore.violin": "Violin",
+
+  "__comment": "Rubidium Fix en el selector de keybinds",
+  "key.category.rubidium_extras": "Rubidium",
+  "key.zoom": "Zoom"
+}
