@@ -9,6 +9,7 @@ import me.srrapero720.watercore.custom.config.WaterConfig;
 import me.srrapero720.watercore.custom.data.LobbyData;
 import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterRegistry;
+import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
@@ -37,6 +38,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -120,24 +122,29 @@ public abstract class PlayerListMixin {
         var profile = player.getGameProfile();
         var profileCache = this.server.getProfileCache();
 
+        var lobbyData = LobbyData.fetch(server);
+        var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
+        var lobbyLevelResource = lobbyLevel == null ? Level.OVERWORLD : lobbyLevel.dimension();
+
         var optional = profileCache.get(profile.getId());
         var s = optional.map(GameProfile::getName).orElse(profile.getName());
         profileCache.add(profile);
 
         var tag = this.load(player);
         final var levelRes = tag != null
-                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(WaterConsole::justPrint).orElse(WaterRegistry.dimension("LOBBY"))
-                : WaterRegistry.dimension("LOBBY");
+                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(WaterConsole::justPrint).orElse(lobbyLevelResource)
+                : lobbyLevelResource;
 
         // If you remove or change the name of your dimension, you know the problem... but here no notify about it
         var levelResult = this.server.getLevel(levelRes);
         final var level = levelResult != null ? levelResult : this.server.overworld();
 
         player.setLevel(level);
-        String s1 = "local";
-        if (connection.getRemoteAddress() != null) {
-            s1 = connection.getRemoteAddress().toString();
-        }
+        var s1 = connection.getRemoteAddress().toString();
+//        String s1 = "local";
+//        if (connection.getRemoteAddress() != null) {
+//            s1 = connection.getRemoteAddress().toString();
+//        }
 
         // No es necesario sobreescribir a SrConsole
         LOGGER.info("{}[{}] logged in with entity id {} at ({}, {}, {})", player.getName().getString(), s1, player.getId(), player.getX(), player.getY(), player.getZ());
@@ -162,7 +169,6 @@ public abstract class PlayerListMixin {
         player.getRecipeBook().sendInitialRecipeBook(player);
         this.updateEntireScoreboard(level.getScoreboard(), player);
         this.server.invalidateStatus();
-
 
         // CHANGED FOR WATERCORE
         var component = ChatDataProvider.parse(WaterConfig.get("JOIN_FORMAT"), player);
@@ -244,87 +250,91 @@ public abstract class PlayerListMixin {
      * also, code is shit and I want to rewrite it
      */
     @Overwrite
-    public ServerPlayer respawn(ServerPlayer p_11237_, boolean p_11238_) {
-        this.players.remove(p_11237_);
-        p_11237_.getLevel().removePlayerImmediately(p_11237_, Entity.RemovalReason.DISCARDED);
-        BlockPos blockpos = p_11237_.getRespawnPosition();
-        float f = p_11237_.getRespawnAngle();
-        boolean flag = p_11237_.isRespawnForced();
-        ServerLevel serverlevel = this.server.getLevel(p_11237_.getRespawnDimension());
-        Optional<Vec3> optional;
-        if (serverlevel != null && blockpos != null) {
-            optional = Player.findRespawnPositionAndUseSpawnBlock(serverlevel, blockpos, f, flag, p_11238_);
-        } else {
-            optional = Optional.empty();
-        }
+    public ServerPlayer respawn(ServerPlayer player, boolean isBoolean) {
+        this.players.remove(player);
+        player.getLevel().removePlayerImmediately(player, Entity.RemovalReason.DISCARDED);
 
-        ServerLevel serverlevel1 = serverlevel != null && optional.isPresent() ? serverlevel : this.server.getLevel(WaterRegistry.dimension("LOBBY"));
-        ServerPlayer serverplayer = new ServerPlayer(this.server, serverlevel1, p_11237_.getGameProfile());
-        serverplayer.connection = p_11237_.connection;
-        serverplayer.restoreFrom(p_11237_, p_11238_);
-        serverplayer.setId(p_11237_.getId());
-        serverplayer.setMainArm(p_11237_.getMainArm());
+        // WATERCORE LOBBY DATA
+        var lobbyData = LobbyData.fetch(server);
+        var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
+        
+        var respawnPos = player.getRespawnPosition();
+        var respawnAngle = player.getRespawnAngle();
+        var respawnForce = player.isRespawnForced();
+        
+        var level = this.server.getLevel(player.getRespawnDimension());
+        Optional<Vec3> optional = (level != null && respawnPos != null)
+                ? Player.findRespawnPositionAndUseSpawnBlock(level, respawnPos, respawnAngle, respawnForce, isBoolean)
+                : Optional.empty();
 
-        for(String s : p_11237_.getTags()) {
-            serverplayer.addTag(s);
-        }
+        level = level != null && optional.isPresent() ? level : (lobbyLevel == null ? this.server.getLevel(Level.OVERWORLD) : lobbyLevel.getLevel());
+        var freshPlayer = new ServerPlayer(this.server, level, player.getGameProfile());
+
+        freshPlayer.connection = player.connection;
+        freshPlayer.restoreFrom(player, isBoolean);
+        freshPlayer.setId(player.getId());
+        freshPlayer.setMainArm(player.getMainArm());
+
+        for(String s : player.getTags()) freshPlayer.addTag(s);
 
         boolean flag2 = false;
         if (optional.isPresent()) {
-            BlockState blockstate = serverlevel1.getBlockState(blockpos);
-            boolean flag1 = blockstate.is(Blocks.RESPAWN_ANCHOR);
-            Vec3 vec3 = optional.get();
+            var blockstate = level.getBlockState(respawnPos);
+            var vec3 = optional.get();
             float f1;
-            if (!blockstate.is(BlockTags.BEDS) && !flag1) {
-                f1 = f;
-            } else {
-                Vec3 vec31 = Vec3.atBottomCenterOf(blockpos).subtract(vec3).normalize();
+
+            if (!blockstate.is(BlockTags.BEDS) && !blockstate.is(Blocks.RESPAWN_ANCHOR)) f1 = respawnAngle;
+            else {
+                var vec31 = Vec3.atBottomCenterOf(respawnPos).subtract(vec3).normalize();
                 f1 = (float) Mth.wrapDegrees(Mth.atan2(vec31.z, vec31.x) * (double)(180F / (float)Math.PI) - 90.0D);
             }
 
-            serverplayer.moveTo(vec3.x, vec3.y, vec3.z, f1, 0.0F);
-            serverplayer.setRespawnPosition(serverlevel1.dimension(), blockpos, f, flag, false);
-            flag2 = !p_11238_ && flag1;
+            freshPlayer.moveTo(vec3.x, vec3.y, vec3.z, f1, 0.0F);
+            freshPlayer.setRespawnPosition(level.dimension(), respawnPos, respawnAngle, isBoolean, false);
+            flag2 = !isBoolean && blockstate.is(Blocks.RESPAWN_ANCHOR);
         } else {
-            var dataFetch = LobbyData.fetch(server);
-            var cords = dataFetch.getCords();
+            var cords = lobbyData.getCords();
             var mPos = cords != null ?  new BlockPos(cords[0], cords[1], cords[2]) : new BlockPos(0, 128, 0);
-            var mRot = dataFetch.getRotation();
+            var mRot = lobbyData.getRotation();
 
-            serverplayer.setPos(mPos.getX(), mPos.getY(), mPos.getZ());
-            serverplayer.setYRot(mRot[0]);
-            serverplayer.setXRot(mRot[1]);
-            serverplayer.setRespawnPosition(serverlevel1.dimension(), mPos, mRot[0], flag, false);
 
-            if (blockpos != null) {
-                serverplayer.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.NO_RESPAWN_BLOCK_AVAILABLE, 0.0F));
+            freshPlayer.setPos(mPos.getX(), mPos.getY(), mPos.getZ());
+            freshPlayer.setYRot(mRot[0]);
+            freshPlayer.setXRot(mRot[1]);
+            freshPlayer.setRespawnPosition(level.dimension(), mPos, mRot[0], respawnForce, false);
+
+            if (respawnPos != null) {
+                freshPlayer.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.NO_RESPAWN_BLOCK_AVAILABLE, 0.0F));
             }
         }
 
-
-
-        while(!serverlevel1.noCollision(serverplayer) && serverplayer.getY() < (double)serverlevel1.getMaxBuildHeight()) {
-            serverplayer.setPos(serverplayer.getX(), serverplayer.getY() + 1.0D, serverplayer.getZ());
+        while(!level.noCollision(freshPlayer) && freshPlayer.getY() < (double) level.getMaxBuildHeight()) {
+            freshPlayer.setPos(freshPlayer.getX(), freshPlayer.getY() + 1.0D, freshPlayer.getZ());
         }
 
-        LevelData leveldata = serverplayer.level.getLevelData();
-        serverplayer.connection.send(new ClientboundRespawnPacket(serverplayer.level.dimensionTypeRegistration(), serverplayer.level.dimension(), BiomeManager.obfuscateSeed(serverplayer.getLevel().getSeed()), serverplayer.gameMode.getGameModeForPlayer(), serverplayer.gameMode.getPreviousGameModeForPlayer(), serverplayer.getLevel().isDebug(), serverplayer.getLevel().isFlat(), p_11238_));
-        serverplayer.connection.teleport(serverplayer.getX(), serverplayer.getY(), serverplayer.getZ(), serverplayer.getYRot(), serverplayer.getXRot());
-        serverplayer.connection.send(new ClientboundSetDefaultSpawnPositionPacket(serverlevel1.getSharedSpawnPos(), serverlevel1.getSharedSpawnAngle()));
-        serverplayer.connection.send(new ClientboundChangeDifficultyPacket(leveldata.getDifficulty(), leveldata.isDifficultyLocked()));
-        serverplayer.connection.send(new ClientboundSetExperiencePacket(serverplayer.experienceProgress, serverplayer.totalExperience, serverplayer.experienceLevel));
-        this.sendLevelInfo(serverplayer, serverlevel1);
-        this.sendPlayerPermissionLevel(serverplayer);
-        serverlevel1.addRespawnedPlayer(serverplayer);
-        this.addPlayer(serverplayer);
-        this.playersByUUID.put(serverplayer.getUUID(), serverplayer);
-        serverplayer.initInventoryMenu();
-        serverplayer.setHealth(serverplayer.getHealth());
-        net.minecraftforge.event.ForgeEventFactory.firePlayerRespawnEvent(serverplayer, p_11238_);
-        if (flag2) {
-            serverplayer.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, (double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ(), 1.0F, 1.0F));
-        }
+        var leveldata = freshPlayer.level.getLevelData();
+        var conn = freshPlayer.connection;
+        // PACKETS
+        conn.send(new ClientboundRespawnPacket(freshPlayer.level.dimensionTypeRegistration(), freshPlayer.level.dimension(), BiomeManager.obfuscateSeed(freshPlayer.getLevel().getSeed()), freshPlayer.gameMode.getGameModeForPlayer(), freshPlayer.gameMode.getPreviousGameModeForPlayer(), freshPlayer.getLevel().isDebug(), freshPlayer.getLevel().isFlat(), isBoolean));
+        conn.teleport(freshPlayer.getX(), freshPlayer.getY(), freshPlayer.getZ(), freshPlayer.getYRot(), freshPlayer.getXRot());
+        conn.send(new ClientboundSetDefaultSpawnPositionPacket(level.getSharedSpawnPos(), level.getSharedSpawnAngle()));
+        conn.send(new ClientboundChangeDifficultyPacket(leveldata.getDifficulty(), leveldata.isDifficultyLocked()));
+        conn.send(new ClientboundSetExperiencePacket(freshPlayer.experienceProgress, freshPlayer.totalExperience, freshPlayer.experienceLevel));
 
-        return serverplayer;
+        // INFO
+        this.sendLevelInfo(freshPlayer, level);
+        this.sendPlayerPermissionLevel(freshPlayer);
+        level.addRespawnedPlayer(freshPlayer);
+        this.addPlayer(freshPlayer);
+        this.playersByUUID.put(freshPlayer.getUUID(), freshPlayer);
+
+        //PLAYER DATA
+        freshPlayer.initInventoryMenu();
+        freshPlayer.setHealth(freshPlayer.getHealth()); // DEDUNDANT - CODED BY MOJANG LOL
+
+        // FORGE FIRED (i really want to remove this piece of shit)
+        ForgeEventFactory.firePlayerRespawnEvent(freshPlayer, isBoolean);
+        if (flag2) freshPlayer.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), 1.0F, 1.0F));
+        return freshPlayer;
     }
 }

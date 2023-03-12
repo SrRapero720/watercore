@@ -1,11 +1,14 @@
 package me.srrapero720.watercore.internal;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
@@ -67,6 +70,11 @@ public class WaterUtil {
     }
 
     private static final String OBJECT = "java/lang/Object";
+
+    public static @Nullable ServerLevel findLevel(@NotNull Iterable<ServerLevel> levels, ResourceLocation hint) {
+        for (var lvl: levels) if (lvl.dimension().getRegistryName().equals(hint)) return lvl;
+        return null;
+    }
 
     private static void emptyClassInfo() throws NoSuchFieldException, IllegalAccessException {
         if (true) return; // Disabled cache cleaning
