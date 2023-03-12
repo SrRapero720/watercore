@@ -1,13 +1,13 @@
 package me.srrapero720.watercore.custom.items;
 
+import me.srrapero720.watercore.water.WaterRegistry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import me.srrapero720.watercore.SrRegistry;
 
 public class BaseCash extends Item {
     public BaseCash(Rarity rarity) {
-        super(new Item.Properties().tab(SrRegistry.tab("MAIN")).stacksTo(512).rarity(rarity).setNoRepair());
+        super(new Item.Properties().tab(WaterRegistry.tab("MAIN")).stacksTo(512).rarity(rarity).setNoRepair());
     }
 
     @Override

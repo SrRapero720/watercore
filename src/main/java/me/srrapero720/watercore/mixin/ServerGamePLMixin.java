@@ -1,5 +1,6 @@
 package me.srrapero720.watercore.mixin;
 
+import me.srrapero720.watercore.api.ChatDataProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
@@ -13,7 +14,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.network.TextFilter;
 import net.minecraft.world.entity.player.ChatVisiblity;
 import net.minecraftforge.common.ForgeHooks;
-import me.srrapero720.watercore.SrUtil;
+import me.srrapero720.watercore.water.WaterUtil;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -33,7 +34,7 @@ public abstract class ServerGamePLMixin {
 
     @ModifyArg(method = "onDisconnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
     public Component modifyOnDisconnect(Component p_11265_) {
-        return SrUtil.createLeaveMessage(player.getDisplayName().getString(), player.getGameProfile().getName());
+        return WaterUtil.createLeaveMessage(player.getDisplayName().getString(), player.getGameProfile().getName());
     }
 
     /**
@@ -42,7 +43,7 @@ public abstract class ServerGamePLMixin {
      * breaking forge hooks
      */
     @Overwrite
-    public void handleChat(TextFilter.FilteredText text) {
+    private void handleChat(TextFilter.FilteredText text) {
         if (this.player.getChatVisibility() == ChatVisiblity.HIDDEN) {
             this.send(new ClientboundChatPacket((new TranslatableComponent("chat.disabled.options")).withStyle(ChatFormatting.RED), ChatType.SYSTEM, Util.NIL_UUID));
         } else {
@@ -51,7 +52,7 @@ public abstract class ServerGamePLMixin {
             if (!msg.startsWith("/")) {
 
                 var msgFiltered = text.getFiltered();
-                var component = SrUtil.createChatMessage(player.getDisplayName().getString(), msgFiltered.isEmpty() ? msgFiltered : msg);
+                var component = ChatDataProvider.createChatMessage(player, msgFiltered.isEmpty() ? msgFiltered : msg);
                 var event = ForgeHooks.onServerChatEvent((ServerGamePacketListenerImpl) (Object) this, msg, component, msgFiltered, component);
 
                 if (event != null && event.getComponent() != null)

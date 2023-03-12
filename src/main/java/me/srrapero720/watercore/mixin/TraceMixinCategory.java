@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.mixin;
 
 import net.minecraft.CrashReportCategory;
-import me.srrapero720.watercore.SrConsole;
+import me.srrapero720.watercore.water.WaterConsole;
 import me.srrapero720.watercore.mixin_util.TraceMixinUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,7 +15,7 @@ public abstract class TraceMixinCategory {
 
 	@Inject(method = "getDetails", at = @At("TAIL"))
 	private void addTrace(StringBuilder crashReportBuilder, CallbackInfo ci) {
-		SrConsole.debug("MixinWC", "Agregando trace");
+		WaterConsole.debug("MixinWC", "Agregando trace");
 		TraceMixinUtil.printTrace(stackTrace, crashReportBuilder);
 	}
 }

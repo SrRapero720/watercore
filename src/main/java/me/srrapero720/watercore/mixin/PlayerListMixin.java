@@ -5,6 +5,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Dynamic;
 import io.netty.buffer.Unpooled;
 import me.srrapero720.watercore.custom.data.LobbyData;
+import me.srrapero720.watercore.water.WaterConsole;
+import me.srrapero720.watercore.water.WaterRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
@@ -41,9 +43,7 @@ import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
-import me.srrapero720.watercore.SrConsole;
-import me.srrapero720.watercore.SrRegistry;
-import me.srrapero720.watercore.SrUtil;
+import me.srrapero720.watercore.water.WaterUtil;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -116,23 +116,23 @@ public abstract class PlayerListMixin {
 
     @Inject(method = "broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V", at = @At(value = "RETURN"))
     public void broadcast_3(Component p_11265_, ChatType p_11266_, UUID p_11267_, CallbackInfo ci) {
-        SrConsole.log("Broadcast_3", "Running broadcast_3 with:" + p_11265_.getString());
+        WaterConsole.log("Broadcast_3", "Running broadcast_3 with:" + p_11265_.getString());
     }
 
     @Inject(method = "broadcastMessage(Lnet/minecraft/network/chat/Component;Ljava/util/function/Function;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V", at = @At(value = "RETURN"))
     public void broadcast_4(Component p_143992_, Function<ServerPlayer, Component> p_143993_, ChatType p_143994_, UUID p_143995_, CallbackInfo ci) {
-        SrConsole.log("Broadcast_4", "Running broadcast_4 with: " + p_143992_.getString());
+        WaterConsole.log("Broadcast_4", "Running broadcast_4 with: " + p_143992_.getString());
     }
 
     @Inject(method = "broadcastToTeam", at = @At(value = "RETURN"))
     public void broadcast_5(Player p_11250_, Component p_11251_, CallbackInfo ci) {
-        SrConsole.log("Broadcast_5", "Running broadcast_5 with: " + p_11251_.getString());
+        WaterConsole.log("Broadcast_5", "Running broadcast_5 with: " + p_11251_.getString());
     }
 
 
     @Inject(method = "broadcastToAllExceptTeam", at = @At(value = "RETURN"))
     public void broadcast_7(Player p_11250_, Component p_11251_, CallbackInfo ci) {
-        SrConsole.log("Broadcast_7", "Running broadcast_7 with: " + p_11251_.getString());
+        WaterConsole.log("Broadcast_7", "Running broadcast_7 with: " + p_11251_.getString());
     }
 
     /**
@@ -150,8 +150,8 @@ public abstract class PlayerListMixin {
 
         var tag = this.load(player);
         final var levelRes = tag != null
-                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(SrConsole::justPrint).orElse(SrRegistry.dimension("LOBBY"))
-                : SrRegistry.dimension("LOBBY");
+                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(WaterConsole::justPrint).orElse(WaterRegistry.dimension("LOBBY"))
+                : WaterRegistry.dimension("LOBBY");
 
         // If you remove or change the name of your dimension, you know the problem... but here no notify about it
         var levelResult = this.server.getLevel(levelRes);
@@ -189,8 +189,8 @@ public abstract class PlayerListMixin {
 
 
         // CHANGED FOR WATERCORE
-        var component = SrUtil.createJoinMessage(player.getDisplayName().getString(), s);
-        this.broadcastMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
+        var component = WaterUtil.createJoinMessage(player.getDisplayName().getString(), s);
+        player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
 
         int timePlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
         if (timePlayed != 0) {
@@ -282,7 +282,7 @@ public abstract class PlayerListMixin {
             optional = Optional.empty();
         }
 
-        ServerLevel serverlevel1 = serverlevel != null && optional.isPresent() ? serverlevel : this.server.getLevel(SrRegistry.dimension("LOBBY"));
+        ServerLevel serverlevel1 = serverlevel != null && optional.isPresent() ? serverlevel : this.server.getLevel(WaterRegistry.dimension("LOBBY"));
         ServerPlayer serverplayer = new ServerPlayer(this.server, serverlevel1, p_11237_.getGameProfile());
         serverplayer.connection = p_11237_.connection;
         serverplayer.restoreFrom(p_11237_, p_11238_);

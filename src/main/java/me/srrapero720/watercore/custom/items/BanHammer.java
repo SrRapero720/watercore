@@ -1,5 +1,7 @@
 package me.srrapero720.watercore.custom.items;
 
+import me.srrapero720.watercore.water.WaterRegistry;
+import me.srrapero720.watercore.water.WaterConsole;
 import net.minecraft.Util;
 import net.minecraft.network.chat.*;
 import net.minecraft.server.players.UserBanListEntry;
@@ -10,13 +12,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import me.srrapero720.watercore.SrConsole;
-import me.srrapero720.watercore.SrRegistry;
-import me.srrapero720.watercore.SrUtil;
+import me.srrapero720.watercore.water.WaterUtil;
 
 public class BanHammer extends Item {
     public BanHammer() {
-        super(new Properties().tab(SrRegistry.tab("ADMIN")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
+        super(new Properties().tab(WaterRegistry.tab("ADMIN")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
     }
 
     @Override
@@ -47,8 +47,8 @@ public class BanHammer extends Item {
                         bans.add(new UserBanListEntry(mPlayer.getGameProfile(),null, "WATERCoRE", null, banReason));
 
                     playerList.getPlayer(entity.getUUID()).connection.disconnect(new TranslatableComponent("watercore.response.banhammer"));
-                    playerList.broadcastMessage(new TextComponent(SrUtil.getBroadcastPrefix() + "&6El jugador §4" + entity.getName().getString() + "§6 fue golpeado por el martillo del BAN"), ChatType.SYSTEM, Util.NIL_UUID);
-                } catch (Exception e) { SrConsole.warn("BanHammer", "Ocurrio un error al banear al usuario"); }
+                    playerList.broadcastMessage(new TextComponent(WaterUtil.getBroadcastPrefix() + "&6El jugador §4" + entity.getName().getString() + "§6 fue golpeado por el martillo del BAN"), ChatType.SYSTEM, Util.NIL_UUID);
+                } catch (Exception e) { WaterConsole.warn("BanHammer", "Ocurrio un error al banear al usuario"); }
             });
             t.start();
         } else entity.remove(Entity.RemovalReason.DISCARDED);

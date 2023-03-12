@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.mixin_util;
 
-import me.srrapero720.watercore.SrConsole;
-import me.srrapero720.watercore.SrUtil;
+import me.srrapero720.watercore.water.WaterConsole;
+import me.srrapero720.watercore.water.WaterUtil;
 import org.spongepowered.asm.mixin.MixinEnvironment;
 import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
 import org.spongepowered.asm.mixin.transformer.ClassInfo;
@@ -14,7 +14,7 @@ public class SpongeMixinTool {
     private static final String OBJECT = "java/lang/Object";
 
     private static void emptyClassInfo() throws NoSuchFieldException, IllegalAccessException {
-        if (SrUtil.isModOnline("not-that-cc")) return; // Crashes crafty crashes if it crashes
+        if (WaterUtil.isModOnline("not-that-cc")) return; // Crashes crafty crashes if it crashes
         Field cacheField = ClassInfo.class.getDeclaredField("cache");
         cacheField.setAccessible(true);
         @SuppressWarnings("unchecked")
@@ -26,7 +26,7 @@ public class SpongeMixinTool {
 
 
     public static void forceLoadAllMixinsAndClearSpongePoweredCache() {
-        SrConsole.error("SpongeMixinTool", "Cleaning cache of Mixins is currently disabled. because TraceMixin feature got broken.");
+        WaterConsole.error("SpongeMixinTool", "Cleaning cache of Mixins is currently disabled. because TraceMixin feature got broken.");
         if (true) return;
         MixinEnvironment.getCurrentEnvironment().audit();
         try { //Why is SpongePowered stealing so much ram for this garbage?

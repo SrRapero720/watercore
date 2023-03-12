@@ -1,8 +1,8 @@
 package me.srrapero720.watercore.mixin;
 
 import me.srrapero720.watercore.mixin_util.TraceMixinUtil;
+import me.srrapero720.watercore.water.WaterConsole;
 import net.minecraft.CrashReport;
-import me.srrapero720.watercore.SrConsole;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +16,7 @@ public abstract class TraceMixin {
 
 	@Inject(method = "getDetails(Ljava/lang/StringBuilder;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/CrashReport;details:Ljava/util/List;"))
 	private void addTrace(StringBuilder crashReportBuilder, CallbackInfo ci) {
-		SrConsole.debug("MixinWC", "Creando CrashReport con mixins");
+		WaterConsole.debug("MixinWC", "Creando CrashReport con mixins");
 
 		int trailingNewlineCount = 0;
 		// Remove trailing \n

@@ -16,10 +16,10 @@ import java.util.function.Supplier;
 public class EventNetwork {
     private static int MSGID = 0;
     private static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(WaterCore.id(), "main"),
-            WaterCore::protocol,
-            WaterCore.protocol()::equals,
-            WaterCore.protocol()::equals
+            new ResourceLocation(WaterCore.ID, "main"),
+            () -> WaterCore.PROTOCOL,
+            WaterCore.PROTOCOL::equals,
+            WaterCore.PROTOCOL::equals
     );
 
     public static SimpleChannel net() { return INSTANCE; }

@@ -1,5 +1,6 @@
 package me.srrapero720.watercore.custom.items;
 
+import me.srrapero720.watercore.water.WaterRegistry;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -13,13 +14,12 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import me.srrapero720.watercore.SrRegistry;
-import me.srrapero720.watercore.SrUtil;
+import me.srrapero720.watercore.water.WaterUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class SuperWand extends Item {
     public SuperWand() {
-        super(new Properties().tab(SrRegistry.tab("ADMIN")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
+        super(new Properties().tab(WaterRegistry.tab("ADMIN")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
     }
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand interactionHand) {
@@ -46,10 +46,10 @@ public class SuperWand extends Item {
     }
 
     public void applyGodEffects(Player player) {
-        player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, SrUtil.toTicks(0.5), 3, false, false, false));
-        player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, SrUtil.toTicks(7), 5, false, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, WaterUtil.toTicks(0.5), 3, false, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, WaterUtil.toTicks(7), 5, false, false, false));
 
-        for (MobEffectInstance i: SrRegistry.potionOnly("blessed_3").getEffects())
+        for (MobEffectInstance i: WaterRegistry.potionOnly("blessed_3").getEffects())
             player.addEffect(new MobEffectInstance(i.getEffect(), i.getDuration(), i.getAmplifier(), i.isAmbient(), i.isVisible(), false));
     }
 

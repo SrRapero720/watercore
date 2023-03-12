@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
-import me.srrapero720.watercore.SrUtil;
+import me.srrapero720.watercore.water.WaterUtil;
 import me.srrapero720.watercore.WaterCore;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 
 public class LobbyData extends SavedData {
-    private static final String NAME = WaterCore.id() + "_dimensions";
-    public static final File DATADIR = new File(SrUtil.getGameDir(), "/config/fancymenu");
+    private static final String NAME = WaterCore.ID + "_dimensions";
+    public static final File DATADIR = new File(WaterUtil.getGameDir(), "/config/fancymenu");
 
     private static LobbyData instance;
 

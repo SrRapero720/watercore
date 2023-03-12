@@ -3,10 +3,10 @@ package me.srrapero720.watercore.custom.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.srrapero720.watercore.water.WaterRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
-import me.srrapero720.watercore.SrRegistry;
 import me.srrapero720.watercore.custom.data.LobbyData;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +28,7 @@ public class SpawnComm {
         var rot = dimData.getRotation();
         var mPos = new BlockPos(cords[0], cords[1], cords[2]);
 
-        player.teleportTo(server.getLevel(SrRegistry.dimension("LOBBY")), mPos.getX(), mPos.getY() + 1, mPos.getZ(), rot[0], rot[1]);
+        player.teleportTo(server.getLevel(WaterRegistry.dimension("LOBBY")), mPos.getX(), mPos.getY() + 1, mPos.getZ(), rot[0], rot[1]);
         return 0;
     }
 }

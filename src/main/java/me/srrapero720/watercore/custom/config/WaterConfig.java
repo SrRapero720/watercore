@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.custom.config;
 
-import me.srrapero720.watercore.SrUtil;
+import me.srrapero720.watercore.water.WaterUtil;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.HashMap;
@@ -25,7 +25,7 @@ public class WaterConfig {
         //EssentialZ -> Config
         BUILDER.push("EssentialsZ");
         CONFIGS.put("BROADCAST_PREFIX", BUILDER.comment("How look the prefix of /broadcast output", "Supports color formatting using & and §")
-                .define("BROADCAST_PREFIX", SrUtil.getBroadcastPrefix()));
+                .define("BROADCAST_PREFIX", WaterUtil.getBroadcastPrefix()));
         CONFIGS.put("CHAT_FORMAT", BUILDER.comment(
                 "Modify the chat prefix",
                 "Supports (&) color formatting",

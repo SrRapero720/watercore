@@ -1,5 +1,7 @@
 package me.srrapero720.watercore.custom.items;
 
+import me.srrapero720.watercore.water.WaterRegistry;
+import me.srrapero720.watercore.water.WaterConsole;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,8 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import me.srrapero720.watercore.SrConsole;
-import me.srrapero720.watercore.SrRegistry;
 import me.srrapero720.watercore.WaterCore;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ public class BaseViolin extends Item {
     private boolean playing = false;
     private final float pitch;
     public BaseViolin(float pitch) {
-        super(new Properties().rarity(Rarity.EPIC).tab(SrRegistry.tab("MAIN")));
+        super(new Properties().rarity(Rarity.EPIC).tab(WaterRegistry.tab("MAIN")));
         this.pitch = pitch;
     }
 
@@ -38,14 +38,14 @@ public class BaseViolin extends Item {
 
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-        final var soundEv = SrRegistry.soundOnly("violin");
+        final var soundEv = WaterRegistry.soundOnly("violin");
         context.getLevel().playSound(context.getPlayer(), context.getPlayer(), soundEv, SoundSource.PLAYERS, 0.75f, pitch);
         return super.onItemUseFirst(stack, context);
     }
 
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
-        SrConsole.warn("BaseViolin", "Running onUsingTick");
+        WaterConsole.warn("BaseViolin", "Running onUsingTick");
         super.onUsingTick(stack, player, count);
     }
 
@@ -53,7 +53,7 @@ public class BaseViolin extends Item {
     public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int unknownVar) {
         // final var soundEv = SrRegistry.soundOnly("violin");
 //        level.playSound((Player) livingEntity, livingEntity, soundEv, SoundSource.PLAYERS, pitch, 1.0f);
-        var packet = new ClientboundStopSoundPacket(new ResourceLocation(WaterCore.id(), "violin"), SoundSource.PLAYERS);
+        var packet = new ClientboundStopSoundPacket(new ResourceLocation(WaterCore.ID, "violin"), SoundSource.PLAYERS);
 
         for(ServerPlayer serverplayer : level.getServer().getPlayerList().getPlayers()) {
             serverplayer.connection.send(packet);
@@ -64,7 +64,7 @@ public class BaseViolin extends Item {
 
     @Override
     public boolean useOnRelease(ItemStack stack) {
-        SrConsole.warn("BaseViolin", "Running useOnRelease");
+        WaterConsole.warn("BaseViolin", "Running useOnRelease");
         return super.useOnRelease(stack);
     }
 }

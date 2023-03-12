@@ -1,10 +1,10 @@
 package me.srrapero720.watercore.mixin.client;
 
+import me.srrapero720.watercore.water.WaterConsole;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.HitResult;
-import me.srrapero720.watercore.SrConsole;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,7 +21,7 @@ public class CrossHairLeak {
 
     @Inject(method = "updateScreenAndTick", at = @At(value = "INVOKE",target = "Lnet/minecraft/client/Minecraft;runTick(Z)V",shift = At.Shift.BEFORE))
     private void resetTarget(Screen screen, CallbackInfo ci) {
-        SrConsole.log("WorldLoaderFix", "Cleaning CrossHair and HitResult");
+        WaterConsole.log("WorldLoaderFix", "Cleaning CrossHair and HitResult");
         this.crosshairPickEntity = null;
         this.hitResult = null;
         System.gc();
