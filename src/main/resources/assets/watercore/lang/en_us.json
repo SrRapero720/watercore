@@ -5,7 +5,7 @@
   "itemGroup.watercore.ADMIN": "WATERCoRE Admin",
   "watercore.response.banhammer": "Haz sido letalmente baneado por el martillo del BAN",
   "watercore.command.setlobbyspawn.success": "§6Guardada la posicion en §c%s §c%s §c%s - Angulo: §c%s",
-  "watercore.command.setlobbyspawn.failed": "§cNo puedes cambiar la posicion en una dimension que no sea [watercore:lobby]",
+  "watercore.command.setlobbyspawn.failed": "§cOcurrio un error inesperado al guardar la posicion",
 
   "__comment": "WATERCoRE Pociones",
   "item.minecraft.potion.effect.blessed_1": "Bendicion Divina",

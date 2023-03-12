@@ -14,22 +14,23 @@ import org.jetbrains.annotations.NotNull;
 
 public class SetLobbyPosComm {
     public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("setlobbyspawn").requires((p_137800_) ->
-                        p_137800_.hasPermission(3)).executes(SetLobbyPosComm::saveLobbySpawn));
+        var main = dispatcher.register(Commands.literal("setlobbyspawn").requires((c) -> c.hasPermission(3)).executes(SetLobbyPosComm::saveLobbySpawn));
+        dispatcher.register(Commands.literal("setworldspawn").redirect(main));
     }
 
     public static int saveLobbySpawn(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
         var server = player.getServer();
 
-        if (!WaterRegistry.dimension("Lobby").equals(player.getLevel().dimension())) {
-            context.getSource().sendFailure(new TranslatableComponent("watercore.command.setlobbyspawn.failed"));
-            return 0;
-        }
+        if (server != null) {
+            LobbyData.fetch(server).setDimension(player.getLevel().dimension()).setCords(player.getOnPos(), WaterUtil.fixAngle(player.getYRot()), WaterUtil.fixAngle(player.getXRot())).save(new CompoundTag());
+            context.getSource().sendSuccess(new TranslatableComponent("watercore.command.setlobbyspawn.success",
+                    WaterUtil.twoDecimal(player.getX()),
+                    WaterUtil.twoDecimal(player.getY()),
+                    WaterUtil.twoDecimal(player.getZ()),
+                    WaterUtil.fixAngle(player.getYRot())), true);
+        } else context.getSource().sendSuccess(new TranslatableComponent("watercore.command.setlobbyspawn.failed"), true);
 
-        LobbyData.fetch(server).setCords(player.getOnPos(), WaterUtil.fixAngle(player.getYRot()), WaterUtil.fixAngle(player.getXRot())).save(new CompoundTag());
-        context.getSource().sendSuccess(new TranslatableComponent("watercore.command.setlobbyspawn.success",
-                WaterUtil.twoDecimal(player.getX()), WaterUtil.twoDecimal(player.getY()), WaterUtil.twoDecimal(player.getZ()), WaterUtil.fixAngle(player.getYRot())), true);
         return 0;
     }
 }

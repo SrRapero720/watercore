@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class ChatDataProvider {
     private static net.luckperms.api.LuckPerms LP;
+
     public static void init() {
         try {
             WaterConsole.log(ChatDataProvider.class.toString(), "Using 'LuckPerms' prefix provider");
@@ -17,26 +18,44 @@ public class ChatDataProvider {
         }
     }
 
+    public static TextComponent parse(String format, ServerPlayer player, String ...extras) {
+        var displayname = "";
+        var playername = player.getDisplayName().getString();
+        var alias = player.getGameProfile().getName();
+        if (alias == null) alias = playername;
+
+        if (LP != null) {
+            var prefixSuffix = getPrefixSuffix(player.getGameProfile());
+            displayname = prefixSuffix[0] + playername + prefixSuffix[1];
+        } else displayname = playername;
+
+        StringBuilder result = new StringBuilder(format
+                .replaceAll(Type.PLAYER, playername)
+                .replaceAll(Type.ALIAS, alias)
+                .replaceAll(Type.DISPLAY, displayname));
+
+        for (var extra: extras) result.append(" ").append(extra);
+
+        return new TextComponent(result.toString());
+    }
+
     public static TextComponent message(ServerPlayer player, String msg) {
+        String format = WaterConfig.get("CHAT_FORMAT");
+        var displayname = "";
+        var playername = player.getDisplayName().getString();
+        var alias = player.getGameProfile().getName();
         if (LP != null) {
             var pf = getPrefixSuffix(player.getGameProfile());
-            return new TextComponent(pf[0] + msg + pf[1]);
-        } else {
-            String format = WaterConfig.get("CHAT_FORMAT");
-            return new TextComponent(format.replaceAll("%player%", player.getDisplayName().getString()) + msg);
-        }
+            displayname = pf[0] + playername + pf[1];
+        } else displayname = playername;
+
+        return new TextComponent(format
+                .replaceAll(Type.PLAYER, playername)
+                .replaceAll(Type.ALIAS, alias == null ? playername : alias)
+                .replaceAll(Type.DISPLAY, displayname)+ " " + msg);
     }
 
-
-    public static TextComponent join(ServerPlayer player) {
-        return connectionPlayerHandler(WaterConfig.get("JOIN_MESSAGE"), player);
-    }
-
-    public static TextComponent leave(ServerPlayer player) {
-        return connectionPlayerHandler(WaterConfig.get("LEAVE_MESSAGE"), player);
-    }
-
-    private static TextComponent connectionPlayerHandler(String message, ServerPlayer player) {
+    public static TextComponent connection(String format, ServerPlayer player) {
         var displayname = "";
         var playername = player.getDisplayName().getString();
         var alias = player.getGameProfile().getName();
@@ -45,9 +64,10 @@ public class ChatDataProvider {
             displayname = ps[0] + playername + ps[1];
         } else { displayname = playername; }
 
-        return new TextComponent(message.replaceAll("%playername%", playername)
-                .replaceAll("%alias%", alias != null ? alias : "<unknown alias>")
-                .replaceAll("%displayname%", displayname));
+        return new TextComponent(format
+                .replaceAll(Type.PLAYER, playername)
+                .replaceAll(Type.ALIAS, alias == null ? playername : alias)
+                .replaceAll(Type.DISPLAY, displayname));
     }
 
     public static String[] getPrefixSuffix(GameProfile player) {
@@ -58,10 +78,22 @@ public class ChatDataProvider {
             result[1] = data.getSuffix();
             return result;
         } catch(Exception ise) {
-            WaterConsole.error("LuckPermsUtil", ise.getMessage());
+            WaterConsole.error(ChatDataProvider.class.getName(), ise.getMessage());
             ise.printStackTrace();
         }
 
         return result;
+    }
+
+    public static class Type {
+        public static final String PLAYER = "%playername%";
+        public static final String DISPLAY = "%displayname%";
+        public static final String ALIAS = "%alias%";
+        public static final String NICK = "%nick%";
+        public static final String VANISH = "%vanish%";
+
+        public static String parse() {
+            return "";
+        }
     }
 }

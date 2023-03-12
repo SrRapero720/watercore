@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Dynamic;
 import io.netty.buffer.Unpooled;
 import me.srrapero720.watercore.api.ChatDataProvider;
+import me.srrapero720.watercore.custom.config.WaterConfig;
 import me.srrapero720.watercore.custom.data.LobbyData;
 import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterRegistry;
@@ -164,7 +165,7 @@ public abstract class PlayerListMixin {
 
 
         // CHANGED FOR WATERCORE
-        var component = ChatDataProvider.join(player);
+        var component = ChatDataProvider.parse(WaterConfig.get("JOIN_MESSAGE"), player);
         player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
 
         int timePlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
