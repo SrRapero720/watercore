@@ -21,7 +21,7 @@ public class BaseViolin extends Item {
     private boolean playing = false;
     private final float pitch;
     public BaseViolin(float pitch) {
-        super(new Properties().rarity(Rarity.EPIC).tab(WaterRegistry.tab("MAIN")));
+        super(new Properties().rarity(Rarity.EPIC).tab(WaterRegistry.tab("main")));
         this.pitch = pitch;
     }
 

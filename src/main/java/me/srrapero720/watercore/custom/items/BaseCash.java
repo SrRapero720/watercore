@@ -7,7 +7,7 @@ import net.minecraft.world.item.Rarity;
 
 public class BaseCash extends Item {
     public BaseCash(Rarity rarity) {
-        super(new Item.Properties().tab(WaterRegistry.tab("MAIN")).stacksTo(512).rarity(rarity).setNoRepair());
+        super(new Item.Properties().tab(WaterRegistry.tab("main")).stacksTo(512).rarity(rarity).setNoRepair());
     }
 
     @Override

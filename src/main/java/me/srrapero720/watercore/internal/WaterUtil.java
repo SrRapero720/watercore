@@ -24,7 +24,7 @@ public class WaterUtil {
     public static boolean isModOnline(String id) { return ModList.get().isLoaded(id); }
 
     @Contract(pure = true)
-    public static @NotNull String getBroadcastPrefix() { return "§e§l[§bWATERC§eo§bRE§e§l] §f"; }
+    public static @NotNull String getBroadcastPrefix() { return "&e&l[&bWATERC&eo&bRE&e&l] &f"; }
 
     public static int fixAngle(double input) { return fixAngle(Math.round(input)); }
     public static int fixAngle(float input) { return fixAngle(Math.round(input)); }

@@ -6,7 +6,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-@OnlyIn(Dist.DEDICATED_SERVER)
 public class PlaceholdersApi {
     private static HashMap<String, Supplier<String>> PH_STRING = new HashMap<>();
     private static HashMap<String, Supplier<Integer>> PH_INT = new HashMap<>();

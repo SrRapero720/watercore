@@ -16,7 +16,7 @@ import me.srrapero720.watercore.internal.WaterUtil;
 
 public class BanHammer extends Item {
     public BanHammer() {
-        super(new Properties().tab(WaterRegistry.tab("ADMIN")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
+        super(new Properties().tab(WaterRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
     }
 
     @Override

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SuperWand extends Item {
     public SuperWand() {
-        super(new Properties().tab(WaterRegistry.tab("ADMIN")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
+        super(new Properties().tab(WaterRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
     }
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand interactionHand) {
