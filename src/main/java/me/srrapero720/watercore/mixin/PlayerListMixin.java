@@ -165,7 +165,7 @@ public abstract class PlayerListMixin {
 
 
         // CHANGED FOR WATERCORE
-        var component = ChatDataProvider.parse(WaterConfig.get("JOIN_MESSAGE"), player);
+        var component = ChatDataProvider.parse(WaterConfig.get("JOIN_FORMAT"), player);
         player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
 
         int timePlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));

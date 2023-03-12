@@ -13,29 +13,53 @@ public class WaterConfig {
 
 
     static {
-        //WATERCoRE -> Config
-        BUILDER.push("WATERCoRE");
-        CONFIGS.put("JOIN_MESSAGE", BUILDER.comment("Change the message for incoming players", "Supports (&) color formatting", "Placeholders: %player% %alias% %player-alias%")
-                .define("JOIN_MESSAGE", "" + "&e%player% joined"));
-        CONFIGS.put("LEAVE_MESSAGE", BUILDER.comment("Change the message for leaving players", "Supports (&) color formatting", "Placeholders: %player% %alias% %player-alias%", "NO WORKING YET")
-                .define("LEAVE_MESSAGE", "&e%player% leave"));
+        //WATERCoRE ->
+        BUILDER.push("WATERCoRE").comment(
+                "Now Compatible with LuckPerms",
+                "Support (&f and §f) color formatting"
+        );
 
-        BUILDER.pop();
+        //WATERCoRE -> SERVER_CONFIG
+        BUILDER.push("SERVER_CONFIG");
 
-        //EssentialZ -> Config
-        BUILDER.push("EssentialsZ");
-        CONFIGS.put("BROADCAST_PREFIX", BUILDER.comment("How look the prefix of /broadcast output", "Supports color formatting using & and §")
-                .define("BROADCAST_PREFIX", WaterUtil.getBroadcastPrefix()));
+        CONFIGS.put("JOIN_FORMAT", BUILDER.comment(
+                "Modify message of joining players",
+                "Placeholders: %displayname% %playername% %alias%").define("JOIN_FORMAT", "" + "&e&l[&b%displayname%&e&l] &aJoined"));
+
+        CONFIGS.put("LEAVE_FORMAT", BUILDER.comment(
+                "Modify message of leaving players",
+                "Placeholders: %displayname% %playername% %alias%").define("LEAVE_FORMAT", "&e&l[&b%displayname%&e&l] &cLeave"));
+
         CONFIGS.put("CHAT_FORMAT", BUILDER.comment(
-                "Modify the chat prefix",
-                "Supports (&) color formatting",
-                "Placeholders: %player% %displayname% %rank%",
+                "Modify chat format",
+                "Support (&f and §f) color formatting",
+                "Placeholders: %displayname% %playername% %alias%",
                 "NOTE: %displayname% is reserved for Luckperms prefix + nickname"
-        ).define("CHAT_FORMAT", "<%player%> "));
+        ).define("CHAT_FORMAT", "&e&l| &b%displayname% &e&l| "));
+        //WATERCoRE ->
         BUILDER.pop();
 
 
-        //Watercore Basics
+
+        //WATERCoRE -> COMMANDS
+        BUILDER.push("COMMANDS").comment(
+                "Now Compatible with LuckPerms",
+                "Support (&f and §f) color formatting"
+        );
+
+        CONFIGS.put("BROADCAST_PREFIX",
+                BUILDER.comment("prefix from /broadcast output").define("BROADCAST_PREFIX", WaterUtil.getBroadcastPrefix()));
+
+
+
+        //WATERCoRE ->
+        BUILDER.pop();
+
+        // ->
+        BUILDER.pop();
+
+
+        //RUNNING BASICS
         SPEC = BUILDER.build();
     }
 

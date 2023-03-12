@@ -2,6 +2,7 @@ package me.srrapero720.watercore.api;
 
 import com.mojang.authlib.GameProfile;
 import me.srrapero720.watercore.internal.WaterConsole;
+import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,7 @@ public class ChatDataProvider {
 
         for (var extra: extras) result.append(" ").append(extra);
 
-        return new TextComponent(result.toString());
+        return new TextComponent(MinecraftChatColor.parse(result.toString()));
     }
 
     public static String @NotNull [] getPrefixSuffix(GameProfile player) {

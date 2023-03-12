@@ -1,9 +1,7 @@
 package me.srrapero720.watercore.api;
 
 public class MinecraftChatColor {
-    private MinecraftChatColor() {
-
-    }
+    private MinecraftChatColor() {}
 
     public static MinecraftChatColor red() { return null; }
 
