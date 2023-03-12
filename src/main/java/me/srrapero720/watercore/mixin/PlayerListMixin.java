@@ -4,6 +4,7 @@ package me.srrapero720.watercore.mixin;
 import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Dynamic;
 import io.netty.buffer.Unpooled;
+import me.srrapero720.watercore.api.ChatDataProvider;
 import me.srrapero720.watercore.custom.data.LobbyData;
 import me.srrapero720.watercore.water.WaterConsole;
 import me.srrapero720.watercore.water.WaterRegistry;
@@ -114,27 +115,6 @@ public abstract class PlayerListMixin {
     @Shadow
     public abstract MinecraftServer getServer();
 
-    @Inject(method = "broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V", at = @At(value = "RETURN"))
-    public void broadcast_3(Component p_11265_, ChatType p_11266_, UUID p_11267_, CallbackInfo ci) {
-        WaterConsole.log("Broadcast_3", "Running broadcast_3 with:" + p_11265_.getString());
-    }
-
-    @Inject(method = "broadcastMessage(Lnet/minecraft/network/chat/Component;Ljava/util/function/Function;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V", at = @At(value = "RETURN"))
-    public void broadcast_4(Component p_143992_, Function<ServerPlayer, Component> p_143993_, ChatType p_143994_, UUID p_143995_, CallbackInfo ci) {
-        WaterConsole.log("Broadcast_4", "Running broadcast_4 with: " + p_143992_.getString());
-    }
-
-    @Inject(method = "broadcastToTeam", at = @At(value = "RETURN"))
-    public void broadcast_5(Player p_11250_, Component p_11251_, CallbackInfo ci) {
-        WaterConsole.log("Broadcast_5", "Running broadcast_5 with: " + p_11251_.getString());
-    }
-
-
-    @Inject(method = "broadcastToAllExceptTeam", at = @At(value = "RETURN"))
-    public void broadcast_7(Player p_11250_, Component p_11251_, CallbackInfo ci) {
-        WaterConsole.log("Broadcast_7", "Running broadcast_7 with: " + p_11251_.getString());
-    }
-
     /**
      * @author SrRapero720
      * @reason Some stuff needs to be changed in this silly function, sorry if broke things.
@@ -189,7 +169,7 @@ public abstract class PlayerListMixin {
 
 
         // CHANGED FOR WATERCORE
-        var component = WaterUtil.createJoinMessage(player.getDisplayName().getString(), s);
+        var component = ChatDataProvider.join(player);
         player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
 
         int timePlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));

@@ -14,6 +14,7 @@ public class SpongeMixinTool {
     private static final String OBJECT = "java/lang/Object";
 
     private static void emptyClassInfo() throws NoSuchFieldException, IllegalAccessException {
+        if (true) return; // Disabled cache cleaning
         if (WaterUtil.isModOnline("not-that-cc")) return; // Crashes crafty crashes if it crashes
         Field cacheField = ClassInfo.class.getDeclaredField("cache");
         cacheField.setAccessible(true);
@@ -27,7 +28,6 @@ public class SpongeMixinTool {
 
     public static void forceLoadAllMixinsAndClearSpongePoweredCache() {
         WaterConsole.error("SpongeMixinTool", "Cleaning cache of Mixins is currently disabled. because TraceMixin feature got broken.");
-        if (true) return;
         MixinEnvironment.getCurrentEnvironment().audit();
         try { //Why is SpongePowered stealing so much ram for this garbage?
             Field noGroupField = InjectorGroupInfo.Map.class.getDeclaredField("NO_GROUP");
