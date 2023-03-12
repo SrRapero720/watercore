@@ -17,7 +17,7 @@ public class ChatDataProvider {
         }
     }
 
-    public static TextComponent createChatMessage(ServerPlayer player, String msg) {
+    public static TextComponent message(ServerPlayer player, String msg) {
         if (LP != null) {
             var pf = getPrefixSuffix(player.getGameProfile());
             return new TextComponent(pf[0] + msg + pf[1]);
@@ -25,6 +25,29 @@ public class ChatDataProvider {
             String format = WaterConfig.get("CHAT_FORMAT");
             return new TextComponent(format.replaceAll("%player%", player.getDisplayName().getString()) + msg);
         }
+    }
+
+
+    public static TextComponent join(ServerPlayer player) {
+        return connectionPlayerHandler(WaterConfig.get("JOIN_MESSAGE"), player);
+    }
+
+    public static TextComponent leave(ServerPlayer player) {
+        return connectionPlayerHandler(WaterConfig.get("LEAVE_MESSAGE"), player);
+    }
+
+    private static TextComponent connectionPlayerHandler(String message, ServerPlayer player) {
+        var displayname = "";
+        var playername = player.getDisplayName().getString();
+        var alias = player.getGameProfile().getName();
+        if (LP != null) {
+            var ps = getPrefixSuffix(player.getGameProfile());
+            displayname = ps[0] + playername + ps[1];
+        } else { displayname = playername; }
+
+        return new TextComponent(message.replaceAll("%playername%", playername)
+                .replaceAll("%alias%", alias != null ? alias : "<unknown alias>")
+                .replaceAll("%displayname%", displayname));
     }
 
     public static String[] getPrefixSuffix(GameProfile player) {

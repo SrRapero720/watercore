@@ -34,7 +34,7 @@ public abstract class ServerGamePLMixin {
 
     @ModifyArg(method = "onDisconnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
     public Component modifyOnDisconnect(Component p_11265_) {
-        return WaterUtil.createLeaveMessage(player.getDisplayName().getString(), player.getGameProfile().getName());
+        return ChatDataProvider.leave(player);
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class ServerGamePLMixin {
             if (!msg.startsWith("/")) {
 
                 var msgFiltered = text.getFiltered();
-                var component = ChatDataProvider.createChatMessage(player, msgFiltered.isEmpty() ? msgFiltered : msg);
+                var component = ChatDataProvider.message(player, msgFiltered.isEmpty() ? msgFiltered : msg);
                 var event = ForgeHooks.onServerChatEvent((ServerGamePacketListenerImpl) (Object) this, msg, component, msgFiltered, component);
 
                 if (event != null && event.getComponent() != null)

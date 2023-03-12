@@ -1,17 +1,11 @@
 package me.srrapero720.watercore.water;
 
-import me.srrapero720.watercore.api.MinecraftChatColor;
-import net.luckperms.api.LuckPermsProvider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import me.srrapero720.watercore.custom.config.WaterConfig;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -21,33 +15,6 @@ public class WaterUtil {
 
     @Contract(pure = true)
     public static @NotNull String getBroadcastPrefix() { return "§e§l[§bWATERC§eo§bRE§e§l] §f"; }
-
-    @Contract("_, _ -> new")
-    public static @NotNull Component createJoinMessage(String profile, String alias) {
-        return connectionMessageBuilder(MinecraftChatColor.parse(WaterConfig.get("JOIN_MESSAGE")), profile, alias);
-    }
-
-    @Contract("_, _ -> new")
-    public static @NotNull Component createLeaveMessage(String profile, String alias) {
-        return connectionMessageBuilder(MinecraftChatColor.parse(WaterConfig.get("LEAVE_MESSAGE")), profile, alias);
-    }
-
-    @Deprecated(forRemoval = true, since = "1.3.0-A1")
-    public static Component createChatMessage(String player, String msg) {
-        String format = WaterConfig.get("CHAT_FORMAT");
-        return new TextComponent(format.replaceAll("%player%", player).replaceAll("%username%", player) + msg);
-    }
-
-    public static void fetchPerms() {
-        var api = LuckPermsProvider.get();
-    }
-
-
-    public static Component connectionMessageBuilder(String message, String profile, @Nullable String alias) {
-        return new TextComponent(message.replaceAll("%player%", profile)
-                .replaceAll("%alias%", alias != null ? alias : "<unknown player>")
-                .replaceAll("%player-alias%", "(" +profile + " aka " + alias + ")"));
-    }
 
     public static int fixAngle(double input) { return fixAngle(Math.round(input)); }
     public static int fixAngle(float input) { return fixAngle(Math.round(input)); }
