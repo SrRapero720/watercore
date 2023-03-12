@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin.client.screen;
 
-import me.srrapero720.watercore.screens.LanguageSelectScreen;
+import me.srrapero720.watercore.custom.screens.LanguageSelectScreen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.events.GuiEventListener;

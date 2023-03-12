@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.custom.tabs;
 
-import me.srrapero720.watercore.water.WaterRegistry;
+import me.srrapero720.watercore.internal.WaterRegistry;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;

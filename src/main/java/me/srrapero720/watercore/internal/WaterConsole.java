@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.water;
+package me.srrapero720.watercore.internal;
 
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;

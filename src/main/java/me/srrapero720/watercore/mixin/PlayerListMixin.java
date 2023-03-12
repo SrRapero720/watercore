@@ -6,8 +6,8 @@ import com.mojang.serialization.Dynamic;
 import io.netty.buffer.Unpooled;
 import me.srrapero720.watercore.api.ChatDataProvider;
 import me.srrapero720.watercore.custom.data.LobbyData;
-import me.srrapero720.watercore.water.WaterConsole;
-import me.srrapero720.watercore.water.WaterRegistry;
+import me.srrapero720.watercore.internal.WaterConsole;
+import me.srrapero720.watercore.internal.WaterRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
@@ -44,19 +44,14 @@ import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
-import me.srrapero720.watercore.water.WaterUtil;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.function.Function;
 
 @Mixin(value = PlayerList.class, priority = 0)
 public abstract class PlayerListMixin {

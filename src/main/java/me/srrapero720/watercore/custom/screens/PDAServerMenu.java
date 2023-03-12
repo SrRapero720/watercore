@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.screens;
+package me.srrapero720.watercore.custom.screens;
 
 
 import net.minecraft.core.BlockPos;

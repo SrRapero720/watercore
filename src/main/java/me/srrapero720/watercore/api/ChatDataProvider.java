@@ -2,7 +2,7 @@ package me.srrapero720.watercore.api;
 
 import com.mojang.authlib.GameProfile;
 import me.srrapero720.watercore.custom.config.WaterConfig;
-import me.srrapero720.watercore.water.WaterConsole;
+import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 

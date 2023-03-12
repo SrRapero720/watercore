@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.custom.items;
 
-import me.srrapero720.watercore.water.WaterRegistry;
-import me.srrapero720.watercore.water.WaterConsole;
+import me.srrapero720.watercore.internal.WaterRegistry;
+import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.Util;
 import net.minecraft.network.chat.*;
 import net.minecraft.server.players.UserBanListEntry;
@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import me.srrapero720.watercore.water.WaterUtil;
+import me.srrapero720.watercore.internal.WaterUtil;
 
 public class BanHammer extends Item {
     public BanHammer() {

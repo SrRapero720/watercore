@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.custom.items;
 
-import me.srrapero720.watercore.water.WaterRegistry;
-import me.srrapero720.watercore.water.WaterConsole;
+import me.srrapero720.watercore.internal.WaterRegistry;
+import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

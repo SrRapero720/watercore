@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.water;
+package me.srrapero720.watercore.internal;
 
 import me.srrapero720.watercore.WaterCore;
 import me.srrapero720.watercore.api.ChatDataProvider;
@@ -101,18 +101,11 @@ public class WaterRegistry {
         /* BLOCKS */
         //BLOCKS_MAP.put("brass_door", BLOCKS.register("brass_door", BrassDoor::new));
 
-
         /* DIMENSIONS */
-        LEVELS.put("lobby", ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(WaterCore.ID, "lobby")));
-        LEVELS.put("engineers", ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(WaterCore.ID, "enginners")));
-        LEVELS.put("magical", ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(WaterCore.ID, "magical")));
-        LEVELS.put("events", ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(WaterCore.ID, "events")));
-
-        /* DIMENSION TYPES */
-        DIMENSION_TYPES.put("lobby", ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, LEVELS.get("lobby").getRegistryName()));
-        DIMENSION_TYPES.put("engineers", ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, LEVELS.get("engineers").getRegistryName()));
-        DIMENSION_TYPES.put("magical", ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, LEVELS.get("magical").getRegistryName()));
-        DIMENSION_TYPES.put("events", ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, LEVELS.get("events").getRegistryName()));
+        register(Type.LEVELS,"lobby", () -> new ResourceLocation(WaterCore.ID, "lobby"));
+        register(Type.LEVELS,"engineers", () -> new ResourceLocation(WaterCore.ID, "enginners"));
+        register(Type.LEVELS,"magical", () -> new ResourceLocation(WaterCore.ID, "magical"));
+        register(Type.LEVELS,"events", () -> new ResourceLocation(WaterCore.ID, "events"));
 
         /* CONFIG */
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, WaterConfig.SPEC, WaterCore.ID + "-server.toml");

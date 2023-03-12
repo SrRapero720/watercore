@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.custom.config;
 
-import me.srrapero720.watercore.water.WaterUtil;
+import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.HashMap;

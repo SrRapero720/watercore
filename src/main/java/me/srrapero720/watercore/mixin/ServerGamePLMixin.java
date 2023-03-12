@@ -14,7 +14,6 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.network.TextFilter;
 import net.minecraft.world.entity.player.ChatVisiblity;
 import net.minecraftforge.common.ForgeHooks;
-import me.srrapero720.watercore.water.WaterUtil;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;

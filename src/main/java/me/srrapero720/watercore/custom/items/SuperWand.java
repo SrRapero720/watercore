@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.custom.items;
 
-import me.srrapero720.watercore.water.WaterRegistry;
+import me.srrapero720.watercore.internal.WaterRegistry;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -14,7 +14,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import me.srrapero720.watercore.water.WaterUtil;
+import me.srrapero720.watercore.internal.WaterUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class SuperWand extends Item {

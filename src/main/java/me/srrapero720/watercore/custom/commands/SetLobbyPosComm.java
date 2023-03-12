@@ -7,8 +7,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
-import me.srrapero720.watercore.water.WaterRegistry;
-import me.srrapero720.watercore.water.WaterUtil;
+import me.srrapero720.watercore.internal.WaterRegistry;
+import me.srrapero720.watercore.internal.WaterUtil;
 import me.srrapero720.watercore.custom.data.LobbyData;
 import org.jetbrains.annotations.NotNull;
 

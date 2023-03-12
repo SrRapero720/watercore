@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.packets;
+package me.srrapero720.watercore.custom.packets;
 
 import java.util.UUID;
 

@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin.client;
 
-import me.srrapero720.watercore.water.WaterConsole;
+import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.entity.Entity;

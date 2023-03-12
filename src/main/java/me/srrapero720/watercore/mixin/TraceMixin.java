@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.mixin;
 
-import me.srrapero720.watercore.mixin_util.TraceMixinUtil;
-import me.srrapero720.watercore.water.WaterConsole;
+import me.srrapero720.watercore.internal.WaterUtil;
+import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.CrashReport;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,7 +28,7 @@ public abstract class TraceMixin {
 			crashReportBuilder.deleteCharAt(crashReportBuilder.length() - 1);
 			trailingNewlineCount++;
 		}
-		TraceMixinUtil.printTrace(uncategorizedStackTrace, crashReportBuilder);
+		WaterUtil.printTrace(uncategorizedStackTrace, crashReportBuilder);
 		crashReportBuilder.append("\n".repeat(trailingNewlineCount));
 	}
 }
