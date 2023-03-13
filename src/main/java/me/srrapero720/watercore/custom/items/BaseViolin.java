@@ -38,7 +38,7 @@ public class BaseViolin extends Item {
 
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-        final var soundEv = WaterRegistry.soundOnly("violin");
+        final var soundEv = WaterRegistry.findSoundOnly("violin");
         context.getLevel().playSound(context.getPlayer(), context.getPlayer(), soundEv, SoundSource.PLAYERS, 0.75f, pitch);
         return super.onItemUseFirst(stack, context);
     }

@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.mixin;
 
 import me.srrapero720.watercore.api.ChatDataProvider;
-import me.srrapero720.watercore.custom.config.WaterConfig;
+import me.srrapero720.watercore.internal.WaterConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;

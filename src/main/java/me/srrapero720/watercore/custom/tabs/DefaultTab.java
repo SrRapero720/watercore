@@ -13,5 +13,5 @@ public class DefaultTab extends CreativeModeTab {
     }
 
     @Override
-    public @NotNull ItemStack makeIcon() { return new ItemStack(WaterRegistry.itemOnly(iconName)); }
+    public @NotNull ItemStack makeIcon() { return new ItemStack(WaterRegistry.findItemOnly(iconName)); }
 }

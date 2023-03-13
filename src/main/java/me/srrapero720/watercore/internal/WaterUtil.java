@@ -72,7 +72,19 @@ public class WaterUtil {
     private static final String OBJECT = "java/lang/Object";
 
     public static @Nullable ServerLevel findLevel(@NotNull Iterable<ServerLevel> levels, ResourceLocation hint) {
-        for (var lvl: levels) if (lvl.dimension().getRegistryName().equals(hint)) return lvl;
+//        for (var lvl: levels) if (lvl.dimension().getRegistryName().equals(hint)) return lvl;
+//        return null;
+
+        /* DEBUG CODE */
+        for (var lvl: levels) {
+            WaterConsole.log("WaterUtil", "Checking " + lvl.dimension().location() + " with " + hint);
+            if (lvl.dimension().location().toString().equals(hint.toString())) {
+                WaterConsole.justPrint(lvl.dimension().location().getPath() + " equals with hint using second if");
+                return lvl;
+            }
+
+        }
+        WaterConsole.justPrint("Nothing equals in findLevel");
         return null;
     }
 

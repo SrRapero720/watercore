@@ -18,7 +18,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 
 @OnlyIn(Dist.CLIENT)
-@Mixin(value = TextureUtil.class, remap = true)
+@Mixin(value = TextureUtil.class, priority = 0)
 public class TextureReloadLeak {
     //By Fx Morin - thanks to Icyllis Milica for [MC-226729](https://bugs.mojang.com/browse/MC-226729)
     @Inject(method = "readResource(Ljava/io/InputStream;)Ljava/nio/ByteBuffer;",locals = LocalCapture.CAPTURE_FAILHARD,at = @At(

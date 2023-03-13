@@ -49,7 +49,7 @@ public class SuperWand extends Item {
         player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, WaterUtil.toTicks(0.5), 3, false, false, false));
         player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, WaterUtil.toTicks(7), 5, false, false, false));
 
-        for (MobEffectInstance i: WaterRegistry.potionOnly("blessed_3").getEffects())
+        for (MobEffectInstance i: WaterRegistry.findPotionOnly("blessed_3").getEffects())
             player.addEffect(new MobEffectInstance(i.getEffect(), i.getDuration(), i.getAmplifier(), i.isAmbient(), i.isVisible(), false));
     }
 

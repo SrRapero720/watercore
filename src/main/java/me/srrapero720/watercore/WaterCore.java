@@ -19,7 +19,6 @@ public class WaterCore {
     public static IEventBus bus() { return FMLJavaModLoadingContext.get().getModEventBus(); }
 
     public WaterCore() {
-//        bus().addListener((event) -> WaterConsole.justPrint("WATERCoRE setup phase"));
         WaterRegistry.register();
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(WaterRegistry.class);
@@ -31,12 +30,12 @@ public class WaterCore {
 
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            //SrConsole.debug(MODULE, "Registrando bloque: " + blockRegistryEvent.getName().toString());
+            // SrConsole.debug(MODULE, "Registrando bloque: " + blockRegistryEvent.getName().toString());
         }
 
         @SubscribeEvent
         public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent) {
-            //SrConsole.debug(MODULE, "Registrando item: " + itemRegistryEvent.getName().toString());
+            // SrConsole.debug(MODULE, "Registrando item: " + itemRegistryEvent.getName().toString());
         }
     }
 }

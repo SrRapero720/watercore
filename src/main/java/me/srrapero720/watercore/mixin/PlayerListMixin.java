@@ -5,10 +5,9 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Dynamic;
 import io.netty.buffer.Unpooled;
 import me.srrapero720.watercore.api.ChatDataProvider;
-import me.srrapero720.watercore.custom.config.WaterConfig;
+import me.srrapero720.watercore.internal.WaterConfig;
 import me.srrapero720.watercore.custom.data.LobbyData;
 import me.srrapero720.watercore.internal.WaterConsole;
-import me.srrapero720.watercore.internal.WaterRegistry;
 import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -41,7 +40,6 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.Vec3;
@@ -118,6 +116,7 @@ public abstract class PlayerListMixin {
      * @reason Some stuff needs to be changed in this silly function, sorry if broke things.
      */
     @Overwrite
+    @Deprecated(since = "1.3.0-A", forRemoval = true)
     public void placeNewPlayer(Connection connection, ServerPlayer player) {
         var profile = player.getGameProfile();
         var profileCache = this.server.getProfileCache();
@@ -141,10 +140,6 @@ public abstract class PlayerListMixin {
 
         player.setLevel(level);
         var s1 = connection.getRemoteAddress().toString();
-//        String s1 = "local";
-//        if (connection.getRemoteAddress() != null) {
-//            s1 = connection.getRemoteAddress().toString();
-//        }
 
         // No es necesario sobreescribir a SrConsole
         LOGGER.info("{}[{}] logged in with entity id {} at ({}, {}, {})", player.getName().getString(), s1, player.getId(), player.getX(), player.getY(), player.getZ());
@@ -178,10 +173,9 @@ public abstract class PlayerListMixin {
         if (timePlayed != 0) {
             servergamepacketlistenerimpl.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
         } else {
-            var lobbyFetch = LobbyData.fetch(server);
-            final var cords = lobbyFetch.getCords();
-            final var rot = lobbyFetch.getRotation();
-            final var mPos = cords != null ?  new BlockPos(cords[0], cords[1], cords[2]) : new BlockPos(0, 128, 0);
+            final var cords = lobbyData.getCords();
+            final var rot = lobbyData.getRotation();
+            final var mPos = new BlockPos(cords[0], cords[1], cords[2]);
             servergamepacketlistenerimpl.teleport(mPos.getX(), mPos.getY() + 1, mPos.getZ(), rot[0], rot[1]);
         }
 

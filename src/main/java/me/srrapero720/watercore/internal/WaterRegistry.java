@@ -22,20 +22,24 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.IModBusEvent;
 import net.minecraftforge.registries.*;
 import net.minecraftforge.server.command.ConfigCommand;
 import me.srrapero720.watercore.custom.commands.BroadcastComm;
-import me.srrapero720.watercore.custom.config.WaterConfig;
 import me.srrapero720.watercore.custom.tabs.DefaultTab;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -43,36 +47,57 @@ import java.util.function.Supplier;
 @Mod.EventBusSubscriber(modid = WaterCore.ID)
 public class WaterRegistry {
     public enum Type { TABS, SOUND, POTION, ITEM, BLOCKS, BLOCK_ENTITIES, LEVELS }
+    private static final Map<String, WaterRegistry> REGISTRIES = new HashMap<>();
+    private final String MOD_ID;
 
-    // REGISTRY FOR TABS (why?)
+    // REGISTRY FOR TABS [STATIC]
     private static final Map<String, CreativeModeTab> TABS = new HashMap<>();
 
     // REGISTRY FOR POTIONS
-    private static final DeferredRegister<Potion> POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, WaterCore.ID);
-    private static final Map<String, RegistryObject<Potion>> POTIONS_MAP = new HashMap<>();
+    private final DeferredRegister<Potion> POTIONS;
+    private final Map<String, RegistryObject<Potion>> POTIONS_MAP = new HashMap<>();
 
     // REGISTRY FOR SOUNDS
-    private static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, WaterCore.ID);
-    private static final Map<String, RegistryObject<SoundEvent>> SOUNDS_MAP = new HashMap<>();
+    private final DeferredRegister<SoundEvent> SOUNDS;
+    private final Map<String, RegistryObject<SoundEvent>> SOUNDS_MAP = new HashMap<>();
 
     // REGISTRY FOR ITEMS
-    private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, WaterCore.ID);
-    private static final Map<String, RegistryObject<Item>> ITEMS_MAP = new HashMap<>();
+    private final DeferredRegister<Item> ITEMS;
+    private final Map<String, RegistryObject<Item>> ITEMS_MAP = new HashMap<>();
 
     // REGISTRY FOR BLOCKS
-    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, WaterCore.ID);
-    private static final Map<String, RegistryObject<Block>> BLOCKS_MAP = new HashMap<>();
+    private final DeferredRegister<Block> BLOCKS;
+    private final Map<String, RegistryObject<Block>> BLOCKS_MAP = new HashMap<>();
 
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, WaterCore.ID);
-    private static final Map<String, RegistryObject<BlockEntityType<?>>> BLOCK_ENTITIES_MAP = new HashMap<>();
+    private final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES;
+    private final Map<String, RegistryObject<BlockEntityType<?>>> BLOCK_ENTITIES_MAP = new HashMap<>();
 
     // REGISTRY FOR DIMENSIONS
-    private static final Map<String, ResourceKey<Level>> LEVELS = new HashMap<>();
-    private static final Map<String, ResourceKey<DimensionType>> DIMENSION_TYPES = new HashMap<>();
+    private final Map<String, ResourceKey<Level>> LEVELS = new HashMap<>();
+    private final Map<String, ResourceKey<DimensionType>> DIMENSION_TYPES = new HashMap<>();
+
+    public WaterRegistry(String modId) {
+        this.MOD_ID = modId;
+        POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, this.MOD_ID);
+        SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, this.MOD_ID);
+        ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, this.MOD_ID);
+        BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, this.MOD_ID);
+        BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, this.MOD_ID);
+
+        REGISTRIES.put(modId, this);
+    }
+    public String getModId() { return MOD_ID; }
+    public void register(IEventBus bus) {
+        SOUNDS.register(bus);
+        POTIONS.register(bus);
+        ITEMS.register(bus);
+        BLOCKS.register(bus);
+        BLOCK_ENTITIES.register(bus);
+    }
 
     static {
         /* TABS */
-        register(Type.TABS,"main", () -> new DefaultTab("watercore.MAIN", "small_violin"));
+        register(Type.TABS,"main", () -> new DefaultTab("watercore.MAIN", "ironcoin"));
         register(Type.TABS,"admin", () -> new DefaultTab("watercore.ADMIN", "banhammer"));
 
         /* SOUNDS */
@@ -96,7 +121,7 @@ public class WaterRegistry {
         register(Type.ITEM,"godwand", SuperWand::new);
         register(Type.ITEM,"banhammer", BanHammer::new);
         register(Type.ITEM,"small_violin", () -> new BaseViolin(0.75f));
-        register(Type.ITEM,"big_violin", () -> new BaseViolin(1.0f));
+        register(Type.ITEM,"violin", () -> new BaseViolin(1.0f));
 
         /* BLOCKS */
         //BLOCKS_MAP.put("brass_door", BLOCKS.register("brass_door", BrassDoor::new));
@@ -112,40 +137,112 @@ public class WaterRegistry {
     }
 
     /* POTIONS GETTERS */
-    public static RegistryObject<Potion> potion(String name) { return POTIONS_MAP.get(name); }
-    public static @NotNull Potion potionOnly(String name) { return POTIONS_MAP.get(name).get(); }
+    public RegistryObject<Potion> potion(String name) { return POTIONS_MAP.get(name); }
+    public @NotNull Potion potionOnly(String name) { return POTIONS_MAP.get(name).get(); }
+
+    //STATIC POTION
+    public static @Nullable Potion findPotionOnly(String name) {
+        var result = findPotion(name);
+        if (result != null) return result.get(); else return null;
+    }
+    public static @Nullable RegistryObject<Potion> findPotion(String name) {
+        for (var reg: REGISTRIES.values()) if (reg.potion(name) != null) return reg.potion(name);
+        return null;
+    }
 
     /* SOUNDS GETTERS */
-    public static RegistryObject<SoundEvent> sound(String name) { return SOUNDS_MAP.get(name); }
-    public static @NotNull SoundEvent soundOnly(String name) { return SOUNDS_MAP.get(name).get(); }
+    public RegistryObject<SoundEvent> sound(String name) { return SOUNDS_MAP.get(name); }
+    public @NotNull SoundEvent soundOnly(String name) { return SOUNDS_MAP.get(name).get(); }
+
+    //STATIC SOUND
+    public static @Nullable SoundEvent findSoundOnly(String name) {
+        var result = findSound(name);
+        if (result != null) return result.get(); else return null;
+    }
+    public static @Nullable RegistryObject<SoundEvent> findSound(String name) {
+        for (var reg: REGISTRIES.values()) if (reg.sound(name) != null) return reg.sound(name);
+        return null;
+    }
 
     /* ITEMS GETTERS */
-    public static RegistryObject<Item> item(String name) { return ITEMS_MAP.get(name); }
-    public static @NotNull Item itemOnly(String name) { return ITEMS_MAP.get(name).get(); }
+    public RegistryObject<Item> item(String name) { return ITEMS_MAP.get(name); }
+    public @NotNull Item itemOnly(String name) { return ITEMS_MAP.get(name).get(); }
+
+    //STATIC ITEMS
+    public static @Nullable Item findItemOnly(String name) {
+        var result = findItem(name);
+        if (result != null) return result.get(); else return null;
+    }
+    public static @Nullable RegistryObject<Item> findItem(String name) {
+        for (var reg: REGISTRIES.values()) if (reg.item(name) != null) return reg.item(name);
+        return null;
+    }
+
 
     /* TABS GETTERS */
+    public CreativeModeTab tabOnly(String name) { return tab(name); }
     public static CreativeModeTab tab(String name) { return TABS.get(name); }
 
     /* BLOCKS GETTERS */
-    public static RegistryObject<Block> block(String name) { return BLOCKS_MAP.get(name); }
-    public static @NotNull Block blockOnly(String name) { return BLOCKS_MAP.get(name).get(); }
-    public static RegistryObject<? extends Item> blockItemCreate(String name, Item item) { return ITEMS_MAP.put(name, ITEMS.register(name, () -> item)); }
+    public RegistryObject<Block> block(String name) { return BLOCKS_MAP.get(name); }
+    public @NotNull Block blockOnly(String name) { return BLOCKS_MAP.get(name).get(); }
+
+    //STATIC BLOCKS
+    public static @Nullable Block findBlockOnly(String name) {
+        var result = findBlock(name);
+        if (result != null) return result.get(); else return null;
+    }
+    public static @Nullable RegistryObject<Block> findBlock(String name) {
+        for (var reg: REGISTRIES.values()) if (reg.block(name) != null) return reg.block(name);
+        return null;
+    }
+
 
     /* BLOCK ENTITIES GETTERS */
-    public static RegistryObject<BlockEntityType<?>> blockEntity(String name) {return BLOCK_ENTITIES_MAP.get(name); }
-    public static @NotNull BlockEntityType<?> blockEntityOnly(String name) { return BLOCK_ENTITIES_MAP.get(name).get(); }
+    public RegistryObject<BlockEntityType<?>> blockEntity(String name) {return BLOCK_ENTITIES_MAP.get(name); }
+    public @NotNull BlockEntityType<?> blockEntityOnly(String name) { return BLOCK_ENTITIES_MAP.get(name).get(); }
+
+    //STATIC BLOCK ENTITIES
+    public static @Nullable BlockEntityType<?> findBlockEntityOnly(String name) {
+        var result = findBlockEntity(name);
+        if (result != null) return result.get(); else return null;
+    }
+    public static @Nullable RegistryObject<BlockEntityType<?>> findBlockEntity(String name) {
+        for (var reg: REGISTRIES.values()) if (reg.block(name) != null) return reg.blockEntity(name);
+        return null;
+    }
+
 
     /* DIMENSIONS GETTERS */
-    public static ResourceKey<Level> dimension(String name) { return LEVELS.get(name);}
-    public static ResourceKey<DimensionType> dimensionType(String name) { return DIMENSION_TYPES.get(name); }
+    public ResourceKey<Level> dimension(String name) { return LEVELS.get(name);}
+    public ResourceKey<DimensionType> dimensionType(String name) { return DIMENSION_TYPES.get(name); }
 
+    //STATIC DIMENSION
+    public static @Nullable ResourceKey<Level> findDimension(String name) {
+        for (var reg: REGISTRIES.values()) if (reg.dimension(name) != null) return reg.dimension(name);
+        return null;
+    }
+
+    //STATIC DIMENSION
+    public static @Nullable ResourceKey<DimensionType> findDimensionType(String name) {
+        for (var reg: REGISTRIES.values()) if (reg.dimensionType(name) != null) return reg.dimensionType(name);
+        return null;
+    }
+
+
+    public static void register(Type type, String id, @NotNull Supplier<?> supplier) {
+        var main = REGISTRIES.get(WaterCore.ID) == null ? new WaterRegistry(WaterCore.ID) : REGISTRIES.get(WaterCore.ID);
+        main.register(type, new ResourceLocation(WaterCore.ID, id), supplier);
+    }
 
     @SuppressWarnings("unchecked")
-    public static void register(Type type, String id, @NotNull Supplier<?> supplier) {
+    public void register(@NotNull Type type, @NotNull ResourceLocation location, @NotNull Supplier<?> supplier) {
+        var modId = location.getNamespace();
+        var id = location.getPath();
         switch (type) {
             case TABS -> TABS.put(id, ((Supplier<CreativeModeTab>) supplier).get());
             case SOUND -> SOUNDS_MAP.put(id, SOUNDS.register(id, (Supplier<SoundEvent>) supplier));
-            case POTION -> POTIONS_MAP.put(id, POTIONS.register(id, (Supplier<Potion>) supplier));
+            case POTION -> POTIONS_MAP.put(id,POTIONS.register(id, (Supplier<Potion>) supplier));
             case ITEM -> ITEMS_MAP.put(id, ITEMS.register(id, (Supplier<Item>) supplier));
             case BLOCKS -> BLOCKS_MAP.put(id, BLOCKS.register(id, (Supplier<Block>) supplier));
             case BLOCK_ENTITIES -> BLOCK_ENTITIES_MAP.put(id, BLOCK_ENTITIES.register(id, (Supplier<BlockEntityType<?>>) supplier));
@@ -158,14 +255,14 @@ public class WaterRegistry {
         }
     }
 
+
     public static void register() {
-        WaterConsole.log("SrRegistry", "Loading WATERCoRE registry");
-        SOUNDS.register(WaterCore.bus());
-        POTIONS.register(WaterCore.bus());
-        ITEMS.register(WaterCore.bus());
-        BLOCKS.register(WaterCore.bus());
-        BLOCK_ENTITIES.register(WaterCore.bus());
-        WaterConsole.log("SrRegistry", "Load ended for WATERCoRE registry");
+        WaterConsole.log("WaterRegistry", "Loading WATERCoRE registries");
+        for (var main: REGISTRIES.values()) {
+            WaterConsole.log("WaterRegistry", "Reading " + main.getModId());
+            main.register(WaterCore.bus());
+        }
+        WaterConsole.log("WaterRegistry", "all WATERCoRE registries are loaded");
     }
 
 
@@ -183,12 +280,20 @@ public class WaterRegistry {
         // MANTENIENE LA DATA ORIGINAL
         // La data original de que?
     }
+    @SubscribeEvent
+    public static void onPlayerXD(LivingDeathEvent event) {
+        // MANTENIENE LA DATA ORIGINAL
+        // La data original de que?
+    }
+
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         WaterConsole.log(getClass().toString(), "WATERCoRE running on server");
         ChatDataProvider.init();
     }
+
+
 
     @SubscribeEvent
     public static void onServerIsRunning(ServerStartedEvent event) {

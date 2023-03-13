@@ -23,15 +23,17 @@ public class LobbyData extends SavedData {
 
     private String dimID = "minecraft";
     private String dimName = "overworld";
-    private int[] cords = new int[] { 0, 128, 0 };
-    private int[] rotation = new int[] { 0, 0 };
+    private int[] cords = new int[]{0, 128, 0};
+    private int[] rotation = new int[]{0, 0};
     public int[] getCords() { return cords; }
     public int[] getRotation() { return rotation; }
+    public boolean isEmpty() { return cords[0] == 0 && cords[1] == 128 && cords[2] == 0; }
     public ResourceLocation getDimension() { return new ResourceLocation(dimID, dimName); }
 
     public LobbyData setDimension(ResourceKey<Level> dimension) {
-        dimID = dimension.getRegistryName().getNamespace();
-        dimName = dimension.getRegistryName().getPath();
+        dimID = dimension.location().getNamespace();
+        dimName = dimension.location().getPath();
+        this.setDirty(true);
         return this;
     }
 
@@ -57,10 +59,12 @@ public class LobbyData extends SavedData {
         var rawDimId = tag.getString("lobbyDimId");
         var rawDimName = tag.getString("lobbyDimName");
 
+
         if (!rawDimId.isEmpty()) instance.dimID = rawDimId;
         if (!rawDimName.isEmpty()) instance.dimName = rawDimName;
-        if (rawCords.length != 0) instance.cords = rawCords;
         if (rawRotation.length != 0) instance.rotation = rawRotation;
+        if (rawCords.length != 0) instance.cords = rawCords;
+
         return instance;
     }
 

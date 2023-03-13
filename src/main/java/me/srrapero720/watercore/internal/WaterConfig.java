@@ -1,7 +1,7 @@
-package me.srrapero720.watercore.custom.config;
+package me.srrapero720.watercore.internal;
 
-import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,12 +30,15 @@ public class WaterConfig {
                 "Modify message of leaving players",
                 "Placeholders: %displayname% %playername% %alias%").define("LEAVE_FORMAT", "&e&l[&b%displayname%&e&l] &cLeave"));
 
-        CONFIGS.put("CHAT_FORMAT", BUILDER.comment(
+        var player_format = BUILDER.comment(
                 "Modify chat format",
-                "Support (&f and §f) color formatting",
                 "Placeholders: %displayname% %playername% %alias%",
                 "NOTE: %displayname% is reserved for Luckperms prefix + nickname"
-        ).define("CHAT_FORMAT", "&e&l| &b%displayname% &e&l| "));
+        ).define("CHAT_FORMAT", "&e&l[&b%displayname%&e&l]&9");
+
+        CONFIGS.put("PLAYER_FORMAT", player_format);
+        CONFIGS.put("CHAT_FORMAT", player_format);
+
         //WATERCoRE ->
         BUILDER.pop();
 
@@ -64,7 +67,8 @@ public class WaterConfig {
     }
 
     @SuppressWarnings("UncheckedCast")
-    public static <T> T get(String name) {
+    public static <T> T get(@NotNull String name) {
+        if (name.equals("CHAT_FORMAT")) WaterConsole.warn("WaterConfig", "Using deprecated config CHAT_FORMAT");
         return (T) CONFIGS.get(name).get();
     }
 }

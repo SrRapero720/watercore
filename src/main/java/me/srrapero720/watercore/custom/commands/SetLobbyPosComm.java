@@ -28,7 +28,8 @@ public class SetLobbyPosComm {
                     WaterUtil.twoDecimal(player.getX()),
                     WaterUtil.twoDecimal(player.getY()),
                     WaterUtil.twoDecimal(player.getZ()),
-                    WaterUtil.fixAngle(player.getYRot())), true);
+                    WaterUtil.fixAngle(player.getYRot()),
+                    player.getLevel().dimension().location()), true);
         } else context.getSource().sendSuccess(new TranslatableComponent("watercore.command.setlobbyspawn.failed"), true);
 
         return 0;

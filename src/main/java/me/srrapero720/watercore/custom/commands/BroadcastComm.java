@@ -10,7 +10,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.MessageArgument;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
-import me.srrapero720.watercore.custom.config.WaterConfig;
+import me.srrapero720.watercore.internal.WaterConfig;
 import org.jetbrains.annotations.NotNull;
 
 public class BroadcastComm {

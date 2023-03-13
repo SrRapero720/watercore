@@ -4,7 +4,7 @@
   "itemGroup.watercore.MAIN": "WATERCoRE Util",
   "itemGroup.watercore.ADMIN": "WATERCoRE Admin",
   "watercore.response.banhammer": "Haz sido letalmente baneado por el martillo del BAN",
-  "watercore.command.setlobbyspawn.success": "§6Guardada la posicion en §c%s §c%s §c%s - Angulo: §c%s",
+  "watercore.command.setlobbyspawn.success": "§6Guardada la posicion en §c%s §c%s §c%s [§c%s] en %s",
   "watercore.command.setlobbyspawn.failed": "§cOcurrio un error inesperado al guardar la posicion",
 
   "__comment": "WATERCoRE Pociones",

@@ -6,7 +6,9 @@
   "refmap": "watercore.mixin-refmap.json",
   "mixins": [
     "BiomesLeak",
+    "MinecraftServerMixin",
     "PlayerListMixin",
+    "PlayerMixin",
     "ServerGamePLMixin",
     "TraceMixin",
     "TraceMixinCategory"
