@@ -19,6 +19,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -69,8 +70,8 @@ public class WaterRegistry {
     private final DeferredRegister<Block> BLOCKS;
     private final Map<String, RegistryObject<Block>> BLOCKS_MAP = new HashMap<>();
 
-    private final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES;
-    private final Map<String, RegistryObject<BlockEntityType<?>>> BLOCK_ENTITIES_MAP = new HashMap<>();
+    private final DeferredRegister<BlockEntityType<? extends BlockEntity>> BLOCK_ENTITIES;
+    private final Map<String, RegistryObject<BlockEntityType<? extends BlockEntity>>> BLOCK_ENTITIES_MAP = new HashMap<>();
 
     // REGISTRY FOR DIMENSIONS
     private final Map<String, ResourceKey<Level>> LEVELS = new HashMap<>();
@@ -137,7 +138,7 @@ public class WaterRegistry {
     }
 
     /* POTIONS GETTERS */
-    public RegistryObject<Potion> potion(String name) { return POTIONS_MAP.get(name); }
+    public RegistryObject<? extends Potion> potion(String name) { return POTIONS_MAP.get(name); }
     public @NotNull Potion potionOnly(String name) { return POTIONS_MAP.get(name).get(); }
 
     //STATIC POTION
@@ -145,13 +146,13 @@ public class WaterRegistry {
         var result = findPotion(name);
         if (result != null) return result.get(); else return null;
     }
-    public static @Nullable RegistryObject<Potion> findPotion(String name) {
+    public static @Nullable RegistryObject<? extends Potion> findPotion(String name) {
         for (var reg: REGISTRIES.values()) if (reg.potion(name) != null) return reg.potion(name);
         return null;
     }
 
     /* SOUNDS GETTERS */
-    public RegistryObject<SoundEvent> sound(String name) { return SOUNDS_MAP.get(name); }
+    public RegistryObject<? extends SoundEvent> sound(String name) { return SOUNDS_MAP.get(name); }
     public @NotNull SoundEvent soundOnly(String name) { return SOUNDS_MAP.get(name).get(); }
 
     //STATIC SOUND
@@ -159,13 +160,13 @@ public class WaterRegistry {
         var result = findSound(name);
         if (result != null) return result.get(); else return null;
     }
-    public static @Nullable RegistryObject<SoundEvent> findSound(String name) {
+    public static @Nullable RegistryObject<? extends SoundEvent> findSound(String name) {
         for (var reg: REGISTRIES.values()) if (reg.sound(name) != null) return reg.sound(name);
         return null;
     }
 
     /* ITEMS GETTERS */
-    public RegistryObject<Item> item(String name) { return ITEMS_MAP.get(name); }
+    public RegistryObject<? extends Item> item(String name) { return ITEMS_MAP.get(name); }
     public @NotNull Item itemOnly(String name) { return ITEMS_MAP.get(name).get(); }
 
     //STATIC ITEMS
@@ -173,7 +174,7 @@ public class WaterRegistry {
         var result = findItem(name);
         if (result != null) return result.get(); else return null;
     }
-    public static @Nullable RegistryObject<Item> findItem(String name) {
+    public static @Nullable RegistryObject<? extends Item> findItem(String name) {
         for (var reg: REGISTRIES.values()) if (reg.item(name) != null) return reg.item(name);
         return null;
     }
@@ -184,7 +185,7 @@ public class WaterRegistry {
     public static CreativeModeTab tab(String name) { return TABS.get(name); }
 
     /* BLOCKS GETTERS */
-    public RegistryObject<Block> block(String name) { return BLOCKS_MAP.get(name); }
+    public RegistryObject<? extends Block> block(String name) { return BLOCKS_MAP.get(name); }
     public @NotNull Block blockOnly(String name) { return BLOCKS_MAP.get(name).get(); }
 
     //STATIC BLOCKS
@@ -192,22 +193,21 @@ public class WaterRegistry {
         var result = findBlock(name);
         if (result != null) return result.get(); else return null;
     }
-    public static @Nullable RegistryObject<Block> findBlock(String name) {
+    public static @Nullable RegistryObject<? extends Block> findBlock(String name) {
         for (var reg: REGISTRIES.values()) if (reg.block(name) != null) return reg.block(name);
         return null;
     }
 
-
     /* BLOCK ENTITIES GETTERS */
-    public RegistryObject<BlockEntityType<?>> blockEntity(String name) {return BLOCK_ENTITIES_MAP.get(name); }
-    public @NotNull BlockEntityType<?> blockEntityOnly(String name) { return BLOCK_ENTITIES_MAP.get(name).get(); }
+    public RegistryObject<BlockEntityType<? extends BlockEntity>> blockEntity(String name) { return BLOCK_ENTITIES_MAP.get(name); }
+    public @NotNull BlockEntityType<? extends BlockEntity> blockEntityOnly(String name) { return BLOCK_ENTITIES_MAP.get(name).get(); }
 
     //STATIC BLOCK ENTITIES
-    public static @Nullable BlockEntityType<?> findBlockEntityOnly(String name) {
+    public static @Nullable BlockEntityType<? extends BlockEntity> findBlockEntityOnly(String name) {
         var result = findBlockEntity(name);
         if (result != null) return result.get(); else return null;
     }
-    public static @Nullable RegistryObject<BlockEntityType<?>> findBlockEntity(String name) {
+    public static @Nullable RegistryObject<BlockEntityType<? extends BlockEntity>> findBlockEntity(String name) {
         for (var reg: REGISTRIES.values()) if (reg.block(name) != null) return reg.blockEntity(name);
         return null;
     }
@@ -228,7 +228,6 @@ public class WaterRegistry {
         for (var reg: REGISTRIES.values()) if (reg.dimensionType(name) != null) return reg.dimensionType(name);
         return null;
     }
-
 
     public static void register(Type type, String id, @NotNull Supplier<?> supplier) {
         var main = REGISTRIES.get(WaterCore.ID) == null ? new WaterRegistry(WaterCore.ID) : REGISTRIES.get(WaterCore.ID);
