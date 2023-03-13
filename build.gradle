@@ -16,7 +16,7 @@ apply plugin: 'org.spongepowered.mixin'
 
 
 // <mayor>.<path>.<hotfix>
-version = '1.3.0-A' // 1 <mayor update> .0 <update> .0 <patch> -A/B/C/D... <hotfix>
+version = '1.3.0-B' // 1 <mayor update> .0 <update> .0 <patch> -A/B/C/D... <hotfix>
 group = 'me.srrapero720.watercore'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
