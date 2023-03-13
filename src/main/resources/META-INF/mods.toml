@@ -22,6 +22,14 @@ mandatory = true
 versionRange = "[40.2,)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.watercore]]
+modId = "luckperms"
+mandatory = false
+versionRange = "[5.4,)"
+ordering = "NONE"
+side = "SERVER"
+
 [[dependencies.watercore]]
 modId = "create"
 mandatory = false
