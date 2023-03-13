@@ -40,7 +40,7 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerEntity 
     @Overwrite
     public @NotNull Component getDisplayName() {
         try {
-            this.displayname = ChatDataProvider.parse(WaterConfig.get("CHAT_FORMAT"), (Player) (Object) this);
+            this.displayname = ChatDataProvider.parse(WaterConfig.get("PLAYER_FORMAT"), (Player) (Object) this);
         } catch (Exception e) {
             // REMOVE IN FABRIC
             e.printStackTrace();

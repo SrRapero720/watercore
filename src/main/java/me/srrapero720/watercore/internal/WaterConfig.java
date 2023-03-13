@@ -15,7 +15,7 @@ public class WaterConfig {
     static {
         //WATERCoRE ->
         BUILDER.push("WATERCoRE").comment(
-                "Now Compatible with LuckPerms",
+                "Now Compatible with LuckPerms metadata (Prefix and suffix)",
                 "Support (&f and §f) color formatting"
         );
 
@@ -30,14 +30,11 @@ public class WaterConfig {
                 "Modify message of leaving players",
                 "Placeholders: %displayname% %playername% %alias%").define("LEAVE_FORMAT", "&e&l[&b%displayname%&e&l] &cLeave"));
 
-        var player_format = BUILDER.comment(
+        CONFIGS.put("PLAYER_FORMAT", BUILDER.comment(
                 "Modify chat format",
                 "Placeholders: %displayname% %playername% %alias%",
                 "NOTE: %displayname% is reserved for Luckperms prefix + nickname"
-        ).define("CHAT_FORMAT", "&e&l[&b%displayname%&e&l]&9");
-
-        CONFIGS.put("PLAYER_FORMAT", player_format);
-        CONFIGS.put("CHAT_FORMAT", player_format);
+        ).define("CHAT_FORMAT", "&e&l[&b%displayname%&e&l]&9"));
 
         //WATERCoRE ->
         BUILDER.pop();
@@ -66,9 +63,8 @@ public class WaterConfig {
         SPEC = BUILDER.build();
     }
 
-    @SuppressWarnings("UncheckedCast")
+    @SuppressWarnings("unchecked")
     public static <T> T get(@NotNull String name) {
-        if (name.equals("CHAT_FORMAT")) WaterConsole.warn("WaterConfig", "Using deprecated config CHAT_FORMAT");
         return (T) CONFIGS.get(name).get();
     }
 }
