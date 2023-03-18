@@ -30,11 +30,16 @@ public class WaterConfig {
                 "Modify message of leaving players",
                 "Placeholders: %displayname% %playername% %alias%").define("LEAVE_FORMAT", "&e&l[&b%displayname%&e&l] &cLeave"));
 
-        CONFIGS.put("PLAYER_FORMAT", BUILDER.comment(
+        CONFIGS.put("CHAT_FORMAT", BUILDER.comment(
                 "Modify chat format",
                 "Placeholders: %displayname% %playername% %alias%",
-                "NOTE: %displayname% is reserved for Luckperms prefix + nickname"
-        ).define("CHAT_FORMAT", "&e&l[&b%displayname%&e&l]&9"));
+                "NOTE: %displayname% is for Luckperms prefix + nickname + suffix"
+        ).define("CHAT_FORMAT", "&e&l[&b%displayname%&e&l]&7"));
+
+        CONFIGS.put("PLAYER_FORMAT", BUILDER.comment(
+                "Modify how player's displayname works",
+                "Placeholders: %prefix% %suffix% %playername%"
+        ).define("PLAYER_FORMAT", "%prefix%%playername%%suffix%"));
 
         //WATERCoRE ->
         BUILDER.pop();

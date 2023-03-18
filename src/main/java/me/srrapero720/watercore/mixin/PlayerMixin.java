@@ -34,18 +34,12 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerEntity 
 
     /**
      * @author SrRapero720
-     * @reason Fuck you Forge
-     * In this code, i try to load my prefix config, if i fail. then use forge defaults
+     * @reason No longer support forge playerDisplayName, and i need to enforce my displayname over other mods.
      */
     @Overwrite
     public @NotNull Component getDisplayName() {
-        try {
-            this.displayname = ChatDataProvider.parse(WaterConfig.get("PLAYER_FORMAT"), (Player) (Object) this);
-        } catch (Exception e) {
-            // REMOVE IN FABRIC
-            e.printStackTrace();
-            if (this.displayname == null) this.displayname = ForgeEventFactory.getPlayerDisplayName((Player) (Object) this, this.getName());
-        }
+
+        this.displayname = ChatDataProvider.createPlayerDisplayName((Player) (Object) this);
 
         MutableComponent mutablecomponent = new TextComponent("");
         mutablecomponent = prefixes.stream().reduce(mutablecomponent, MutableComponent::append);

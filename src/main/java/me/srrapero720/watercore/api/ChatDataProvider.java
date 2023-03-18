@@ -1,6 +1,7 @@
 package me.srrapero720.watercore.api;
 
 import com.mojang.authlib.GameProfile;
+import me.srrapero720.watercore.internal.WaterConfig;
 import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
@@ -20,24 +21,30 @@ public class ChatDataProvider {
         }
     }
 
-    public static TextComponent parse(String format, Player player, String ...extras) {
-        var displayname = "";
-        var playername = ((IPlayerEntity) player).getPlayername().getString();
-        var alias = player.getGameProfile().getName();
-        if (alias == null) alias = playername;
-
+    public static TextComponent createPlayerDisplayName(Player player) {
+        String format = WaterConfig.get("PLAYER_FORMAT");
         if (LP != null) {
             var prefixSuffix = getPrefixSuffix(player.getGameProfile());
-            displayname = prefixSuffix[0] + playername + prefixSuffix[1];
-        } else displayname = playername;
+            return new TextComponent(format.replaceAll(Type.PREFIX, prefixSuffix[0])
+                    .replaceAll(Type.PLAYER, ((IPlayerEntity) player).getPlayername().getString())
+                    .replaceAll(Type.SUFFIX, prefixSuffix[1]));
+
+        }
+        return new TextComponent(((IPlayerEntity) player).getPlayername().getString());
+    }
+
+    public static TextComponent parse(String format, Player player, String ...extras) {
+        var displayname = createPlayerDisplayName(player).getString();
+        var playername = ((IPlayerEntity) player).getPlayername().getString();
+        var profilename = player.getGameProfile().getName();
+        if (profilename == null) profilename = playername;
 
         StringBuilder result = new StringBuilder(format
                 .replaceAll(Type.PLAYER, playername)
-                .replaceAll(Type.ALIAS, alias)
+                .replaceAll(Type.PROFILENAME, profilename)
                 .replaceAll(Type.DISPLAY, displayname));
 
         for (var extra: extras) result.append(" ").append(extra);
-
         return new TextComponent(MinecraftChatColor.parse(result.toString()));
     }
 
@@ -59,7 +66,9 @@ public class ChatDataProvider {
     public static class Type {
         public static final String PLAYER = "%playername%";
         public static final String DISPLAY = "%displayname%";
-        public static final String ALIAS = "%alias%";
+        public static final String PROFILENAME = "%profilename%";
+        public static final String PREFIX = "%prefix%";
+        public static final String SUFFIX = "%suffix%";
         public static final String NICK = "%nick%";
         public static final String VANISH = "%vanish%";
 
