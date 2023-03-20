@@ -50,7 +50,6 @@ public abstract class ServerGamePLMixin {
             this.player.resetLastActionTime();
             var msg = text.getRaw();
             if (!msg.startsWith("/")) {
-
                 var msgFiltered = text.getFiltered();
                 var component = ChatDataProvider.parse(WaterConfig.get("CHAT_FORMAT"), player, msgFiltered.isEmpty() ? msgFiltered : msg);
                 var event = ForgeHooks.onServerChatEvent((ServerGamePacketListenerImpl) (Object) this, msg, component, msgFiltered, component);

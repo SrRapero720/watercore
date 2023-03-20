@@ -45,6 +45,9 @@ import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -56,68 +59,29 @@ import java.util.*;
 
 @Mixin(value = PlayerList.class, priority = 0)
 public abstract class PlayerListMixin {
-
-    @Shadow
-    @Final
-    private MinecraftServer server;
-
-    @Shadow
-    @Nullable
-    public abstract CompoundTag load(ServerPlayer p_11225_);
-
-    @Shadow
-    @Final
-    private static Logger LOGGER;
-
-    @Shadow
-    @Final
-    private RegistryAccess.Frozen registryHolder;
-
-    @Shadow
-    public abstract int getMaxPlayers();
-
-    @Shadow
-    private int viewDistance;
-
-    @Shadow
-    private int simulationDistance;
-
-    @Shadow
-    public abstract void sendPlayerPermissionLevel(ServerPlayer p_11290_);
-
-    @Shadow
-    protected abstract void updateEntireScoreboard(ServerScoreboard p_11274_, ServerPlayer p_11275_);
-
-    @Shadow
-    public abstract void broadcastMessage(Component p_11265_, ChatType p_11266_, UUID p_11267_);
-
-    @Shadow
-    public abstract boolean addPlayer(ServerPlayer player);
-
-    @Shadow
-    @Final
-    private Map<UUID, ServerPlayer> playersByUUID;
-
-    @Shadow
-    public abstract void broadcastAll(Packet<?> p_11269_);
-
-    @Shadow
-    public abstract void sendLevelInfo(ServerPlayer p_11230_, ServerLevel p_11231_);
-
-    @Shadow
-    @Final
-    private List<ServerPlayer> players;
-
-    @Shadow
-    public abstract MinecraftServer getServer();
+    @Shadow private int viewDistance;
+    @Shadow private int simulationDistance;
+    @Shadow @Final private MinecraftServer server;
+    @Shadow @Final private static Logger LOGGER;
+    @Shadow @Final private RegistryAccess.Frozen registryHolder;
+    @Shadow @Final private List<ServerPlayer> players;
+    @Shadow @Final private Map<UUID, ServerPlayer> playersByUUID;
+    @Shadow @Nullable public abstract CompoundTag load(ServerPlayer p_11225_);
+    @Shadow public abstract void sendPlayerPermissionLevel(ServerPlayer p_11290_);
+    @Shadow protected abstract void updateEntireScoreboard(ServerScoreboard p_11274_, ServerPlayer p_11275_);
+    @Shadow public abstract void broadcastMessage(Component p_11265_, ChatType p_11266_, UUID p_11267_);
+    @Shadow public abstract boolean addPlayer(ServerPlayer player);
+    @Shadow public abstract int getMaxPlayers();
+    @Shadow public abstract void broadcastAll(Packet<?> p_11269_);
+    @Shadow public abstract void sendLevelInfo(ServerPlayer p_11230_, ServerLevel p_11231_);
+    @Shadow public abstract MinecraftServer getServer();
 
     /**
      * @author SrRapero720
-     * @reason Some stuff needs to be changed in this silly function, sorry if broke things.
+     * @reason Some stuff needs to be changed in this silly function (cannot be Injected), sorry if broke things.
      */
     @Overwrite
-    @Deprecated(since = "1.3.0-A", forRemoval = true)
-    public void placeNewPlayer(Connection connection, ServerPlayer player) {
+    public void placeNewPlayer(@NotNull Connection connection, @NotNull ServerPlayer player) {
         var profile = player.getGameProfile();
         var profileCache = this.server.getProfileCache();
 
@@ -126,7 +90,7 @@ public abstract class PlayerListMixin {
         var lobbyLevelResource = lobbyLevel == null ? Level.OVERWORLD : lobbyLevel.dimension();
 
         var optional = profileCache.get(profile.getId());
-        var s = optional.map(GameProfile::getName).orElse(profile.getName());
+        var playername = optional.map(GameProfile::getName).orElse(profile.getName());
         profileCache.add(profile);
 
         var tag = this.load(player);
@@ -143,22 +107,22 @@ public abstract class PlayerListMixin {
 
         // No es necesario sobreescribir a SrConsole
         LOGGER.info("{}[{}] logged in with entity id {} at ({}, {}, {})", player.getName().getString(), s1, player.getId(), player.getX(), player.getY(), player.getZ());
-
-        LevelData leveldata = level.getLevelData();
         player.loadGameTypes(tag);
-        ServerGamePacketListenerImpl servergamepacketlistenerimpl = new ServerGamePacketListenerImpl(this.server, connection, player);
-        net.minecraftforge.network.NetworkHooks.sendMCRegistryPackets(connection, "PLAY_TO_CLIENT");
-        GameRules gamerules = leveldata.getGameRules();
+
+        var leveldata = level.getLevelData();
+        var packet = new ServerGamePacketListenerImpl(this.server, connection, player);
+        NetworkHooks.sendMCRegistryPackets(connection, "PLAY_TO_CLIENT");
+        var gamerules = leveldata.getGameRules();
         boolean flag = gamerules.getBoolean(GameRules.RULE_DO_IMMEDIATE_RESPAWN);
         boolean flag1 = gamerules.getBoolean(GameRules.RULE_REDUCEDDEBUGINFO);
-        servergamepacketlistenerimpl.send(new ClientboundLoginPacket(player.getId(), leveldata.isHardcore(), player.gameMode.getGameModeForPlayer(), player.gameMode.getPreviousGameModeForPlayer(), this.server.levelKeys(), this.registryHolder, level.dimensionTypeRegistration(), level.dimension(), BiomeManager.obfuscateSeed(level.getSeed()), this.getMaxPlayers(), this.viewDistance, this.simulationDistance, flag1, !flag, level.isDebug(), level.isFlat()));
-        servergamepacketlistenerimpl.send(new ClientboundCustomPayloadPacket(ClientboundCustomPayloadPacket.BRAND, (new FriendlyByteBuf(Unpooled.buffer())).writeUtf(this.getServer().getServerModName())));
-        servergamepacketlistenerimpl.send(new ClientboundChangeDifficultyPacket(leveldata.getDifficulty(), leveldata.isDifficultyLocked()));
-        servergamepacketlistenerimpl.send(new ClientboundPlayerAbilitiesPacket(player.getAbilities()));
-        servergamepacketlistenerimpl.send(new ClientboundSetCarriedItemPacket(player.getInventory().selected));
-        MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.OnDatapackSyncEvent((PlayerList) (Object) this, player));
-        servergamepacketlistenerimpl.send(new ClientboundUpdateRecipesPacket(this.server.getRecipeManager().getRecipes()));
-        servergamepacketlistenerimpl.send(new ClientboundUpdateTagsPacket(TagNetworkSerialization.serializeTagsToNetwork(this.registryHolder)));
+        packet.send(new ClientboundLoginPacket(player.getId(), leveldata.isHardcore(), player.gameMode.getGameModeForPlayer(), player.gameMode.getPreviousGameModeForPlayer(), this.server.levelKeys(), this.registryHolder, level.dimensionTypeRegistration(), level.dimension(), BiomeManager.obfuscateSeed(level.getSeed()), this.getMaxPlayers(), this.viewDistance, this.simulationDistance, flag1, !flag, level.isDebug(), level.isFlat()));
+        packet.send(new ClientboundCustomPayloadPacket(ClientboundCustomPayloadPacket.BRAND, (new FriendlyByteBuf(Unpooled.buffer())).writeUtf(this.getServer().getServerModName())));
+        packet.send(new ClientboundChangeDifficultyPacket(leveldata.getDifficulty(), leveldata.isDifficultyLocked()));
+        packet.send(new ClientboundPlayerAbilitiesPacket(player.getAbilities()));
+        packet.send(new ClientboundSetCarriedItemPacket(player.getInventory().selected));
+        MinecraftForge.EVENT_BUS.post(new OnDatapackSyncEvent((PlayerList) (Object) this, player));
+        packet.send(new ClientboundUpdateRecipesPacket(this.server.getRecipeManager().getRecipes()));
+        packet.send(new ClientboundUpdateTagsPacket(TagNetworkSerialization.serializeTagsToNetwork(this.registryHolder)));
         this.sendPlayerPermissionLevel(player);
         player.getStats().markAllDirty();
         player.getRecipeBook().sendInitialRecipeBook(player);
@@ -167,16 +131,17 @@ public abstract class PlayerListMixin {
 
         // CHANGED FOR WATERCORE
         var component = ChatDataProvider.parse(WaterConfig.get("JOIN_FORMAT"), player);
-        player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
+        this.broadcastMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
+        if (level.isClientSide()) player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
 
         int timePlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
         if (timePlayed != 0) {
-            servergamepacketlistenerimpl.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
+            packet.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
         } else {
             final var cords = lobbyData.getCords();
             final var rot = lobbyData.getRotation();
             final var mPos = new BlockPos(cords[0], cords[1], cords[2]);
-            servergamepacketlistenerimpl.teleport(mPos.getX(), mPos.getY() + 1, mPos.getZ(), rot[0], rot[1]);
+            packet.teleport(mPos.getX(), mPos.getY() + 1, mPos.getZ(), rot[0], rot[1]);
         }
 
         this.addPlayer(player);
@@ -194,14 +159,14 @@ public abstract class PlayerListMixin {
             player.sendTexturePack(this.server.getResourcePack(), this.server.getResourcePackHash(), this.server.isResourcePackRequired(), this.server.getResourcePackPrompt());
         }
 
-        for (MobEffectInstance mobeffectinstance : player.getActiveEffects()) {
-            servergamepacketlistenerimpl.send(new ClientboundUpdateMobEffectPacket(player.getId(), mobeffectinstance));
+        for (var mobeffectinstance : player.getActiveEffects()) {
+            packet.send(new ClientboundUpdateMobEffectPacket(player.getId(), mobeffectinstance));
         }
 
         if (tag != null && tag.contains("RootVehicle", 10)) {
-            CompoundTag compoundtag1 = tag.getCompound("RootVehicle");
-            ServerLevel finalLevel = level;
-            Entity entity1 = EntityType.loadEntityRecursive(compoundtag1.getCompound("Entity"), level, (p_11223_) ->
+            var compoundtag1 = tag.getCompound("RootVehicle");
+            var finalLevel = level;
+            var entity1 = EntityType.loadEntityRecursive(compoundtag1.getCompound("Entity"), level, (p_11223_) ->
                     !finalLevel.addWithUUID(p_11223_) ? null : p_11223_);
             if (entity1 != null) {
                 UUID uuid;

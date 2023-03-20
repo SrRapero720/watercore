@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.*;
 
@@ -26,6 +27,7 @@ public abstract class PlayerMixin extends LivingEntity implements IPlayerEntity 
     @Shadow private Component displayname;
 
     protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) { super(p_20966_, p_20967_); }
+
     @Override
     public Component getPlayername() { return getName(); }
 

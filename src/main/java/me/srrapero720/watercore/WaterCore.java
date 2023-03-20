@@ -2,6 +2,7 @@ package me.srrapero720.watercore;
 
 import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterRegistry;
+import net.minecraft.server.commands.TeleportCommand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
