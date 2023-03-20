@@ -12,6 +12,11 @@ public class ChatDataProvider {
 
     public static void init() {
         try {
+//            var lucko = IntrusiveClassLoader.findAll("net.lucko");
+//            if (!lucko.isEmpty()) for (var czz: lucko.toArray()) {
+//                WaterConsole.justPrint(czz.getClass().getSimpleName());
+//            }
+
             var clazz = Class.forName("net.luckperms.api.LuckPermsProvider");
             LP = net.luckperms.api.LuckPermsProvider.get();
 
