@@ -1,12 +1,11 @@
 package me.srrapero720.watercore.mixin;
 
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Dynamic;
 import io.netty.buffer.Unpooled;
 import me.srrapero720.watercore.api.ChatDataProvider;
-import me.srrapero720.watercore.internal.WaterConfig;
 import me.srrapero720.watercore.custom.data.LobbyData;
+import me.srrapero720.watercore.internal.WaterConfig;
 import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.Util;
@@ -20,6 +19,7 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerLevel;
@@ -32,7 +32,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagNetworkSerialization;
 import net.minecraft.util.Mth;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -41,7 +40,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.BiomeManager;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -55,7 +53,10 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Mixin(value = PlayerList.class, priority = 0)
 public abstract class PlayerListMixin {
@@ -89,8 +90,6 @@ public abstract class PlayerListMixin {
         var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
         var lobbyLevelResource = lobbyLevel == null ? Level.OVERWORLD : lobbyLevel.dimension();
 
-        var optional = profileCache.get(profile.getId());
-        var playername = optional.map(GameProfile::getName).orElse(profile.getName());
         profileCache.add(profile);
 
         var tag = this.load(player);
@@ -112,45 +111,47 @@ public abstract class PlayerListMixin {
         var leveldata = level.getLevelData();
         var packet = new ServerGamePacketListenerImpl(this.server, connection, player);
         NetworkHooks.sendMCRegistryPackets(connection, "PLAY_TO_CLIENT");
-        var gamerules = leveldata.getGameRules();
-        boolean flag = gamerules.getBoolean(GameRules.RULE_DO_IMMEDIATE_RESPAWN);
-        boolean flag1 = gamerules.getBoolean(GameRules.RULE_REDUCEDDEBUGINFO);
-        packet.send(new ClientboundLoginPacket(player.getId(), leveldata.isHardcore(), player.gameMode.getGameModeForPlayer(), player.gameMode.getPreviousGameModeForPlayer(), this.server.levelKeys(), this.registryHolder, level.dimensionTypeRegistration(), level.dimension(), BiomeManager.obfuscateSeed(level.getSeed()), this.getMaxPlayers(), this.viewDistance, this.simulationDistance, flag1, !flag, level.isDebug(), level.isFlat()));
+
+        boolean doImmediateRespawn = leveldata.getGameRules().getBoolean(GameRules.RULE_DO_IMMEDIATE_RESPAWN);
+        boolean reduceDebugInfo = leveldata.getGameRules().getBoolean(GameRules.RULE_REDUCEDDEBUGINFO);
+        packet.send(new ClientboundLoginPacket(player.getId(), leveldata.isHardcore(), player.gameMode.getGameModeForPlayer(), player.gameMode.getPreviousGameModeForPlayer(), this.server.levelKeys(), this.registryHolder, level.dimensionTypeRegistration(), level.dimension(), BiomeManager.obfuscateSeed(level.getSeed()), this.getMaxPlayers(), this.viewDistance, this.simulationDistance, reduceDebugInfo, !doImmediateRespawn, level.isDebug(), level.isFlat()));
         packet.send(new ClientboundCustomPayloadPacket(ClientboundCustomPayloadPacket.BRAND, (new FriendlyByteBuf(Unpooled.buffer())).writeUtf(this.getServer().getServerModName())));
         packet.send(new ClientboundChangeDifficultyPacket(leveldata.getDifficulty(), leveldata.isDifficultyLocked()));
         packet.send(new ClientboundPlayerAbilitiesPacket(player.getAbilities()));
         packet.send(new ClientboundSetCarriedItemPacket(player.getInventory().selected));
-        MinecraftForge.EVENT_BUS.post(new OnDatapackSyncEvent((PlayerList) (Object) this, player));
         packet.send(new ClientboundUpdateRecipesPacket(this.server.getRecipeManager().getRecipes()));
         packet.send(new ClientboundUpdateTagsPacket(TagNetworkSerialization.serializeTagsToNetwork(this.registryHolder)));
+
+        // Forge devs are odd persons
+        MinecraftForge.EVENT_BUS.post(new OnDatapackSyncEvent((PlayerList) (Object) this, player));
+
         this.sendPlayerPermissionLevel(player);
         player.getStats().markAllDirty();
         player.getRecipeBook().sendInitialRecipeBook(player);
         this.updateEntireScoreboard(level.getScoreboard(), player);
         this.server.invalidateStatus();
 
-        // CHANGED FOR WATERCORE
+        // CHANGED FOR WATERCORE - If is client side. send message to everyone and player, instead show to all
         var component = ChatDataProvider.parse(WaterConfig.get("JOIN_FORMAT"), player);
         this.broadcastMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
         if (level.isClientSide()) player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
 
         int timePlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
-        if (timePlayed != 0) {
-            packet.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
-        } else {
+        if (timePlayed == 0) {
             final var cords = lobbyData.getCords();
             final var rot = lobbyData.getRotation();
             final var mPos = new BlockPos(cords[0], cords[1], cords[2]);
             packet.teleport(mPos.getX(), mPos.getY() + 1, mPos.getZ(), rot[0], rot[1]);
-        }
+        } else packet.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
+
 
         this.addPlayer(player);
         this.playersByUUID.put(player.getUUID(), player);
-        this.broadcastAll(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, player));
+        this.broadcastAll(new ClientboundPlayerInfoPacket(Action.ADD_PLAYER, player));
 
-        for (int i = 0; i < this.players.size(); ++i) {
-            player.connection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, this.players.get(i)));
-        }
+        for (var serverPlayer: this.players)
+            player.connection.send(new ClientboundPlayerInfoPacket(Action.ADD_PLAYER, serverPlayer));
+
 
         level.addNewPlayer(player);
         this.server.getCustomBossEvents().onPlayerConnect(player);
@@ -159,41 +160,32 @@ public abstract class PlayerListMixin {
             player.sendTexturePack(this.server.getResourcePack(), this.server.getResourcePackHash(), this.server.isResourcePackRequired(), this.server.getResourcePackPrompt());
         }
 
-        for (var mobeffectinstance : player.getActiveEffects()) {
+        for (var mobeffectinstance : player.getActiveEffects())
             packet.send(new ClientboundUpdateMobEffectPacket(player.getId(), mobeffectinstance));
-        }
+
 
         if (tag != null && tag.contains("RootVehicle", 10)) {
-            var compoundtag1 = tag.getCompound("RootVehicle");
-            var finalLevel = level;
-            var entity1 = EntityType.loadEntityRecursive(compoundtag1.getCompound("Entity"), level, (p_11223_) ->
-                    !finalLevel.addWithUUID(p_11223_) ? null : p_11223_);
+            var subTag = tag.getCompound("RootVehicle");
+            var entity1 = EntityType.loadEntityRecursive(subTag.getCompound("Entity"), level, (p_11223_) -> !level.addWithUUID(p_11223_) ? null : p_11223_);
             if (entity1 != null) {
                 UUID uuid;
-                if (compoundtag1.hasUUID("Attach")) {
-                    uuid = compoundtag1.getUUID("Attach");
-                } else {
-                    uuid = null;
-                }
+                if (subTag.hasUUID("Attach")) uuid = subTag.getUUID("Attach");
+                else uuid = null;
 
-                if (entity1.getUUID().equals(uuid)) {
-                    player.startRiding(entity1, true);
-                } else {
-                    for (Entity entity : entity1.getIndirectPassengers()) {
+
+                if (!entity1.getUUID().equals(uuid)) {
+                    for (var entity : entity1.getIndirectPassengers()) {
                         if (entity.getUUID().equals(uuid)) {
                             player.startRiding(entity, true);
                             break;
                         }
                     }
-                }
+                } else player.startRiding(entity1, true);
 
                 if (!player.isPassenger()) {
                     LOGGER.warn("Couldn't reattach entity to player");
                     entity1.discard();
-
-                    for (Entity entity2 : entity1.getIndirectPassengers()) {
-                        entity2.discard();
-                    }
+                    for (Entity entity2 : entity1.getIndirectPassengers()) entity2.discard();
                 }
             }
         }
@@ -205,8 +197,8 @@ public abstract class PlayerListMixin {
 
     /**
      * @author SrRapero720
-     * @reason Mainly reason I do that is for performance, to 2 teleports on ForgeEvents become in a little stun :)
-     * also, code is shit and I want to rewrite it
+     * @reason Mainly reason I do that is for performance, do 2 teleports on ForgeEvents become in a little Tick stun :)
+     * also, MC code is shit and I want to rewrite it
      */
     @Overwrite
     public ServerPlayer respawn(ServerPlayer player, boolean isBoolean) {
