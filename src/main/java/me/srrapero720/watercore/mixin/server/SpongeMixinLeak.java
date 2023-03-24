@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SpongeMixinLeak {
     @Inject(method = "loadLevel", at = @At("RETURN"))
     private void onFinishedLoadingWorlds(CallbackInfo ci) {
-        WaterConsole.warn("SpongeLeakFixServer", "Forzando carga de todos los mixins y limpiando cache");
+        WaterConsole.warn("SpongeLeakFixServer", "Starting force-loading all mixins and cleaning cache");
         WaterUtil.forceLoadAllMixinsAndClearSpongePoweredCache();
     }
 }
