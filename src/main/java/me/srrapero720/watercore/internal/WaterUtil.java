@@ -89,6 +89,7 @@ public class WaterUtil {
     }
 
     private static void emptyClassInfo() throws NoSuchFieldException, IllegalAccessException {
+        WaterConsole.error("SpongeMixinTool", "Cleaning cache of Mixins is currently disabled. because TraceMixin feature got broken.");
         if (true) return; // Disabled cache cleaning
         if (WaterUtil.isModOnline("not-that-cc")) return; // Crashes crafty crashes if it crashes
         Field cacheField = ClassInfo.class.getDeclaredField("cache");
@@ -102,19 +103,16 @@ public class WaterUtil {
 
 
     public static void forceLoadAllMixinsAndClearSpongePoweredCache() {
-        WaterConsole.error("SpongeMixinTool", "Cleaning cache of Mixins is currently disabled. because TraceMixin feature got broken.");
         MixinEnvironment.getCurrentEnvironment().audit();
         try { //Why is SpongePowered stealing so much ram for this garbage?
-            Field noGroupField = InjectorGroupInfo.Map.class.getDeclaredField("NO_GROUP");
+            var noGroupField = InjectorGroupInfo.Map.class.getDeclaredField("NO_GROUP");
             noGroupField.setAccessible(true);
-            Object noGroup = noGroupField.get(null);
-            Field membersField = noGroup.getClass().getDeclaredField("members");
+            var noGroup = noGroupField.get(null);
+            var membersField = noGroup.getClass().getDeclaredField("members");
             membersField.setAccessible(true);
             ((List<?>) membersField.get(noGroup)).clear(); // Clear spongePoweredCache
             emptyClassInfo();
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 
     public static void printTrace(StackTraceElement[] stackTrace, StringBuilder crashReportBuilder) {
