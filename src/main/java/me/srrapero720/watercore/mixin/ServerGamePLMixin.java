@@ -32,6 +32,7 @@ public abstract class ServerGamePLMixin {
     @Shadow protected abstract void handleCommand(String p_9958_);
     @Shadow public abstract void send(Packet<?> p_9830_);
 
+    // Now works with forge
     @ModifyArg(method = "onDisconnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
     public Component modifyOnDisconnect(Component p_11265_) {
         return ChatDataProvider.parse(WaterConfig.get("LEAVE_FORMAT"), player);
