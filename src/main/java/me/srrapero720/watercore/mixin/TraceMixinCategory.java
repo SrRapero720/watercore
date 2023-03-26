@@ -1,8 +1,9 @@
 package me.srrapero720.watercore.mixin;
 
+import me.srrapero720.craftycrashes.SMAPper;
+import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.CrashReportCategory;
-import me.srrapero720.watercore.internal.WaterConsole;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,5 +18,10 @@ public abstract class TraceMixinCategory {
 	private void addTrace(StringBuilder crashReportBuilder, CallbackInfo ci) {
 		WaterConsole.debug("MixinWC", "Agregando trace");
 		WaterUtil.printTrace(stackTrace, crashReportBuilder);
+	}
+
+	@Inject(method = "trimStacktrace", at = @At(value = "INVOKE", target = "Ljava/lang/System;arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V", shift = At.Shift.AFTER))
+	private void fixCause(int p_128175_, CallbackInfo ci) {
+		SMAPper.apply(stackTrace, "java.", "sun.", "net.minecraftforge.fml.", "com.mojang.authlib.");
 	}
 }
