@@ -47,16 +47,14 @@ import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Mixin(value = PlayerList.class, priority = 0)
 public abstract class PlayerListMixin {
@@ -65,17 +63,78 @@ public abstract class PlayerListMixin {
     @Shadow @Final private MinecraftServer server;
     @Shadow @Final private static Logger LOGGER;
     @Shadow @Final private RegistryAccess.Frozen registryHolder;
-    @Shadow @Final private List<ServerPlayer> players;
     @Shadow @Final private Map<UUID, ServerPlayer> playersByUUID;
     @Shadow @Nullable public abstract CompoundTag load(ServerPlayer p_11225_);
     @Shadow public abstract void sendPlayerPermissionLevel(ServerPlayer p_11290_);
     @Shadow protected abstract void updateEntireScoreboard(ServerScoreboard p_11274_, ServerPlayer p_11275_);
     @Shadow public abstract void broadcastMessage(Component p_11265_, ChatType p_11266_, UUID p_11267_);
-    @Shadow public abstract boolean addPlayer(ServerPlayer player);
     @Shadow public abstract int getMaxPlayers();
     @Shadow public abstract void broadcastAll(Packet<?> p_11269_);
     @Shadow public abstract void sendLevelInfo(ServerPlayer p_11230_, ServerLevel p_11231_);
     @Shadow public abstract MinecraftServer getServer();
+    @Unique private final HashMap<String, ServerPlayer> playersByNameWC = new HashMap<>();
+
+    // PLANED FOR REMOVAL ALL USAGES ON WATERCoRE OVERRIDES.
+    @Shadow @Final private List<ServerPlayer> players;
+
+    // WARNING - IS MIXED HERE
+    @Shadow public abstract boolean addPlayer(ServerPlayer player);
+    @Shadow public abstract boolean removePlayer(ServerPlayer player);
+
+    @Inject(method = "addPlayer", at = @At(value = "TAIL"))
+    public void injectAddPlayer(ServerPlayer player, CallbackInfoReturnable<Boolean> cir) {
+        playersByNameWC.put(player.getName().getString().toLowerCase(), player);
+    }
+
+    @Inject(method = "removePlayer", at = @At(value = "TAIL"))
+    public void injectRemovePlayer(ServerPlayer player, CallbackInfoReturnable<Boolean> cir) {
+        playersByNameWC.remove(player.getName().getString().toLowerCase());
+    }
+
+
+    /**
+     * @author SrRapero720
+     * @reason MAGMA/ARCLIGHT instances breaks itselfs using this.
+     */
+    @Nullable
+    @Overwrite
+    public ServerPlayer getPlayerByName(String name) {
+        return playersByNameWC.get(name);
+    }
+
+    @Inject(method = "remove", at = @At(value = "HEAD"))
+    public void injectorRemove(ServerPlayer player, CallbackInfo ci) {
+        playersByNameWC.remove(player.getName().getString().toLowerCase());
+    }
+
+    /**
+     * @author SrRapero720
+     * @reason Optimization thing
+     */
+    @Overwrite
+    public List<ServerPlayer> getPlayersWithAddress(String address) {
+        var playerArray = new LinkedList<>(playersByNameWC.values());
+        playerArray.removeIf(serverPlayer -> !serverPlayer.getIpAddress().equals(address));
+        return playerArray;
+    }
+
+    /**
+     * @author SrRapero720
+     * @reason Enhances this method (TRIAGE)
+     */
+    @Overwrite
+    public String[] getPlayerNamesArray() {
+        return playersByNameWC.keySet().toArray(new String[0]);
+    }
+
+    /**
+     * @author SrRapero720
+     * @reason Nothing to mention here, we use our player storage instead...
+     */
+    @Overwrite
+    public int getPlayerCount() {
+        return playersByNameWC.size();
+    }
 
     /**
      * @author SrRapero720
@@ -146,6 +205,7 @@ public abstract class PlayerListMixin {
 
 
         this.addPlayer(player);
+        this.playersByNameWC.put(player.getName().getString().toLowerCase(), player);
         this.playersByUUID.put(player.getUUID(), player);
         this.broadcastAll(new ClientboundPlayerInfoPacket(Action.ADD_PLAYER, player));
 
@@ -202,7 +262,8 @@ public abstract class PlayerListMixin {
      */
     @Overwrite
     public ServerPlayer respawn(ServerPlayer player, boolean isBoolean) {
-        this.players.remove(player);
+        this.removePlayer(player);
+        playersByNameWC.remove(player.getName().getString().toLowerCase());
         player.getLevel().removePlayerImmediately(player, Entity.RemovalReason.DISCARDED);
 
         // WATERCORE LOBBY DATA
@@ -286,6 +347,7 @@ public abstract class PlayerListMixin {
         // FORGE FIRED (i really want to remove this piece of shit)
         ForgeEventFactory.firePlayerRespawnEvent(freshPlayer, isBoolean);
         if (flag2) freshPlayer.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), 1.0F, 1.0F));
+        this.playersByNameWC.put(player.getName().getString().toLowerCase(), player);
         return freshPlayer;
     }
 }

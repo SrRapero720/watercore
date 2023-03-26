@@ -9,16 +9,19 @@ import me.srrapero720.watercore.custom.items.BaseCoin;
 import me.srrapero720.watercore.custom.items.BaseViolin;
 import me.srrapero720.watercore.custom.items.SuperWand;
 import me.srrapero720.watercore.custom.potions.BlessedPotion;
+import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -46,7 +49,7 @@ import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = WaterCore.ID)
 public class WaterRegistry {
-    public enum Type { TABS, SOUND, POTION, ITEM, BLOCKS, BLOCK_ENTITIES, LEVELS }
+    public enum Type { TABS, SOUND, POTION, ITEM, BLOCKS, BLOCK_ENTITIES, LEVELS, BLOCK_ENTITY_ITEM }
     private static final Map<String, WaterRegistry> REGISTRIES = new HashMap<>();
     private final String MOD_ID;
 
@@ -236,8 +239,8 @@ public class WaterRegistry {
     }
 
     @SuppressWarnings("unchecked")
+    // TODO: Recreate this again to support advance register types
     public void register(@NotNull Type type, @NotNull ResourceLocation location, @NotNull Supplier<?> supplier) {
-        var modId = location.getNamespace();
         var id = location.getPath();
         switch (type) {
             case TABS -> TABS.put(id, ((Supplier<CreativeModeTab>) supplier).get());
@@ -245,7 +248,11 @@ public class WaterRegistry {
             case POTION -> POTIONS_MAP.put(id,POTIONS.register(id, (Supplier<Potion>) supplier));
             case ITEM -> ITEMS_MAP.put(id, ITEMS.register(id, (Supplier<Item>) supplier));
             case BLOCKS -> BLOCKS_MAP.put(id, BLOCKS.register(id, (Supplier<Block>) supplier));
-            case BLOCK_ENTITIES -> BLOCK_ENTITIES_MAP.put(id, BLOCK_ENTITIES.register(id, (Supplier<BlockEntityType<?>>) supplier));
+            case BLOCK_ENTITIES -> BLOCK_ENTITIES_MAP.put(id, BLOCK_ENTITIES.register(id, () ->
+                    ((Supplier<BlockEntityType.Builder<?>>) supplier).get().build(Util.fetchChoiceType(References.BLOCK_ENTITY, location.getPath()))));
+            case BLOCK_ENTITY_ITEM -> {
+
+            }
             case LEVELS -> {
                 var res = ((Supplier<ResourceLocation>) supplier).get();
                 LEVELS.put(id, ResourceKey.create(Registry.DIMENSION_REGISTRY, res));
