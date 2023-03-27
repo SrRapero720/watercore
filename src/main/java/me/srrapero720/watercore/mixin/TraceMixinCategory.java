@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = CrashReportCategory.class, priority = 0)
 public abstract class TraceMixinCategory {
@@ -20,8 +21,9 @@ public abstract class TraceMixinCategory {
 		WaterUtil.printTrace(stackTrace, crashReportBuilder);
 	}
 
-	@Inject(method = "trimStacktrace", at = @At(value = "INVOKE", target = "Ljava/lang/System;arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V", shift = At.Shift.AFTER))
-	private void fixCause(int p_128175_, CallbackInfo ci) {
+	@Inject(method = "fillInStackTrace", at = @At(value = "INVOKE", target = "Ljava/lang/System;arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V", shift = At.Shift.AFTER))
+	private void fixCause(int p_128149_, CallbackInfoReturnable<Integer> cir) {
+		WaterConsole.warn("trimStackTrace", "Running ahead");
 		SMAPper.apply(stackTrace, "java.", "sun.", "net.minecraftforge.fml.", "com.mojang.authlib.");
 	}
 }

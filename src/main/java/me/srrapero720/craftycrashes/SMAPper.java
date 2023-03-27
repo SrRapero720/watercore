@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 public class SMAPper {
 	public static void apply(Throwable t, String... skippedPackages) {
-		apply(t, new HashMap<String, SMAP>(), skippedPackages);
+		apply(t, new HashMap<>(), skippedPackages);
 	}
 
 	private static void apply(Throwable t, Map<String, SMAP> cache, String... skippedPackages) {
