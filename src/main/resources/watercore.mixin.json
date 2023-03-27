@@ -16,6 +16,7 @@
     "TraceMixinCategory"
   ],
   "client": [
+    "client.ClientPacketMixin",
     "client.CrossHairLeak",
     "client.MinecraftClientMixin",
     "client.MipmapReload",
