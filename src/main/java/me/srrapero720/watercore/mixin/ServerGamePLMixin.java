@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin;
 
-import me.srrapero720.watercore.api.ChatDataProvider;
+import me.srrapero720.watercore.api.FormatPlayerProvider;
 import me.srrapero720.watercore.internal.WaterConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -35,7 +35,7 @@ public abstract class ServerGamePLMixin {
     // Now works with forge
     @ModifyArg(method = "onDisconnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
     public Component modifyOnDisconnect(Component p_11265_) {
-        return ChatDataProvider.parse(WaterConfig.get("LEAVE_FORMAT"), player);
+        return FormatPlayerProvider.parse(WaterConfig.get("LEAVE_FORMAT"), player);
     }
 
     /**
@@ -52,7 +52,7 @@ public abstract class ServerGamePLMixin {
             var msg = text.getRaw();
             if (!msg.startsWith("/")) {
                 var msgFiltered = text.getFiltered();
-                var component = ChatDataProvider.parse(WaterConfig.get("CHAT_FORMAT"), player, msgFiltered.isEmpty() ? msgFiltered : msg);
+                var component = FormatPlayerProvider.parse(WaterConfig.get("CHAT_FORMAT"), player, msgFiltered.isEmpty() ? msgFiltered : msg);
                 var event = ForgeHooks.onServerChatEvent((ServerGamePacketListenerImpl) (Object) this, msg, component, msgFiltered, component);
 
                 if (event != null && event.getComponent() != null)

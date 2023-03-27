@@ -7,22 +7,18 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class ChatDataProvider {
+public class FormatPlayerProvider {
     private static net.luckperms.api.LuckPerms LP;
+    private static final String NAME = FormatPlayerProvider.class.getSimpleName();
 
     public static void init() {
         try {
-//            var lucko = IntrusiveClassLoader.findAll("net.lucko");
-//            if (!lucko.isEmpty()) for (var czz: lucko.toArray()) {
-//                WaterConsole.justPrint(czz.getClass().getSimpleName());
-//            }
-
             var clazz = Class.forName("net.luckperms.api.LuckPermsProvider");
             LP = net.luckperms.api.LuckPermsProvider.get();
 
-            WaterConsole.log(ChatDataProvider.class.toString(), "Using 'LuckPerms' as Prefix provider");
+            WaterConsole.log(NAME, "Using 'LuckPerms' as Prefix provider");
         } catch (Exception e) {
-            WaterConsole.log(ChatDataProvider.class.toString(), "Luckperms no found");
+            WaterConsole.log(NAME, "Luckperms no found");
         }
     }
 
@@ -31,16 +27,16 @@ public class ChatDataProvider {
         if (LP != null) {
             var prefixSuffix = getPrefixSuffix(player.getGameProfile());
             return new TextComponent(format.replaceAll(Type.PREFIX, prefixSuffix[0])
-                    .replaceAll(Type.PLAYER, ((IPlayerEntity) player).getPlayername().getString())
+                    .replaceAll(Type.PLAYER, player.getName().getString())
                     .replaceAll(Type.SUFFIX, prefixSuffix[1]));
 
         }
-        return new TextComponent(((IPlayerEntity) player).getPlayername().getString());
+        return new TextComponent(player.getName().getString());
     }
 
     public static TextComponent parse(String format, Player player, String ...extras) {
         var displayname = createPlayerDisplayName(player).getString();
-        var playername = ((IPlayerEntity) player).getPlayername().getString();
+        var playername = player.getName().getString();
         var profilename = player.getGameProfile().getName();
         if (profilename == null) profilename = playername;
 
@@ -61,7 +57,7 @@ public class ChatDataProvider {
             if (data.getSuffix() != null) result[1] = data.getSuffix();
             return result;
         } catch(Exception ise) {
-            WaterConsole.error(ChatDataProvider.class.getName(), ise.getMessage());
+            WaterConsole.error(FormatPlayerProvider.class.getName(), ise.getMessage());
             ise.printStackTrace();
         }
 

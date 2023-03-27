@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.internal;
 
 import me.srrapero720.watercore.WaterCore;
-import me.srrapero720.watercore.api.ChatDataProvider;
+import me.srrapero720.watercore.api.FormatPlayerProvider;
 import me.srrapero720.watercore.custom.commands.SetLobbyPosComm;
 import me.srrapero720.watercore.custom.commands.SpawnComm;
 import me.srrapero720.watercore.custom.items.BanHammer;
@@ -21,7 +21,6 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -34,7 +33,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.IModBusEvent;
 import net.minecraftforge.registries.*;
 import net.minecraftforge.server.command.ConfigCommand;
 import me.srrapero720.watercore.custom.commands.BroadcastComm;
@@ -42,7 +40,6 @@ import me.srrapero720.watercore.custom.tabs.DefaultTab;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -297,13 +294,13 @@ public class WaterRegistry {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         WaterConsole.log(getClass().toString(), "WATERCoRE running on server");
-        ChatDataProvider.init();
+        FormatPlayerProvider.init();
     }
 
 
 
     @SubscribeEvent
     public static void onServerIsRunning(ServerStartedEvent event) {
-        ChatDataProvider.init();
+        FormatPlayerProvider.init();
     }
 }
