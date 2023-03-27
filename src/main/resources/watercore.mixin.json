@@ -24,6 +24,7 @@
     "client.TextureReloadLeak",
     "client.screen.OptionsScreenMixin",
     "client.screen.TitleScreenMixin",
+    "external.SL312664_PwScreen",
     "util.ModelManagerAccessor"
   ],
   "server": [

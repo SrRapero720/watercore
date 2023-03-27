@@ -69,7 +69,6 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.2.0'
-//    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     implementation fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
     implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
@@ -83,6 +82,9 @@ dependencies {
     implementation fg.deobf("curse.maven:ferritecore-429235:4074294")
     implementation fg.deobf("curse.maven:fastload-630620:4271605")
     implementation fg.deobf("curse.maven:lazy-dfu-forge-460819:3544496")
+
+    //MIXIN: SL312664
+    implementation fg.deobf("curse.maven:simple-login-312664:3864949")
 
     compileOnly "net.luckperms:api:5.4"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
