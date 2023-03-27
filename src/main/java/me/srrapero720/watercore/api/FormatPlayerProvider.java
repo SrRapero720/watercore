@@ -46,7 +46,7 @@ public class FormatPlayerProvider {
                 .replaceAll(Type.DISPLAY, displayname));
 
         for (var extra: extras) result.append(" ").append(extra);
-        return new TextComponent(MinecraftChatColor.parse(result.toString()));
+        return new TextComponent(MCFormat.parse(result.toString()));
     }
 
     public static String @NotNull [] getPrefixSuffix(GameProfile player) {
