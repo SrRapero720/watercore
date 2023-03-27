@@ -5,6 +5,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.system.MemoryUtil;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -14,50 +15,47 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(value = TextureUtil.class, priority = 0)
 public class TextureReloadLeak {
-    //By Fx Morin - thanks to Icyllis Milica for [MC-226729](https://bugs.mojang.com/browse/MC-226729)
-    @Inject(method = "readResource(Ljava/io/InputStream;)Ljava/nio/ByteBuffer;",locals = LocalCapture.CAPTURE_FAILHARD,at = @At(
-                    value = "INVOKE",
-                    target = "Lorg/lwjgl/system/MemoryUtil;memAlloc(I)Ljava/nio/ByteBuffer;",
-                    shift = At.Shift.BY,
-                    by = 2,
-                    ordinal = 0
-            ), cancellable = true
-    )
-    private static void readResourceWithoutLeak1(InputStream p_85304_, CallbackInfoReturnable<ByteBuffer> cir, ByteBuffer $$3, FileInputStream $$1, FileChannel $$2) throws IOException {
-        try {
-            while($$2.read($$3) != -1) {}
-        } catch (IOException e) {
-            MemoryUtil.memFree($$3);
-            throw e;
-        }
-        cir.setReturnValue($$3);
-    }
 
+    /**
+     * @author SrRapero720
+     * @reason I'm disappointment with Mojang code
+     * Can be removed in 1.19.3
+     */
+    @Overwrite
+    public static ByteBuffer readResource(InputStream stream) throws IOException {
+        if (stream instanceof FileInputStream fileStream) {
+            var filechannel = fileStream.getChannel();
+            var bytebuffer = MemoryUtil.memAlloc((int) filechannel.size() + 1);
 
-    @Inject(method = "readResource(Ljava/io/InputStream;)Ljava/nio/ByteBuffer;",locals = LocalCapture.CAPTURE_FAILHARD,at = @At(
-                    value = "INVOKE",
-                    target = "Ljava/nio/channels/Channels;newChannel(Ljava/io/InputStream;)" +
-                            "Ljava/nio/channels/ReadableByteChannel;",
-                    shift = At.Shift.BY,
-                    by = 2,
-                    ordinal = 0
-            ),
-            cancellable = true
-    )
-    private static void readResourceWithoutLeak2(InputStream p_85304_, CallbackInfoReturnable<ByteBuffer> cir, ByteBuffer $$4, ReadableByteChannel $$5) throws IOException {
-        try {
-            while($$5.read($$4) != -1)
-                if ($$4.remaining() == 0) $$4 = MemoryUtil.memRealloc($$4, $$4.capacity() * 2);
-        } catch (IOException e) {
-            MemoryUtil.memFree($$4);
-            throw e;
+            try {
+                while(filechannel.read(bytebuffer) != -1);
+            } catch (IOException e) {
+                MemoryUtil.memFree(bytebuffer);
+                throw e;
+            }
+
+            return bytebuffer;
+        } else {
+            var bytebuffer = MemoryUtil.memAlloc(8192);
+            var byteChannel = Channels.newChannel(stream);
+
+            try {
+                while(byteChannel.read(bytebuffer) != -1)
+                    if (bytebuffer.remaining() == 0)
+                        bytebuffer = MemoryUtil.memRealloc(bytebuffer, bytebuffer.capacity() * 2);
+            } catch (IOException e) {
+                MemoryUtil.memFree(bytebuffer);
+                throw e;
+            }
+
+            return bytebuffer;
         }
-        cir.setReturnValue($$4);
     }
 }
