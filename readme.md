@@ -41,7 +41,7 @@ and administration items
 - FTB Ranks (breaks our chat format and player name format)
 
 ***
-<img style="display:block; width: 80%; height: auto; margin: 0 auto;" src="https://media.discordapp.net/attachments/1076151535291088916/1076656790986559538/WATERCoRE.png">
+<img style="display:block; width: 100%; height: auto; margin: 0 auto;" src="https://media.discordapp.net/attachments/1076151535291088916/1076656790986559538/WATERCoRE.png">
 
 ***
 
