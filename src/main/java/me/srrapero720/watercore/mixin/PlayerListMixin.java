@@ -81,12 +81,12 @@ public abstract class PlayerListMixin {
     @Shadow public abstract boolean addPlayer(ServerPlayer player);
     @Shadow public abstract boolean removePlayer(ServerPlayer player);
 
-    @Inject(method = "addPlayer", at = @At(value = "TAIL"))
+    @Inject(method = "addPlayer", at = @At(value = "TAIL"), remap = false)
     public void injectAddPlayer(ServerPlayer player, CallbackInfoReturnable<Boolean> cir) {
         playersByNameWC.put(player.getName().getString().toLowerCase(), player);
     }
 
-    @Inject(method = "removePlayer", at = @At(value = "TAIL"))
+    @Inject(method = "removePlayer", at = @At(value = "TAIL"), remap = false)
     public void injectRemovePlayer(ServerPlayer player, CallbackInfoReturnable<Boolean> cir) {
         playersByNameWC.remove(player.getName().getString().toLowerCase());
     }
