@@ -6,6 +6,8 @@
   "refmap": "watercore.mixin-refmap.json",
   "mixins": [
     "BiomesLeak",
+    "CBCustomPayloadMixin",
+    "LivingEntityMixin",
     "MinecraftServerMixin",
     "PlayerListMixin",
     "PlayerMixin",
@@ -15,6 +17,7 @@
   ],
   "client": [
     "client.CrossHairLeak",
+    "client.MinecraftClientMixin",
     "client.MipmapReload",
     "client.SpongeMixinLeak",
     "client.TextureReloadLeak",

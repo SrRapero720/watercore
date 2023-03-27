@@ -1,6 +1,7 @@
 package me.srrapero720.watercore.internal;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
@@ -17,12 +18,11 @@ import org.spongepowered.asm.mixin.transformer.ClassInfo;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class WaterUtil {
+    public static final Set<FriendlyByteBuf> BUFFERS = Collections.synchronizedSet(new HashSet<>());
+
     public static int toTicks(final double sec) { return (int) (sec * 20); }
     public static boolean isModOnline(String id) { return ModList.get().isLoaded(id); }
 
