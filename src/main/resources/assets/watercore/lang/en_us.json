@@ -4,8 +4,6 @@
   "itemGroup.watercore.MAIN": "WATERCoRE Util",
   "itemGroup.watercore.ADMIN": "WATERCoRE Admin",
   "watercore.response.banhammer": "Haz sido letalmente baneado por el martillo del BAN",
-  "watercore.command.setlobbyspawn.success": "§6Guardada la posicion en §c%s §c%s §c%s [§c%s] en %s",
-  "watercore.command.setlobbyspawn.failed": "§cOcurrio un error inesperado al guardar la posicion",
 
   "__comment": "WATERCoRE Pociones",
   "item.minecraft.potion.effect.blessed_1": "Bendicion Divina",
@@ -41,5 +39,12 @@
 
   "__comment": "Rubidium Fix en el selector de keybinds",
   "key.category.rubidium_extras": "Rubidium",
-  "key.zoom": "Zoom"
+  "key.zoom": "Zoom",
+
+  "__comment": "Comandos",
+  "wc.command.broadcast.hint": "mensaje con el prefix del servidor",
+  "wc.command.broadcast-raw.hint": "mensaje sin prefix",
+  "wc.command.setlobbyspawn.success": "§6Guardada la posicion en §c%s §c%s §c%s [§c%s] en %s",
+  "wc.command.setlobbyspawn.failed": "§cOcurrio un error inesperado al guardar la posicion",
+  "wc.command.back.failed": "§cNo hay ubicacion anterior disponibles"
 }

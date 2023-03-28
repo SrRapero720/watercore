@@ -8,19 +8,14 @@ import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
-import me.srrapero720.watercore.custom.data.LobbyData;
-import net.minecraft.resources.ResourceKey;
+import me.srrapero720.watercore.custom.data.LobbySpawnData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public class SpawnComm {
     public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        var first = dispatcher.register(Commands.literal("spawn").executes(SpawnComm::teleportPlayer));
-        dispatcher.register(Commands.literal("spawnlobby")
-                .requires((p_137800_) -> p_137800_.hasPermission(3)).executes(SpawnComm::teleportPlayerToLobby));
-        dispatcher.register(Commands.literal("lobby").redirect(first));
+        dispatcher.register(Commands.literal("spawn").executes(SpawnComm::teleportPlayer));
+        dispatcher.register(Commands.literal("lobby").executes(SpawnComm::teleportPlayer));
     }
 
     public static int teleportPlayerToLobby(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -32,7 +27,7 @@ public class SpawnComm {
     public static int teleportPlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
 
-        var dimData = LobbyData.fetch(player.server);
+        var dimData = LobbySpawnData.fetch(player.server);
         var server = player.server;
 
         var cords = dimData.getCords();

@@ -2,7 +2,7 @@ package me.srrapero720.watercore.internal;
 
 import me.srrapero720.watercore.WaterCore;
 import me.srrapero720.watercore.api.FormatPlayerProvider;
-import me.srrapero720.watercore.custom.commands.SetLobbyPosComm;
+import me.srrapero720.watercore.custom.commands.SetLobbySpawnComm;
 import me.srrapero720.watercore.custom.commands.SpawnComm;
 import me.srrapero720.watercore.custom.items.BanHammer;
 import me.srrapero720.watercore.custom.items.BaseCoin;
@@ -275,7 +275,7 @@ public class WaterRegistry {
     public static void onGameCommandRegister(RegisterCommandsEvent event) {
         BroadcastComm.register(event.getDispatcher());
         ConfigCommand.register(event.getDispatcher());
-        SetLobbyPosComm.register(event.getDispatcher());
+        SetLobbySpawnComm.register(event.getDispatcher());
         SpawnComm.register(event.getDispatcher());
     }
 

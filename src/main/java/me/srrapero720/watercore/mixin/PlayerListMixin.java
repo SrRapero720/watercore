@@ -4,7 +4,8 @@ package me.srrapero720.watercore.mixin;
 import com.mojang.serialization.Dynamic;
 import io.netty.buffer.Unpooled;
 import me.srrapero720.watercore.api.FormatPlayerProvider;
-import me.srrapero720.watercore.custom.data.LobbyData;
+import me.srrapero720.watercore.custom.data.LobbySpawnData;
+import me.srrapero720.watercore.custom.data.WorldSpawnData;
 import me.srrapero720.watercore.internal.WaterConfig;
 import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterUtil;
@@ -145,7 +146,7 @@ public abstract class PlayerListMixin {
         var profile = player.getGameProfile();
         var profileCache = this.server.getProfileCache();
 
-        var lobbyData = LobbyData.fetch(server);
+        var lobbyData = LobbySpawnData.fetch(server);
         var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
         var lobbyLevelResource = lobbyLevel == null ? Level.OVERWORLD : lobbyLevel.dimension();
 
@@ -267,8 +268,8 @@ public abstract class PlayerListMixin {
         player.getLevel().removePlayerImmediately(player, Entity.RemovalReason.DISCARDED);
 
         // WATERCORE LOBBY DATA
-        var lobbyData = LobbyData.fetch(server);
-        var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
+        var worldSpawnData = WorldSpawnData.fetch(server);
+        var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), worldSpawnData.getDimension());
         
         var respawnPos = player.getRespawnPosition();
         var respawnAngle = player.getRespawnAngle();
@@ -305,9 +306,9 @@ public abstract class PlayerListMixin {
             freshPlayer.setRespawnPosition(level.dimension(), respawnPos, respawnAngle, isBoolean, false);
             flag2 = !isBoolean && blockstate.is(Blocks.RESPAWN_ANCHOR);
         } else {
-            var cords = lobbyData.getCords();
+            var cords = worldSpawnData.getCords();
             var mPos = cords != null ?  new BlockPos(cords[0], cords[1], cords[2]) : new BlockPos(0, 128, 0);
-            var mRot = lobbyData.getRotation();
+            var mRot = worldSpawnData.getRotation();
 
 
             freshPlayer.setPos(mPos.getX(), mPos.getY(), mPos.getZ());

@@ -8,11 +8,13 @@
   "mixins": [
     "BiomesLeak",
     "CBCustomPayloadMixin",
+    "EntityMixin",
     "LivingEntityMixin",
     "MinecraftServerMixin",
     "PlayerListMixin",
     "PlayerMixin",
     "ServerGamePLMixin",
+    "ServerPlayerMixin",
     "TagKeyMixin",
     "TraceMixin",
     "TraceMixinCategory"
