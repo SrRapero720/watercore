@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +25,9 @@ public class WaterUtil {
     public static final Set<FriendlyByteBuf> BUFFERS = Collections.synchronizedSet(new HashSet<>());
 
     public static int toTicks(final double sec) { return (int) (sec * 20); }
-    public static boolean isModOnline(String id) { return ModList.get().isLoaded(id); }
+    public static boolean isModOnline(String id) {
+        return FMLLoader.getLoadingModList().getModFileById(id) != null;
+    }
 
     @Contract(pure = true)
     public static @NotNull String getBroadcastPrefix() { return "&e&l[&bWATERC&eo&bRE&e&l] &f"; }
