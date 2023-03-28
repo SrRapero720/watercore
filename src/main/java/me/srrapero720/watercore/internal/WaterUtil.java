@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -32,6 +33,13 @@ public class WaterUtil {
     @Contract(pure = true)
     public static @NotNull String getBroadcastPrefix() { return "&e&l[&bWATERC&eo&bRE&e&l] &f"; }
 
+    public static Vec3 findCenter(double x, double y, double z) {
+        var centerX = ((x - (int) x) > 0.25D || (x - (int) x) < -0.25D) ? (int) x + 0.5D : x;
+        var centerZ = ((z - (int) z) > 0.25D || (z - (int) z) < -0.25D) ? (int) z + 0.5D : z;
+        var centerY = (int) y + 0.5D;
+
+        return new Vec3(centerX, centerY, centerZ);
+    }
     public static int fixAngle(double input) { return fixAngle(Math.round(input)); }
     public static int fixAngle(float input) { return fixAngle(Math.round(input)); }
     public static int fixAngle(int input) {
@@ -75,19 +83,9 @@ public class WaterUtil {
     private static final String OBJECT = "java/lang/Object";
 
     public static @Nullable ServerLevel findLevel(@NotNull Iterable<ServerLevel> levels, ResourceLocation hint) {
-//        for (var lvl: levels) if (lvl.dimension().getRegistryName().equals(hint)) return lvl;
-//        return null;
+        for (var lvl: levels)
+            if (lvl.dimension().location().toString().equals(hint.toString())) return lvl;
 
-        /* DEBUG CODE */
-        for (var lvl: levels) {
-            WaterConsole.log("WaterUtil", "Checking " + lvl.dimension().location() + " with " + hint);
-            if (lvl.dimension().location().toString().equals(hint.toString())) {
-                WaterConsole.justPrint(lvl.dimension().location().getPath() + " equals with hint using second if");
-                return lvl;
-            }
-
-        }
-        WaterConsole.justPrint("Nothing equals in findLevel");
         return null;
     }
 
