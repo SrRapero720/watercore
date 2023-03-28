@@ -1,6 +1,7 @@
 package me.srrapero720.watercore.mixin;
 
-import me.srrapero720.watercore.custom.data.LobbyData;
+import me.srrapero720.watercore.custom.data.LobbySpawnData;
+import me.srrapero720.watercore.custom.data.WorldSpawnData;
 import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterRegistry;
 import net.minecraft.core.BlockPos;
@@ -9,7 +10,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Blocks;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,16 +24,21 @@ import java.util.Map;
 @Mixin(value = MinecraftServer.class, priority = 0)
 public abstract class MinecraftServerMixin {
     @Shadow @Final private Map<ResourceKey<Level>, ServerLevel> levels;
-
     @Shadow @Nullable public abstract ServerLevel getLevel(ResourceKey<Level> p_129881_);
 
     @Inject(method = "runServer()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;updateStatusIcon(Lnet/minecraft/network/protocol/status/ServerStatus;)V"))
     public void onRunningServer(CallbackInfo ci) {
-        var lobbyData = LobbyData.fetch((MinecraftServer) (Object) this);
+        var lobbyData = LobbySpawnData.fetch((MinecraftServer) (Object) this);
+        var spawnData = WorldSpawnData.fetch((MinecraftServer) (Object) this);
+
         if (lobbyData.isEmpty()) {
-            WaterConsole.warn("MinecraftServerMixin", "WATERCoRE no found any spawn pos. using default");
-            var currentLevel = levels.get(Level.OVERWORLD);
-            lobbyData.setCords(currentLevel.getSharedSpawnPos(), 0, 0).save(new CompoundTag());
+            WaterConsole.warn("MinecraftServerMixin", "No found any WorldSpawn pos. using default");
+            lobbyData.setCords(levels.get(Level.OVERWORLD).getSharedSpawnPos(), 0, 0).save(new CompoundTag());
+        }
+
+        if (spawnData.isEmpty()) {
+            WaterConsole.warn("MinecraftServerMixin", "No found any LobbySpawn pos. using default");
+            spawnData.setCords(levels.get(Level.OVERWORLD).getSharedSpawnPos(), 0, 0).save(new CompoundTag());
         }
 
         var lobbyLevel = getLevel(WaterRegistry.findDimension("lobby"));

@@ -30,7 +30,6 @@ public class WorldSpawnData extends SavedData {
         return this;
     }
 
-    @Deprecated
     public WorldSpawnData setCords(@NotNull BlockPos cords, float rotX, float rotY) {
 
         this.cords = new int[] { cords.getX(), cords.getY(), cords.getZ()};

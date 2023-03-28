@@ -30,7 +30,7 @@ public class LobbySpawnData extends SavedData {
         return this;
     }
 
-    @Deprecated
+
     public LobbySpawnData setCords(@NotNull BlockPos cords, float rotX, float rotY) {
         this.cords = new int[] { cords.getX(), cords.getY(), cords.getZ()};
         this.rotation = new int[] { (int) rotX, (int) rotY };
