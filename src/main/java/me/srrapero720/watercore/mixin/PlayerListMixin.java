@@ -146,16 +146,16 @@ public abstract class PlayerListMixin {
         var profile = player.getGameProfile();
         var profileCache = this.server.getProfileCache();
 
-        var lobbyData = LobbySpawnData.fetch(server);
-        var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
-        var lobbyLevelResource = lobbyLevel == null ? Level.OVERWORLD : lobbyLevel.dimension();
+        var spawnData = WorldSpawnData.fetch(server);
+        var spawnLevel = WaterUtil.findLevel(server.getAllLevels(), spawnData.getDimension());
+        var spawnLevelRes = spawnLevel == null ? Level.OVERWORLD : spawnLevel.dimension();
 
         profileCache.add(profile);
 
         var tag = this.load(player);
         final var levelRes = tag != null
-                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(WaterConsole::justPrint).orElse(lobbyLevelResource)
-                : lobbyLevelResource;
+                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(WaterConsole::justPrint).orElse(spawnLevelRes)
+                : spawnLevelRes;
 
         // If you remove or change the name of your dimension, you know the problem... but here no notify about it
         var levelResult = this.server.getLevel(levelRes);
@@ -198,8 +198,8 @@ public abstract class PlayerListMixin {
 
         int timePlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
         if (timePlayed == 0) {
-            final var cords = lobbyData.getCords();
-            final var rot = lobbyData.getRotation();
+            final var cords = spawnData.getCords();
+            final var rot = spawnData.getRotation();
             final var mPos = new BlockPos(cords[0], cords[1], cords[2]);
             packet.teleport(mPos.getX(), mPos.getY() + 1, mPos.getZ(), rot[0], rot[1]);
         } else packet.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
@@ -268,8 +268,8 @@ public abstract class PlayerListMixin {
         player.getLevel().removePlayerImmediately(player, Entity.RemovalReason.DISCARDED);
 
         // WATERCORE LOBBY DATA
-        var worldSpawnData = WorldSpawnData.fetch(server);
-        var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), worldSpawnData.getDimension());
+        var lobbyData = WorldSpawnData.fetch(server);
+        var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
         
         var respawnPos = player.getRespawnPosition();
         var respawnAngle = player.getRespawnAngle();
@@ -306,9 +306,9 @@ public abstract class PlayerListMixin {
             freshPlayer.setRespawnPosition(level.dimension(), respawnPos, respawnAngle, isBoolean, false);
             flag2 = !isBoolean && blockstate.is(Blocks.RESPAWN_ANCHOR);
         } else {
-            var cords = worldSpawnData.getCords();
+            var cords = lobbyData.getCords();
             var mPos = cords != null ?  new BlockPos(cords[0], cords[1], cords[2]) : new BlockPos(0, 128, 0);
-            var mRot = worldSpawnData.getRotation();
+            var mRot = lobbyData.getRotation();
 
 
             freshPlayer.setPos(mPos.getX(), mPos.getY(), mPos.getZ());
