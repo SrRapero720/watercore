@@ -268,7 +268,7 @@ public abstract class PlayerListMixin {
         player.getLevel().removePlayerImmediately(player, Entity.RemovalReason.DISCARDED);
 
         // WATERCORE LOBBY DATA
-        var lobbyData = WorldSpawnData.fetch(server);
+        var lobbyData = LobbySpawnData.fetch(server);
         var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
         
         var respawnPos = player.getRespawnPosition();
