@@ -39,7 +39,7 @@ public abstract class MinecraftServerMixin {
         var lobbyLevel = getLevel(WaterRegistry.findDimension("lobby"));
         var statelobby = lobbyLevel.getBlockState(new BlockPos(0, 128, 0));
         if (statelobby.is(Blocks.AIR)) {
-            lobbyLevel.setBlock(new BlockPos(0, 128, 0), Blocks.AIR.defaultBlockState(), 0);
+            lobbyLevel.setBlock(new BlockPos(0, 128, 0), Blocks.BEDROCK.defaultBlockState(), 0);
         }
     }
 }
