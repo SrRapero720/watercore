@@ -1,17 +1,21 @@
 package me.srrapero720.watercore.api;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class MCFormat {
     private static final HashMap<String, String> STORED_FORMATS = new HashMap<>();
 
     public static String parse(String content) {
-        var askedFormats = content.split("&\\w");
+        var allMatches = new ArrayList<String>();
+        var m = Pattern.compile("&\\w").matcher(content);
+        while (m.find()) {
+            if (!allMatches.contains(m.group())) allMatches.add(m.group());
+        }
 
-        for (var format: askedFormats)
-            content = content.replaceAll(format, Objects.requireNonNullElse(STORED_FORMATS.get(format), format));
-
+        for (var format: allMatches) content = content.replaceAll(format, Objects.requireNonNullElse(STORED_FORMATS.get(format), format));
 
         return content;
     }
