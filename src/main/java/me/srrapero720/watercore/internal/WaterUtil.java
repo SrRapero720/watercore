@@ -26,19 +26,22 @@ public class WaterUtil {
     public static final Set<FriendlyByteBuf> BUFFERS = Collections.synchronizedSet(new HashSet<>());
 
     public static int toTicks(final double sec) { return (int) (sec * 20); }
-    public static boolean isModOnline(String id) {
-        return FMLLoader.getLoadingModList().getModFileById(id) != null;
-    }
+    public static boolean isModOnline(String id) { return FMLLoader.getLoadingModList().getModFileById(id) != null; }
 
     @Contract(pure = true)
     public static @NotNull String getBroadcastPrefix() { return "&e&l[&bWATERC&eo&bRE&e&l] &f"; }
 
     public static Vec3 findCenter(double x, double y, double z) {
-        var centerX = ((x - (int) x) > 0.25D || (x - (int) x) < -0.25D) ? (int) x + 0.5D : x;
-        var centerZ = ((z - (int) z) > 0.25D || (z - (int) z) < -0.25D) ? (int) z + 0.5D : z;
-        var centerY = (int) y + 0.5D;
+        var deltaX = x - (int) x;
+        var currentX = ((deltaX > -0.75D && deltaX < -0.25D)) ? (int) x - 0.5D : (deltaX > 0.25D && deltaX < 0.75D) ? (int) x + 0.5D : Math.round(x);
 
-        return new Vec3(centerX, centerY, centerZ);
+        var deltaZ = z - (int) z;
+        var currentZ = ((deltaZ > -0.75D && deltaZ < -0.25D)) ? (int) z - 0.5D : (deltaZ > 0.25D && deltaZ < 0.75D) ? (int) z + 0.5D : Math.round(z);
+
+
+        var centerY = (int) y + 0.25D;
+
+        return new Vec3(currentX, centerY, currentZ);
     }
     public static long secondsToMilis(long sec) {
         return sec * 1000;

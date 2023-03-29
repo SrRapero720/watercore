@@ -33,11 +33,10 @@ public class SpawnComm {
         var cords = dimData.getCords();
         var rot = dimData.getRotation();
         var level = dimData.getDimension();
-        var mPos = new BlockPos(cords[0], cords[1], cords[2]);
 
         ServerLevel result = WaterUtil.findLevel(server.getAllLevels(), level);
 
-        player.teleportTo(result == null ? server.getLevel(WaterRegistry.findDimension("lobby")) : result, mPos.getX(), mPos.getY(), mPos.getZ(), rot[0], rot[1]);
+        player.teleportTo(result == null ? server.getLevel(WaterRegistry.findDimension("lobby")) : result, cords[0], cords[1], cords[2], rot[0], rot[1]);
         return 0;
     }
 }
