@@ -21,6 +21,22 @@
   "item.minecraft.lingering_potion.effect.blessed_3": "Bendicion Divina perceverante III",
   "item.minecraft.tipped_arrow.effect.blessed_3": "Flecha de Bendicion Divina III",
 
+
+  "item.minecraft.potion.effect.cursed_1": "Maldicion Divina",
+  "item.minecraft.splash_potion.effect.cursed_1": "Maldicion Divina arrojadiza",
+  "item.minecraft.lingering_potion.effect.cursed_1": "Maldicion Divina perceverante",
+  "item.minecraft.tipped_arrow.effect.cursed_1": "Flecha de Maldicion Divina",
+
+  "item.minecraft.potion.effect.cursed_2": "Maldicion Divina II",
+  "item.minecraft.splash_potion.effect.cursed_2": "Maldicion Divina arrojadiza II",
+  "item.minecraft.lingering_potion.effect.cursed_2": "Maldicion Divina perceverante II",
+  "item.minecraft.tipped_arrow.effect.cursed_2": "Flecha de Maldicion Divina II",
+
+  "item.minecraft.potion.effect.cursed_3": "Maldicion Divina III",
+  "item.minecraft.splash_potion.effect.cursed_3": "Maldicion Divina arrojadiza III",
+  "item.minecraft.lingering_potion.effect.cursed_3": "Maldicion Divina perceverante III",
+  "item.minecraft.tipped_arrow.effect.cursed_3": "Flecha de Maldicion Divina III",
+
   "__comment": "WATERCoRE Items (Dinero)",
   "item.watercore.coppercoin": "Gota de Cobre",
   "item.watercore.ironcoin": "Gota de Hierro",

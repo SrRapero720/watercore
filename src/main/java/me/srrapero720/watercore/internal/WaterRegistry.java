@@ -2,13 +2,13 @@ package me.srrapero720.watercore.internal;
 
 import me.srrapero720.watercore.WaterCore;
 import me.srrapero720.watercore.api.FormatPlayerProvider;
-import me.srrapero720.watercore.custom.commands.SetLobbySpawnComm;
-import me.srrapero720.watercore.custom.commands.SpawnComm;
+import me.srrapero720.watercore.custom.commands.*;
 import me.srrapero720.watercore.custom.items.BanHammer;
 import me.srrapero720.watercore.custom.items.BaseCoin;
 import me.srrapero720.watercore.custom.items.BaseViolin;
 import me.srrapero720.watercore.custom.items.SuperWand;
 import me.srrapero720.watercore.custom.potions.BlessedPotion;
+import me.srrapero720.watercore.custom.potions.CursedPotion;
 import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -34,9 +34,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.registries.*;
-import net.minecraftforge.server.command.ConfigCommand;
-import me.srrapero720.watercore.custom.commands.BroadcastComm;
-import me.srrapero720.watercore.custom.tabs.DefaultTab;
+import me.srrapero720.watercore.custom.tabs.SmartCreativeTab;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -97,8 +95,8 @@ public class WaterRegistry {
 
     static {
         /* TABS */
-        register(Type.TABS,"main", () -> new DefaultTab("watercore.MAIN", "ironcoin"));
-        register(Type.TABS,"admin", () -> new DefaultTab("watercore.ADMIN", "banhammer"));
+        register(Type.TABS,"main", () -> new SmartCreativeTab("watercore.MAIN", "ironcoin"));
+        register(Type.TABS,"admin", () -> new SmartCreativeTab("watercore.ADMIN", "banhammer"));
 
         /* SOUNDS */
         register(Type.SOUND,"watermine", () -> new SoundEvent(new ResourceLocation(WaterCore.ID, "watermine")));
@@ -108,6 +106,10 @@ public class WaterRegistry {
         register(Type.POTION,"blessed_1", () -> new BlessedPotion(WaterUtil.toTicks(180), 1));
         register(Type.POTION,"blessed_2", () -> new BlessedPotion(WaterUtil.toTicks(180), 2));
         register(Type.POTION,"blessed_3", () -> new BlessedPotion(WaterUtil.toTicks(180), 3));
+
+        register(Type.POTION,"cursed_1", () -> new CursedPotion(WaterUtil.toTicks(180), 1));
+        register(Type.POTION,"cursed_2", () -> new CursedPotion(WaterUtil.toTicks(180), 2));
+        register(Type.POTION,"cursed_3", () -> new CursedPotion(WaterUtil.toTicks(180), 3));
 
         /* ITEMS */
         register(Type.ITEM,"coppercoin", () -> new BaseCoin(Rarity.COMMON));
@@ -273,10 +275,13 @@ public class WaterRegistry {
     /* REGISTER FOR COMMANDS */
     @SubscribeEvent
     public static void onGameCommandRegister(RegisterCommandsEvent event) {
+        BackComm.register(event.getDispatcher());
         BroadcastComm.register(event.getDispatcher());
-        ConfigCommand.register(event.getDispatcher());
         SetLobbySpawnComm.register(event.getDispatcher());
         SpawnComm.register(event.getDispatcher());
+        WatercoreComm.register(event.getDispatcher());
+//        ConfigCommand.register(event.getDispatcher());
+
     }
 
     @SubscribeEvent
