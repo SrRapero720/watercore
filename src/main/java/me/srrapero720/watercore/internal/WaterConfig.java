@@ -52,8 +52,11 @@ public class WaterConfig {
                 "Support (&f and §f) color formatting"
         );
 
-        CONFIGS.put("BROADCAST_PREFIX",
-                BUILDER.comment("prefix from /broadcast output").define("BROADCAST_PREFIX", WaterUtil.getBroadcastPrefix()));
+        CONFIGS.put("BACK_COOLDOWN", BUILDER.comment("Cooldown usage of /back command in seconds")
+                .define("BACK_COOLDOWN", 20L));
+
+        CONFIGS.put("BROADCAST_PREFIX", BUILDER.comment("prefix from /broadcast output")
+                .define("BROADCAST_PREFIX", WaterUtil.getBroadcastPrefix()));
 
 
 

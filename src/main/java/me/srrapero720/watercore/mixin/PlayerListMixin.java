@@ -6,6 +6,7 @@ import io.netty.buffer.Unpooled;
 import me.srrapero720.watercore.api.FormatPlayerProvider;
 import me.srrapero720.watercore.custom.data.LobbySpawnData;
 import me.srrapero720.watercore.custom.data.WorldSpawnData;
+import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
 import me.srrapero720.watercore.internal.WaterConfig;
 import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterUtil;
@@ -100,7 +101,7 @@ public abstract class PlayerListMixin {
     @Nullable
     @Overwrite
     public ServerPlayer getPlayerByName(String name) {
-        return playersByNameWC.get(name);
+        return playersByNameWC.get(name.toLowerCase());
     }
 
     @Inject(method = "remove", at = @At(value = "HEAD"))
@@ -263,8 +264,8 @@ public abstract class PlayerListMixin {
      */
     @Overwrite
     public ServerPlayer respawn(ServerPlayer player, boolean isBoolean) {
+        SimplePlayerStorage.saveBackData(player);
         this.removePlayer(player);
-        playersByNameWC.remove(player.getName().getString().toLowerCase());
         player.getLevel().removePlayerImmediately(player, Entity.RemovalReason.DISCARDED);
 
         // WATERCORE LOBBY DATA
@@ -307,14 +308,12 @@ public abstract class PlayerListMixin {
             flag2 = !isBoolean && blockstate.is(Blocks.RESPAWN_ANCHOR);
         } else {
             var cords = lobbyData.getCords();
-            var mPos = cords != null ?  new BlockPos(cords[0], cords[1], cords[2]) : new BlockPos(0, 128, 0);
             var mRot = lobbyData.getRotation();
 
-
-            freshPlayer.setPos(mPos.getX(), mPos.getY(), mPos.getZ());
+            freshPlayer.setPos(cords[0], cords[1], cords[2]);
             freshPlayer.setYRot(mRot[0]);
             freshPlayer.setXRot(mRot[1]);
-            freshPlayer.setRespawnPosition(level.dimension(), mPos, mRot[0], respawnForce, false);
+            freshPlayer.setRespawnPosition(level.dimension(), new BlockPos(cords[0], cords[1], cords[2]), mRot[0], respawnForce, false);
 
             if (respawnPos != null) {
                 freshPlayer.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.NO_RESPAWN_BLOCK_AVAILABLE, 0.0F));
@@ -348,7 +347,7 @@ public abstract class PlayerListMixin {
         // FORGE FIRED (i really want to remove this piece of shit)
         ForgeEventFactory.firePlayerRespawnEvent(freshPlayer, isBoolean);
         if (flag2) freshPlayer.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), 1.0F, 1.0F));
-        this.playersByNameWC.put(player.getName().getString().toLowerCase(), player);
+        this.playersByNameWC.put(freshPlayer.getName().getString().toLowerCase(), freshPlayer);
         return freshPlayer;
     }
 }

@@ -27,11 +27,11 @@ public class SetLobbySpawnComm {
 
             LobbySpawnData.fetch(server).setDimension(player.getLevel().dimension()).setCords(position, WaterUtil.fixAngle(player.getYRot()), WaterUtil.fixAngle(player.getXRot())).save(new CompoundTag());
             context.getSource().sendSuccess(new TranslatableComponent("wc.command.setlobbyspawn.success",
-                    WaterUtil.twoDecimal(player.getX()),
-                    WaterUtil.twoDecimal(player.getY()),
-                    WaterUtil.twoDecimal(player.getZ()),
-                    WaterUtil.fixAngle(player.getYRot()),
-                    player.getLevel().dimension().location()), true);
+                    "§c" + WaterUtil.twoDecimal(position.x),
+                    "§c" + WaterUtil.twoDecimal(position.y),
+                    "§c" + WaterUtil.twoDecimal(position.z),
+                    "§c" + WaterUtil.fixAngle(player.getYRot()),
+                    "§c" + player.getLevel().dimension().location()), true);
         } else context.getSource().sendFailure(new TranslatableComponent("wc.command.setlobbyspawn.failed"));
 
         return 0;
@@ -46,11 +46,11 @@ public class SetLobbySpawnComm {
 
             WorldSpawnData.fetch(server).setDimension(player.getLevel().dimension()).setCords(position, WaterUtil.fixAngle(player.getYRot()), WaterUtil.fixAngle(player.getXRot())).save(new CompoundTag());
             context.getSource().sendSuccess(new TranslatableComponent("wc.command.setlobbyspawn.success",
-                    WaterUtil.twoDecimal(player.getX()),
-                    WaterUtil.twoDecimal(player.getY()),
-                    WaterUtil.twoDecimal(player.getZ()),
-                    WaterUtil.fixAngle(player.getYRot()),
-                    player.getLevel().dimension().location()), true);
+                    "§c" + WaterUtil.twoDecimal(position.x),
+                    "§c" + WaterUtil.twoDecimal(position.y),
+                    "§c" + WaterUtil.twoDecimal(position.z),
+                    "§c" + WaterUtil.fixAngle(player.getYRot()),
+                    "§c" + player.getLevel().dimension().location()), true);
         } else context.getSource().sendFailure(new TranslatableComponent("wc.command.setlobbyspawn.failed"));
 
         return 0;
