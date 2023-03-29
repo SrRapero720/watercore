@@ -5,9 +5,9 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class DefaultTab extends CreativeModeTab {
+public class SmartCreativeTab extends CreativeModeTab {
     final String iconName;
-    public DefaultTab(String label, String item_registry) {
+    public SmartCreativeTab(String label, String item_registry) {
         super(label);
         iconName = item_registry;
     }
