@@ -2,7 +2,6 @@ package me.srrapero720.watercore;
 
 import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterRegistry;
-import net.minecraft.server.commands.TeleportCommand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
@@ -13,7 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod("watercore")
+@Mod(WaterCore.ID)
 public class WaterCore {
     public static final String PROTOCOL = "1.2";
     public static final String ID = "watercore";

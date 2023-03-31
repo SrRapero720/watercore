@@ -1,7 +1,6 @@
 package me.srrapero720.watercore.mixin;
 
 import me.srrapero720.watercore.custom.data.storage.IPlayerStorage;
-import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
