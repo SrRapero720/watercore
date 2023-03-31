@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-@Mixin(value = MinecraftServer.class, priority = 0)
+@Mixin(value = MinecraftServer.class)
 public abstract class MinecraftServerMixin {
     @Shadow @Final private Map<ResourceKey<Level>, ServerLevel> levels;
     @Shadow @Nullable public abstract ServerLevel getLevel(ResourceKey<Level> p_129881_);
