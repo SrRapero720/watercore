@@ -19,7 +19,7 @@ WATERCoRE, Tu herramienta de servidores (oficial de WATERMiNE) Integracion ofici
 [[dependencies.watercore]]
 modId = "forge"
 mandatory = true
-versionRange = "[40.2,)"
+versionRange = "[40,)"
 ordering = "NONE"
 side = "BOTH"
 
