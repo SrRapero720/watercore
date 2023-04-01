@@ -2,7 +2,6 @@ package me.srrapero720.watercore.custom.data.storage;
 
 import me.srrapero720.watercore.custom.data.BackData;
 import me.srrapero720.watercore.internal.WaterConfig;
-import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -28,13 +27,10 @@ public class SimplePlayerStorage {
 
 
     public static void saveBackData(@NotNull ServerPlayer player) {
-        WaterConsole.warn("saveBackData", "Saved back data");
-        WaterConsole.justPrint(new BackData(player).toString());
         PLAYER_BACKDATA.put(player.getName().getString(), new BackData(player));
     }
 
     public static BackData loadBackData(ServerPlayer player) {
-        WaterConsole.warn("loadBackData", "LoadedBackData xd");
         return PLAYER_BACKDATA.get(player.getName().getString());
     }
 }

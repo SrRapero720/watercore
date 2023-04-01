@@ -16,11 +16,11 @@ public class LobbySpawnData extends SavedData {
 
     private String dimensionID = "minecraft";
     private String dimensionName = "overworld";
-    private double[] cords = new double[]{0D, 128D, 0D};
+    private double[] cords = new double[]{0D, 128.77D, 0D};
     private int[] rotation = new int[]{0, 0};
     public double[] getCords() { return cords; }
     public int[] getRotation() { return rotation; }
-    public boolean isEmpty() { return cords[0] == 0 && cords[1] == 128 && cords[2] == 0; }
+    public boolean isEmpty() { return cords[0] == 0D && cords[1] == 128D && cords[2] == 0D; }
     public ResourceLocation getDimension() { return new ResourceLocation(dimensionID, dimensionName); }
 
     public LobbySpawnData setDimension(@NotNull ResourceKey<Level> dimension) {
@@ -52,11 +52,13 @@ public class LobbySpawnData extends SavedData {
         var rawDimensionName = tag.getString("dimensionName");
         var rawAngle = tag.getIntArray("spawnAngle");
 
-        instance.cords = new double[]{
-                tag.getDouble("spawnX"),
-                tag.getDouble("spawnY"),
-                tag.getDouble("spawnZ")
-        };
+        if (tag.contains("spawnY", 99)) {
+            instance.cords = new double[]{
+                    tag.getDouble("spawnX"),
+                    tag.getDouble("spawnY"),
+                    tag.getDouble("spawnZ")
+            };
+        }
 
         if (!rawDimensionID.isEmpty()) instance.dimensionID = rawDimensionID;
         if (!rawDimensionName.isEmpty()) instance.dimensionName = rawDimensionName;
