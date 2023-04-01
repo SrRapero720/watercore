@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import top.seraphjack.simplelogin.client.SetPasswordScreen;
 
-@Mixin(SetPasswordScreen.class)
+@Mixin(value = SetPasswordScreen.class, remap = false)
 public abstract class SL312664_PwScreen extends Screen {
     @Shadow private EditBox password;
 
