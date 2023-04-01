@@ -15,7 +15,8 @@ import org.spongepowered.asm.mixin.*;
 import java.util.Collection;
 
 
-@Mixin(value = Player.class)
+// TODO: USES player#getName() instead self playername
+@Mixin(value = Player.class, priority = 0)
 public abstract class PlayerMixin extends LivingEntity {
     @Shadow @Final private Collection<MutableComponent> prefixes;
     @Shadow @Final private Collection<MutableComponent> suffixes;

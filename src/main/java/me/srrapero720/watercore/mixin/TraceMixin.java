@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = CrashReport.class)
+@Mixin(value = CrashReport.class, priority = 0)
 public abstract class TraceMixin {
 	@Shadow private StackTraceElement[] uncategorizedStackTrace;
 	@Shadow @Final private Throwable exception;

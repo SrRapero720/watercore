@@ -288,13 +288,11 @@ public class WaterRegistry {
     public static void onPlayerClone(PlayerEvent.Clone event) {
         // MANTENIENE LA DATA ORIGINAL
         // La data original de que?
-        // Por que hay 2 chats abiertos?
     }
     @SubscribeEvent
     public static void onPlayerXD(LivingDeathEvent event) {
         // MANTENIENE LA DATA ORIGINAL
         // La data original de que?
-        // De que mierdas hablaban ustedes?
     }
 
 
