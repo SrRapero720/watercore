@@ -20,7 +20,7 @@ public class LobbySpawnData extends SavedData {
     private int[] rotation = new int[]{0, 0};
     public double[] getCords() { return cords; }
     public int[] getRotation() { return rotation; }
-    public boolean isEmpty() { return cords[0] == 0D && cords[1] == 128D && cords[2] == 0D; }
+    public boolean isEmpty() { return cords[1] == 128.77D; }
     public ResourceLocation getDimension() { return new ResourceLocation(dimensionID, dimensionName); }
 
     public LobbySpawnData setDimension(@NotNull ResourceKey<Level> dimension) {
