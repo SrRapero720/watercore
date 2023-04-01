@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(value = ServerGamePacketListenerImpl.class, priority = 0)
+@Mixin(value = ServerGamePacketListenerImpl.class, priority = 72)
 public abstract class ServerGamePLMixin {
     @Shadow public ServerPlayer player;
     @Final @Shadow private MinecraftServer server;

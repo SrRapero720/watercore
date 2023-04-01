@@ -58,7 +58,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import javax.annotation.Nullable;
 import java.util.*;
 
-@Mixin(value = PlayerList.class, priority = 0)
+@Mixin(value = PlayerList.class, priority = 72)
 public abstract class PlayerListMixin {
     @Shadow private int viewDistance;
     @Shadow private int simulationDistance;

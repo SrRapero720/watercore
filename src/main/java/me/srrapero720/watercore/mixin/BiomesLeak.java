@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.function.Supplier;
 
-@Mixin(value = Biome.class, priority = 0)
+@Mixin(value = Biome.class, priority = 72)
 public class BiomesLeak {
     // Incompatible con Saturn
     private static final ThreadLocal<Long2FloatLinkedOpenHashMap> TEMP_CACHE;
