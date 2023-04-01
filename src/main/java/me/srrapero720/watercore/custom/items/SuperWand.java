@@ -18,9 +18,17 @@ import me.srrapero720.watercore.internal.WaterUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class SuperWand extends Item {
+    final int damage;
     public SuperWand() {
         super(new Properties().tab(WaterRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
+        damage = 24;
     }
+
+    public SuperWand(int damage) {
+        super(new Properties().tab(WaterRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
+        this.damage = damage;
+    }
+
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand interactionHand) {
         if (interactionHand.equals(InteractionHand.MAIN_HAND)) {
