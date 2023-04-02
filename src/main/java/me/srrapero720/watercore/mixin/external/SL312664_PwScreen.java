@@ -18,13 +18,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import top.seraphjack.simplelogin.client.SetPasswordScreen;
 
 @OnlyIn(Dist.CLIENT)
-@Mixin(value = SetPasswordScreen.class, remap = false)
+@Mixin(value = SetPasswordScreen.class)
 public abstract class SL312664_PwScreen extends Screen {
-    @Shadow private EditBox password;
+    @Shadow(aliases = {"password", ""}) private EditBox password;
 
     protected SL312664_PwScreen(Component p_96550_) { super(p_96550_); }
 
-    @Inject(method = "init", at = @At(value = "TAIL"))
+    @Inject(method = { "m_7856_", "init"}, at = @At(value = "TAIL"), remap = false)
     protected void injectInit(CallbackInfo ci) {
         addRenderableWidget(password);
     }
