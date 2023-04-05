@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
+import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -15,8 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class BackComm {
     public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("back").executes((context -> teleport(0, context)))
-                .then(Commands.argument("index", IntegerArgumentType.integer(0, 10)))
-                .executes(BackComm::teleportWithIndex));
+                .then(Commands.argument("index", IntegerArgumentType.integer(0, 10)).executes(BackComm::teleportWithIndex)));
     }
 
     private static int teleportWithIndex(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
@@ -42,6 +42,8 @@ public class BackComm {
         }
 
         player.teleportTo(WaterUtil.findLevel(levels, post.getDimension()), post.getX(), post.getY(), post.getZ(), post.getRotY(), post.getRotX());
+
+
         return 0;
     }
 }
