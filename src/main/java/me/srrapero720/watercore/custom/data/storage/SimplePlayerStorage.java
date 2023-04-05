@@ -2,6 +2,7 @@ package me.srrapero720.watercore.custom.data.storage;
 
 import me.srrapero720.watercore.custom.data.BackData;
 import me.srrapero720.watercore.internal.WaterConfig;
+import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,8 @@ public class SimplePlayerStorage {
         return PLAYER_BACKCOOLDOWN.getOrDefault(player.getName().getString(), 0L);
     }
     public static boolean updateBackCooldown(ServerPlayer player) {
-        if (System.nanoTime() >= PLAYER_BACKCOOLDOWN.getOrDefault(player.getName().getString(), 0L)) {
+        WaterConsole.justPrint("Nano: " + System.nanoTime() + " Cooldown: " + (System.nanoTime() + WaterUtil.secondsToMilis(WaterConfig.get("BACK_COOLDOWN"))));
+        if (System.nanoTime() >= loadBackCooldown(player)) {
             PLAYER_BACKCOOLDOWN.put(player.getName().getString(), System.nanoTime() + WaterUtil.secondsToMilis(WaterConfig.get("BACK_COOLDOWN")));
             return true;
         }
@@ -29,10 +31,9 @@ public class SimplePlayerStorage {
 
     public static void saveBackData(@NotNull ServerPlayer player) {
         var key = player.getName().getString();
-        List<BackData> list;
-        if ((list = PLAYER_BACKDATA.get(key)) == null) PLAYER_BACKDATA.put(key, list = new ArrayList<>());
+        var list = PLAYER_BACKDATA.getOrDefault(key, new ArrayList<>());
 
-        list.add(new BackData(player));
+        list.add(0, new BackData(player));
         if (list.size() > 10) list.remove(list.size() - 1);
 
         // ENSURE SAVING
