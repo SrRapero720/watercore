@@ -4,8 +4,7 @@ package me.srrapero720.watercore.mixin;
 import com.mojang.serialization.Dynamic;
 import io.netty.buffer.Unpooled;
 import me.srrapero720.watercore.api.FormatPlayerProvider;
-import me.srrapero720.watercore.custom.data.LobbySpawnData;
-import me.srrapero720.watercore.custom.data.WorldSpawnData;
+import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
 import me.srrapero720.watercore.internal.WaterConfig;
 import me.srrapero720.watercore.internal.WaterConsole;
@@ -147,7 +146,7 @@ public abstract class PlayerListMixin {
         var profile = player.getGameProfile();
         var profileCache = this.server.getProfileCache();
 
-        var spawnData = WorldSpawnData.fetch(server);
+        var spawnData = PlayerSpawn.fetch(PlayerSpawn.Mode.WORLD, server);
         var spawnLevel = WaterUtil.findLevel(server.getAllLevels(), spawnData.getDimension());
         var spawnLevelRes = spawnLevel == null ? Level.OVERWORLD : spawnLevel.dimension();
 
@@ -199,10 +198,8 @@ public abstract class PlayerListMixin {
 
         int timePlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
         if (timePlayed == 0) {
-            final var cords = spawnData.getCords();
-            final var rot = spawnData.getRotation();
-            final var mPos = new BlockPos(cords[0], cords[1], cords[2]);
-            packet.teleport(mPos.getX(), mPos.getY() + 1, mPos.getZ(), rot[0], rot[1]);
+            final var mPos = new BlockPos(spawnData.getX(), spawnData.getY(), spawnData.getZ());
+            packet.teleport(mPos.getX(), mPos.getY() + 1, mPos.getZ(), spawnData.getRotY(), spawnData.getRotX());
         } else packet.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
 
 
@@ -269,7 +266,7 @@ public abstract class PlayerListMixin {
         player.getLevel().removePlayerImmediately(player, Entity.RemovalReason.DISCARDED);
 
         // WATERCORE LOBBY DATA
-        var lobbyData = LobbySpawnData.fetch(server);
+        var lobbyData = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, server);
         var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
         
         var respawnPos = player.getRespawnPosition();
@@ -307,13 +304,11 @@ public abstract class PlayerListMixin {
             freshPlayer.setRespawnPosition(level.dimension(), respawnPos, respawnAngle, isBoolean, false);
             flag2 = !isBoolean && blockstate.is(Blocks.RESPAWN_ANCHOR);
         } else {
-            var cords = lobbyData.getCords();
-            var mRot = lobbyData.getRotation();
-
-            freshPlayer.setPos(cords[0], cords[1], cords[2]);
-            freshPlayer.setYRot(mRot[0]);
-            freshPlayer.setXRot(mRot[1]);
-            freshPlayer.setRespawnPosition(level.dimension(), new BlockPos(cords[0], cords[1], cords[2]), mRot[0], respawnForce, false);
+            freshPlayer.setPos(lobbyData.getX(), lobbyData.getY(), lobbyData.getZ());
+            freshPlayer.setXRot(lobbyData.getRotX());
+            freshPlayer.setYRot(lobbyData.getRotY());
+            freshPlayer.setRespawnPosition(level.dimension(),
+                    new BlockPos(lobbyData.getX(), lobbyData.getY(), lobbyData.getZ()), lobbyData.getRotY(), respawnForce, false);
 
             if (respawnPos != null) {
                 freshPlayer.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.NO_RESPAWN_BLOCK_AVAILABLE, 0.0F));
@@ -344,7 +339,6 @@ public abstract class PlayerListMixin {
         freshPlayer.initInventoryMenu();
         freshPlayer.setHealth(freshPlayer.getHealth()); // DEDUNDANT - CODED BY MOJANG LOL
 
-        // FORGE FIRED (i really want to remove this piece of shit)
         ForgeEventFactory.firePlayerRespawnEvent(freshPlayer, isBoolean);
         if (flag2) freshPlayer.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), 1.0F, 1.0F));
         this.playersByNameWC.put(freshPlayer.getName().getString().toLowerCase(), freshPlayer);

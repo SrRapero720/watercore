@@ -3,13 +3,11 @@ package me.srrapero720.watercore.custom.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.internal.WaterRegistry;
 import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.BlockPos;
-import me.srrapero720.watercore.custom.data.LobbySpawnData;
-import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 
 public class SpawnComm {
@@ -20,23 +18,18 @@ public class SpawnComm {
 
     public static int teleportPlayerToLobby(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
-        player.teleportTo(player.server.getLevel(WaterRegistry.findDimension("lobby")), 0, 128, 0, 0, 0);
+        var level = player.server.getLevel(WaterRegistry.findDimension("lobby"));
+        player.teleportTo(level, 0, 128, 0, 0, 0);
         return 0;
     }
 
     public static int teleportPlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
 
-        var dimData = LobbySpawnData.fetch(player.server);
-        var server = player.server;
+        var spawn = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, player.server);
+        var result = WaterUtil.findLevel(player.server.getAllLevels(), spawn.getDimension());
 
-        var cords = dimData.getCords();
-        var rot = dimData.getRotation();
-        var level = dimData.getDimension();
-
-        ServerLevel result = WaterUtil.findLevel(server.getAllLevels(), level);
-
-        player.teleportTo(result == null ? server.getLevel(WaterRegistry.findDimension("lobby")) : result, cords[0], cords[1], cords[2], rot[0], rot[1]);
+        player.teleportTo(result, spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getRotY(), spawn.getRotX());
         return 0;
     }
 }
