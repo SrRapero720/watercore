@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class MCFormat {
+public class MCTextFormat {
     private static final HashMap<String, String> STORED_FORMATS = new HashMap<>();
 
     public static String parse(String content) {

@@ -7,9 +7,9 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class FormatPlayerProvider {
+public class MCPlayerFormat {
     private static net.luckperms.api.LuckPerms LP;
-    private static final String NAME = FormatPlayerProvider.class.getSimpleName();
+    private static final String NAME = MCPlayerFormat.class.getSimpleName();
 
     public static void init() {
         try {
@@ -46,7 +46,7 @@ public class FormatPlayerProvider {
                 .replaceAll(Type.DISPLAY, displayname));
 
         for (var extra: extras) result.append(" ").append(extra);
-        return new TextComponent(MCFormat.parse(result.toString()));
+        return new TextComponent(MCTextFormat.parse(result.toString()));
     }
 
     public static String @NotNull [] getPrefixSuffix(GameProfile player) {
@@ -57,7 +57,7 @@ public class FormatPlayerProvider {
             if (data.getSuffix() != null) result[1] = data.getSuffix();
             return result;
         } catch(Exception ise) {
-            WaterConsole.error(FormatPlayerProvider.class.getName(), ise.getMessage());
+            WaterConsole.error(MCPlayerFormat.class.getName(), ise.getMessage());
             ise.printStackTrace();
         }
 

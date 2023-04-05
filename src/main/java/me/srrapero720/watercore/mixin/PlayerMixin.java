@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin;
 
-import me.srrapero720.watercore.api.FormatPlayerProvider;
+import me.srrapero720.watercore.api.MCPlayerFormat;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
@@ -34,7 +34,7 @@ public abstract class PlayerMixin extends LivingEntity {
     @Overwrite
     public @NotNull Component getDisplayName() {
 
-        this.displayname = FormatPlayerProvider.createPlayerDisplayName((Player) (Object) this);
+        this.displayname = MCPlayerFormat.createPlayerDisplayName((Player) (Object) this);
 
         MutableComponent mutablecomponent = new TextComponent("");
         mutablecomponent = prefixes.stream().reduce(mutablecomponent, MutableComponent::append);

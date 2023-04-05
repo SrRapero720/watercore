@@ -3,7 +3,7 @@ package me.srrapero720.watercore.mixin;
 
 import com.mojang.serialization.Dynamic;
 import io.netty.buffer.Unpooled;
-import me.srrapero720.watercore.api.FormatPlayerProvider;
+import me.srrapero720.watercore.api.MCPlayerFormat;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
 import me.srrapero720.watercore.internal.WaterConfig;
@@ -192,7 +192,7 @@ public abstract class PlayerListMixin {
         this.server.invalidateStatus();
 
         // CHANGED FOR WATERCORE - If is client side. send message to everyone and player, instead show to all
-        var component = FormatPlayerProvider.parse(WaterConfig.get("JOIN_FORMAT"), player);
+        var component = MCPlayerFormat.parse(WaterConfig.get("JOIN_FORMAT"), player);
         this.broadcastMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
         if (level.isClientSide()) player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
 

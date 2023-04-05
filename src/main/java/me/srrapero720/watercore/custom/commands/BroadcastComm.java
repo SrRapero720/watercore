@@ -3,7 +3,7 @@ package me.srrapero720.watercore.custom.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import me.srrapero720.watercore.api.MCFormat;
+import me.srrapero720.watercore.api.MCTextFormat;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -11,7 +11,6 @@ import net.minecraft.commands.arguments.MessageArgument;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
 import me.srrapero720.watercore.internal.WaterConfig;
-import net.minecraft.network.chat.TranslatableComponent;
 import org.jetbrains.annotations.NotNull;
 
 public class BroadcastComm {
@@ -25,7 +24,7 @@ public class BroadcastComm {
         dispatcher.register(Commands.literal("broadcast")
                 .requires((p_137800_) -> p_137800_.hasPermission(3))
                 .then(Commands.argument("message", MessageArgument.message())
-                .executes((context -> broadcastToServer(context, MCFormat.parse(WaterConfig.get("BROADCAST_PREFIX"))))))
+                .executes((context -> broadcastToServer(context, MCTextFormat.parse(WaterConfig.get("BROADCAST_PREFIX"))))))
         );
     }
 
@@ -35,7 +34,7 @@ public class BroadcastComm {
             var source = context.getSource();
             var server = source.getServer();
             var c = MessageArgument.getMessage(context, "message");
-            server.getPlayerList().broadcastMessage(new TextComponent(MCFormat.parse(mPrefix + c.getString())), ChatType.SYSTEM, Util.NIL_UUID);
+            server.getPlayerList().broadcastMessage(new TextComponent(MCTextFormat.parse(mPrefix + c.getString())), ChatType.SYSTEM, Util.NIL_UUID);
             return 1;
         } catch (Exception e) {
             e.printStackTrace();
