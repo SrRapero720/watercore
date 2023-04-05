@@ -6,13 +6,14 @@ import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SimplePlayerStorage {
-    private static final Map<String, BackData> PLAYER_BACKDATA = new HashMap<>();
+    private static final Map<String, List<BackData>> PLAYER_BACKDATA = new HashMap<>();
     private static final Map<String, Long> PLAYER_BACKCOOLDOWN = new HashMap<>();
-
 
     public static long loadBackCooldown(ServerPlayer player) {
         return PLAYER_BACKCOOLDOWN.getOrDefault(player.getName().getString(), 0L);
@@ -27,10 +28,26 @@ public class SimplePlayerStorage {
 
 
     public static void saveBackData(@NotNull ServerPlayer player) {
-        PLAYER_BACKDATA.put(player.getName().getString(), new BackData(player));
+        var key = player.getName().getString();
+        List<BackData> list;
+        if ((list = PLAYER_BACKDATA.get(key)) == null) PLAYER_BACKDATA.put(key, list = new ArrayList<>());
+
+        list.add(new BackData(player));
+        if (list.size() > 10) list.remove(list.size() - 1);
+
+        // ENSURE SAVING
+        PLAYER_BACKDATA.put(key, list);
     }
 
-    public static BackData loadBackData(ServerPlayer player) {
-        return PLAYER_BACKDATA.get(player.getName().getString());
+    public static BackData getBack(int index, ServerPlayer player) {
+        var key = player.getName().getString();
+        List<BackData> list;
+        if ((list = PLAYER_BACKDATA.get(key)) == null) return null;
+        if (index >= list.size()) return null;
+        return list.get(index);
+    }
+
+    public static BackData getLastBack(ServerPlayer player) {
+        return getBack(0, player);
     }
 }

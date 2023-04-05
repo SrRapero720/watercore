@@ -1,24 +1,18 @@
 package me.srrapero720.watercore.custom.data;
 
+import me.srrapero720.watercore.api.MCTeletransportation;
 import me.srrapero720.watercore.custom.data.storage.IPlayerStorage;
 import me.srrapero720.watercore.internal.WaterConsole;
+import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.portal.PortalInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class BackData {
-    public final ResourceLocation dimension;
-    public final double x, y, z;
-    public final float xRot, yRot;
+public final class BackData extends MCTeletransportation {
     public BackData(ResourceLocation dim, double x, double y, double z, float xRot, float yRot) {
-        dimension = dim;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.xRot = xRot;
-        this.yRot = yRot;
+        super(dim, new double[] { x, y, z }, new float[] { xRot, yRot });
     }
 
     public BackData(ServerPlayer player) {
@@ -26,21 +20,12 @@ public final class BackData {
         this.x = player.getX();
         this.y = player.getY();
         this.z = player.getZ();
-        this.xRot = player.getXRot();
-        this.yRot = player.getYRot();
+        this.rotX = player.getXRot();
+        this.rotY = player.getYRot();
     }
 
     @Override
-    public String toString() {
-        return "BackData{" +
-                "dimension=" + dimension +
-                ", x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                ", xRot=" + xRot +
-                ", yRot=" + yRot +
-                '}';
-    }
+    protected void onDataUpdated() { /* UNUSED HERE */ }
 
     @Deprecated(forRemoval = true)
     public static void saveLastPosition(@NotNull ServerPlayer player) {
