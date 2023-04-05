@@ -86,7 +86,7 @@ dependencies {
     //MIXIN: SL312664
     implementation fg.deobf("curse.maven:simple-login-312664:3864949")
 
-    compileOnly "net.luckperms:api:5.4"
+    implementation fg.deobf("net.luckperms:api:5.4")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
