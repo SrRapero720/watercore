@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.mixin;
+package me.srrapero720.watercore.mixin.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;

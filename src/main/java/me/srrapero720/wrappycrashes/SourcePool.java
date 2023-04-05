@@ -1,4 +1,4 @@
-package me.srrapero720.craftycrashes;
+package me.srrapero720.wrappycrashes;
 
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.Iterables;
 
-import me.srrapero720.craftycrashes.smap.FileInfo;
+import me.srrapero720.wrappycrashes.smap.FileInfo;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import org.spongepowered.asm.mixin.transformer.ClassInfo;
 

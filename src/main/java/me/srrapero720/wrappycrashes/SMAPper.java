@@ -1,11 +1,11 @@
-package me.srrapero720.craftycrashes;
+package me.srrapero720.wrappycrashes;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import me.srrapero720.craftycrashes.smap.FileInfo;
-import me.srrapero720.craftycrashes.smap.LineInfo;
-import me.srrapero720.craftycrashes.smap.SMAP;
+import me.srrapero720.wrappycrashes.smap.FileInfo;
+import me.srrapero720.wrappycrashes.smap.LineInfo;
+import me.srrapero720.wrappycrashes.smap.SMAP;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 public class SMAPper {

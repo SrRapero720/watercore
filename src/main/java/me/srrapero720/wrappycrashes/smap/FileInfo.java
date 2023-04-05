@@ -1,4 +1,4 @@
-package me.srrapero720.craftycrashes.smap;
+package me.srrapero720.wrappycrashes.smap;
 
 public class FileInfo {
 	public final String name, path;

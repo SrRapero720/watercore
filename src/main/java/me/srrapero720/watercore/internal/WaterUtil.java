@@ -134,7 +134,7 @@ public class WaterUtil {
 
     public static void printTrace(StackTraceElement[] stackTrace, StringBuilder crashReportBuilder) {
         if (stackTrace != null && stackTrace.length > 0) {
-            crashReportBuilder.append("\nMixins in Stacktrace:");
+            crashReportBuilder.append("\n[WATERCoRE] Mixins in Stacktrace:");
 
             try {
                 List<String> classNames = new ArrayList<>();

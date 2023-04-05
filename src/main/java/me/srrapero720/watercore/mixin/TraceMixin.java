@@ -1,17 +1,14 @@
 package me.srrapero720.watercore.mixin;
 
-import me.srrapero720.craftycrashes.SMAPper;
+import me.srrapero720.wrappycrashes.SMAPper;
 import me.srrapero720.watercore.internal.WaterUtil;
 import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.CrashReport;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = CrashReport.class, priority = 72)

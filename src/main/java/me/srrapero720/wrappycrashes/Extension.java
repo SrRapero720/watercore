@@ -1,4 +1,4 @@
-package me.srrapero720.craftycrashes;
+package me.srrapero720.wrappycrashes;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin;
 
-import me.srrapero720.craftycrashes.SMAPper;
+import me.srrapero720.wrappycrashes.SMAPper;
 import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.CrashReportCategory;
