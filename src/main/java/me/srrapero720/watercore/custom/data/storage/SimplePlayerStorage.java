@@ -47,8 +47,4 @@ public class SimplePlayerStorage {
         if (index >= list.size()) return null;
         return list.get(index);
     }
-
-    public static BackData getLastBack(ServerPlayer player) {
-        return getBack(0, player);
-    }
 }
