@@ -28,7 +28,6 @@ public class WaterUtil {
     public static int toTicks(final double sec) { return (int) (sec * 20); }
     public static boolean isModOnline(String id) { return FMLLoader.getLoadingModList().getModFileById(id) != null; }
 
-    @Contract(pure = true)
     public static @NotNull String getBroadcastPrefix() { return "&e&l[&bWATERC&eo&bRE&e&l] &f"; }
 
     public static Vec3 findCenter(double x, double y, double z) {
@@ -38,9 +37,7 @@ public class WaterUtil {
         var deltaZ = z - (int) z;
         var currentZ = ((deltaZ > -0.75D && deltaZ < -0.25D)) ? (int) z - 0.5D : (deltaZ > 0.25D && deltaZ < 0.75D) ? (int) z + 0.5D : Math.round(z);
 
-
         var centerY = (int) y + 0.25D;
-
         return new Vec3(currentX, centerY, currentZ);
     }
     public static long secondsToMilis(long sec) {
@@ -66,6 +63,18 @@ public class WaterUtil {
 
     public static File getGameDir() {
         return FMLEnvironment.dist == Dist.CLIENT ? Minecraft.getInstance().gameDirectory : new File("");
+    }
+
+    public static boolean isLong(String s) {
+        try { Long.valueOf(s); return true; } catch (Exception e) { return false; }
+    }
+
+    public static boolean isFloat(String s) {
+        try { Float.valueOf(s); return true; } catch (Exception e) { return false; }
+    }
+
+    public static boolean isInt(String s) {
+        try { Integer.valueOf(s); return true; } catch (Exception e) { return false; }
     }
 
     /* THANKS STACKOVERFLOW

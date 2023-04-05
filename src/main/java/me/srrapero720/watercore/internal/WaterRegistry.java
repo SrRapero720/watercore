@@ -9,12 +9,11 @@ import me.srrapero720.watercore.custom.items.BaseViolin;
 import me.srrapero720.watercore.custom.items.SuperWand;
 import me.srrapero720.watercore.custom.potions.BlessedPotion;
 import me.srrapero720.watercore.custom.potions.CursedPotion;
-import net.minecraft.Util;
+import me.srrapero720.watercore.custom.tabs.SmartCreativeTab;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -33,8 +32,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.registries.*;
-import me.srrapero720.watercore.custom.tabs.SmartCreativeTab;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,7 +44,7 @@ import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = WaterCore.ID)
 public class WaterRegistry {
-    public enum Type { TABS, SOUND, POTION, ITEM, BLOCKS, BLOCK_ENTITIES, LEVELS, BLOCK_ENTITY_ITEM }
+    public enum Type { TABS, SOUND, POTION, ITEM, BLOCKS, BLOCK_ENTITIES, LEVELS}
     private static final Map<String, WaterRegistry> REGISTRIES = new HashMap<>();
     private final String MOD_ID;
 
@@ -248,10 +248,7 @@ public class WaterRegistry {
             case ITEM -> ITEMS_MAP.put(id, ITEMS.register(id, (Supplier<Item>) supplier));
             case BLOCKS -> BLOCKS_MAP.put(id, BLOCKS.register(id, (Supplier<Block>) supplier));
             case BLOCK_ENTITIES -> BLOCK_ENTITIES_MAP.put(id, BLOCK_ENTITIES.register(id, () ->
-                    ((Supplier<BlockEntityType.Builder<?>>) supplier).get().build(Util.fetchChoiceType(References.BLOCK_ENTITY, location.getPath()))));
-            case BLOCK_ENTITY_ITEM -> {
-
-            }
+                    ((Supplier<BlockEntityType.Builder<?>>) supplier).get().build(null)));
             case LEVELS -> {
                 var res = ((Supplier<ResourceLocation>) supplier).get();
                 LEVELS.put(id, ResourceKey.create(Registry.DIMENSION_REGISTRY, res));
