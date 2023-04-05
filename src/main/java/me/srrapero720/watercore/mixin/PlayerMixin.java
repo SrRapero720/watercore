@@ -11,6 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.Collection;
 
@@ -27,19 +29,8 @@ public abstract class PlayerMixin extends LivingEntity {
     @Shadow public abstract @NotNull Component getName();
     @Shadow protected abstract MutableComponent decorateDisplayNameComponent(MutableComponent p_36219_);
 
-    /**
-     * @author SrRapero720
-     * @reason No longer support forge playerDisplayName, and i need to enforce my displayname over other mods.
-     */
-    @Overwrite
-    public @NotNull Component getDisplayName() {
-
-        this.displayname = MCPlayerFormat.createPlayerDisplayName((Player) (Object) this);
-
-        MutableComponent mutablecomponent = new TextComponent("");
-        mutablecomponent = prefixes.stream().reduce(mutablecomponent, MutableComponent::append);
-        mutablecomponent = mutablecomponent.append(PlayerTeam.formatNameForTeam(this.getTeam(), this.displayname));
-        mutablecomponent = suffixes.stream().reduce(mutablecomponent, MutableComponent::append);
-        return this.decorateDisplayNameComponent(mutablecomponent);
+    @Redirect(method = "getDisplayName", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/event/ForgeEventFactory;getPlayerDisplayName(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/network/chat/Component;)Lnet/minecraft/network/chat/Component;"))
+    public Component getDisplayName(Player instance, Component value) {
+        return MCPlayerFormat.createPlayerDisplayName((Player) (Object) this);
     }
 }
