@@ -2,7 +2,6 @@ package me.srrapero720.watercore.mixin;
 
 
 import com.mojang.serialization.Dynamic;
-import io.netty.buffer.Unpooled;
 import me.srrapero720.watercore.api.MCPlayerFormat;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
@@ -11,46 +10,26 @@ import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.Connection;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.*;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket.Action;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.ServerScoreboard;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.players.PlayerList;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.TagNetworkSerialization;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -59,28 +38,11 @@ import java.util.*;
 
 @Mixin(value = PlayerList.class, priority = 72)
 public abstract class PlayerListMixin {
-    @Shadow private int viewDistance;
-    @Shadow private int simulationDistance;
     @Shadow @Final private MinecraftServer server;
-    @Shadow @Final private static Logger LOGGER;
-    @Shadow @Final private RegistryAccess.Frozen registryHolder;
-    @Shadow @Final private Map<UUID, ServerPlayer> playersByUUID;
     @Shadow @Nullable public abstract CompoundTag load(ServerPlayer p_11225_);
-    @Shadow public abstract void sendPlayerPermissionLevel(ServerPlayer p_11290_);
-    @Shadow protected abstract void updateEntireScoreboard(ServerScoreboard p_11274_, ServerPlayer p_11275_);
     @Shadow public abstract void broadcastMessage(Component p_11265_, ChatType p_11266_, UUID p_11267_);
-    @Shadow public abstract int getMaxPlayers();
-    @Shadow public abstract void broadcastAll(Packet<?> p_11269_);
-    @Shadow public abstract void sendLevelInfo(ServerPlayer p_11230_, ServerLevel p_11231_);
     @Shadow public abstract MinecraftServer getServer();
     @Unique private final HashMap<String, ServerPlayer> playersByNameWC = new HashMap<>();
-
-    // PLANED FOR REMOVAL ALL USAGES ON WATERCoRE OVERRIDES.
-    @Shadow @Final private List<ServerPlayer> players;
-
-    // WARNING - IS MIXED HERE
-    @Shadow public abstract boolean addPlayer(ServerPlayer player);
-    @Shadow public abstract boolean removePlayer(ServerPlayer player);
 
     @Inject(method = "addPlayer", at = @At(value = "TAIL"), remap = false)
     public void injectAddPlayer(ServerPlayer player, CallbackInfoReturnable<Boolean> cir) {
@@ -88,260 +50,128 @@ public abstract class PlayerListMixin {
     }
 
     @Inject(method = "removePlayer", at = @At(value = "TAIL"), remap = false)
-    public void injectRemovePlayer(ServerPlayer player, CallbackInfoReturnable<Boolean> cir) {
+    public void injectRemovePlayer(@NotNull ServerPlayer player, CallbackInfoReturnable<Boolean> cir) {
         playersByNameWC.remove(player.getName().getString().toLowerCase());
     }
 
-
-    /**
-     * @author SrRapero720
-     * @reason MAGMA/ARCLIGHT instances breaks itselfs using this.
-     */
-    @Nullable
-    @Overwrite
-    public ServerPlayer getPlayerByName(String name) {
-        return playersByNameWC.get(name.toLowerCase());
+    @Inject(method = "getPlayerByName", at = @At("HEAD"), cancellable = true)
+    public void injectGetPlayerByName(@NotNull String name, @NotNull CallbackInfoReturnable<ServerPlayer> cir) {
+        cir.setReturnValue(playersByNameWC.get(name.toLowerCase()));
     }
 
     @Inject(method = "remove", at = @At(value = "HEAD"))
-    public void injectorRemove(ServerPlayer player, CallbackInfo ci) {
+    public void injectorRemove(@NotNull ServerPlayer player, CallbackInfo ci) {
         playersByNameWC.remove(player.getName().getString().toLowerCase());
     }
 
-    /**
-     * @author SrRapero720
-     * @reason Optimization thing
-     */
-    @Overwrite
-    public List<ServerPlayer> getPlayersWithAddress(String address) {
+    @Inject(method = "getPlayersWithAddress", at = @At(value = "HEAD"), cancellable = true)
+    public void injectGetPlayersWithAddress(String address, @NotNull CallbackInfoReturnable<List<ServerPlayer>> cir) {
         var playerArray = new LinkedList<>(playersByNameWC.values());
         playerArray.removeIf(serverPlayer -> !serverPlayer.getIpAddress().equals(address));
-        return playerArray;
+        cir.setReturnValue(playerArray);
     }
 
-    /**
-     * @author SrRapero720
-     * @reason Enhances this method (TRIAGE)
-     */
-    @Overwrite
-    public String[] getPlayerNamesArray() {
-        return playersByNameWC.keySet().toArray(new String[0]);
+    @Inject(method = "getPlayerNamesArray", at = @At(value = "HEAD"), cancellable = true)
+    public void injectGetPlayerNamesArray(@NotNull CallbackInfoReturnable<String[]> cir) {
+        cir.setReturnValue(playersByNameWC.keySet().toArray(new String[0]));
     }
 
-    /**
-     * @author SrRapero720
-     * @reason Nothing to mention here, we use our player storage instead...
-     */
-    @Overwrite
-    public int getPlayerCount() {
-        return playersByNameWC.size();
-    }
+    @Inject(method = "getPlayerCount", at = @At(value = "HEAD"), cancellable = true)
+    public void injectGetPlayerCount(@NotNull CallbackInfoReturnable<Integer> cir) { cir.setReturnValue(playersByNameWC.size()); }
 
-    /**
-     * @author SrRapero720
-     * @reason Some stuff needs to be changed in this silly function (cannot be Injected), sorry if broke things.
-     */
-    @Overwrite
-    public void placeNewPlayer(@NotNull Connection connection, @NotNull ServerPlayer player) {
-        var profile = player.getGameProfile();
-        var profileCache = this.server.getProfileCache();
-
+    @ModifyVariable(method = "placeNewPlayer", at = @At(value = "STORE"))
+    public ResourceKey<Level> injectLocalPlaceNewPlayer(ResourceKey<Level> levelResourceKey, Connection connection, ServerPlayer player) {
+        var tag = this.load(player);
         var spawnData = PlayerSpawn.fetch(PlayerSpawn.Mode.WORLD, server);
         var spawnLevel = WaterUtil.findLevel(server.getAllLevels(), spawnData.getDimension());
         var spawnLevelRes = spawnLevel == null ? Level.OVERWORLD : spawnLevel.dimension();
 
-        profileCache.add(profile);
-
-        var tag = this.load(player);
-        final var levelRes = tag != null
+        return tag != null
                 ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(WaterConsole::justPrint).orElse(spawnLevelRes)
                 : spawnLevelRes;
+    }
 
-        // If you remove or change the name of your dimension, you know the problem... but here no notify about it
-        var levelResult = this.server.getLevel(levelRes);
-        final var level = levelResult != null ? levelResult : this.server.overworld();
-
-        player.setLevel(level);
-        var s1 = connection.getRemoteAddress().toString();
-
-        // No es necesario sobreescribir a SrConsole
-        LOGGER.info("{}[{}] logged in with entity id {} at ({}, {}, {})", player.getName().getString(), s1, player.getId(), player.getX(), player.getY(), player.getZ());
-        player.loadGameTypes(tag);
-
-        var leveldata = level.getLevelData();
-        var packet = new ServerGamePacketListenerImpl(this.server, connection, player);
-        NetworkHooks.sendMCRegistryPackets(connection, "PLAY_TO_CLIENT");
-
-        boolean doImmediateRespawn = leveldata.getGameRules().getBoolean(GameRules.RULE_DO_IMMEDIATE_RESPAWN);
-        boolean reduceDebugInfo = leveldata.getGameRules().getBoolean(GameRules.RULE_REDUCEDDEBUGINFO);
-        packet.send(new ClientboundLoginPacket(player.getId(), leveldata.isHardcore(), player.gameMode.getGameModeForPlayer(), player.gameMode.getPreviousGameModeForPlayer(), this.server.levelKeys(), this.registryHolder, level.dimensionTypeRegistration(), level.dimension(), BiomeManager.obfuscateSeed(level.getSeed()), this.getMaxPlayers(), this.viewDistance, this.simulationDistance, reduceDebugInfo, !doImmediateRespawn, level.isDebug(), level.isFlat()));
-        packet.send(new ClientboundCustomPayloadPacket(ClientboundCustomPayloadPacket.BRAND, (new FriendlyByteBuf(Unpooled.buffer())).writeUtf(this.getServer().getServerModName())));
-        packet.send(new ClientboundChangeDifficultyPacket(leveldata.getDifficulty(), leveldata.isDifficultyLocked()));
-        packet.send(new ClientboundPlayerAbilitiesPacket(player.getAbilities()));
-        packet.send(new ClientboundSetCarriedItemPacket(player.getInventory().selected));
-        packet.send(new ClientboundUpdateRecipesPacket(this.server.getRecipeManager().getRecipes()));
-        packet.send(new ClientboundUpdateTagsPacket(TagNetworkSerialization.serializeTagsToNetwork(this.registryHolder)));
-
-        // Forge devs are odd persons
-        MinecraftForge.EVENT_BUS.post(new OnDatapackSyncEvent((PlayerList) (Object) this, player));
-
-        this.sendPlayerPermissionLevel(player);
-        player.getStats().markAllDirty();
-        player.getRecipeBook().sendInitialRecipeBook(player);
-        this.updateEntireScoreboard(level.getScoreboard(), player);
-        this.server.invalidateStatus();
-
-        // CHANGED FOR WATERCORE - If is client side. send message to everyone and player, instead show to all
-        var component = MCPlayerFormat.parse(WaterConfig.get("JOIN_FORMAT"), player);
-        this.broadcastMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
-        if (level.isClientSide()) player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
-
+    @Redirect(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;teleport(DDDFF)V"))
+    public void redirectPlaceNewPlayerTeleport(ServerGamePacketListenerImpl packet, double p_9775_, double p_9776_, double p_9777_, float p_9778_, float p_9779_, Connection connection, ServerPlayer player) {
+        var spawnData = PlayerSpawn.fetch(PlayerSpawn.Mode.WORLD, server);
         int timePlayed = player.getStats().getValue(Stats.CUSTOM.get(Stats.PLAY_TIME));
+
         if (timePlayed == 0) {
             final var mPos = new BlockPos(spawnData.getX(), spawnData.getY(), spawnData.getZ());
             packet.teleport(mPos.getX(), mPos.getY() + 1, mPos.getZ(), spawnData.getRotY(), spawnData.getRotX());
         } else packet.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
+    }
 
+    @Inject(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;addPlayer(Lnet/minecraft/server/level/ServerPlayer;)Z"))
+    public void injectPlaceNewPlayerPutPlayer(Connection connection, ServerPlayer player, CallbackInfo ci) {
+        playersByNameWC.put(player.getName().getString().toLowerCase(), player);
+    }
 
-        this.addPlayer(player);
-        this.playersByNameWC.put(player.getName().getString().toLowerCase(), player);
-        this.playersByUUID.put(player.getUUID(), player);
-        this.broadcastAll(new ClientboundPlayerInfoPacket(Action.ADD_PLAYER, player));
-
-        for (var serverPlayer: this.players)
-            player.connection.send(new ClientboundPlayerInfoPacket(Action.ADD_PLAYER, serverPlayer));
-
-
-        level.addNewPlayer(player);
-        this.server.getCustomBossEvents().onPlayerConnect(player);
-        this.sendLevelInfo(player, level);
-        if (!this.server.getResourcePack().isEmpty()) {
-            player.sendTexturePack(this.server.getResourcePack(), this.server.getResourcePackHash(), this.server.isResourcePackRequired(), this.server.getResourcePackPrompt());
-        }
-
-        for (var mobeffectinstance : player.getActiveEffects())
-            packet.send(new ClientboundUpdateMobEffectPacket(player.getId(), mobeffectinstance));
-
-
-        if (tag != null && tag.contains("RootVehicle", 10)) {
-            var subTag = tag.getCompound("RootVehicle");
-            var entity1 = EntityType.loadEntityRecursive(subTag.getCompound("Entity"), level, (p_11223_) -> !level.addWithUUID(p_11223_) ? null : p_11223_);
-            if (entity1 != null) {
-                UUID uuid;
-                if (subTag.hasUUID("Attach")) uuid = subTag.getUUID("Attach");
-                else uuid = null;
-
-
-                if (!entity1.getUUID().equals(uuid)) {
-                    for (var entity : entity1.getIndirectPassengers()) {
-                        if (entity.getUUID().equals(uuid)) {
-                            player.startRiding(entity, true);
-                            break;
-                        }
-                    }
-                } else player.startRiding(entity1, true);
-
-                if (!player.isPassenger()) {
-                    LOGGER.warn("Couldn't reattach entity to player");
-                    entity1.discard();
-                    for (Entity entity2 : entity1.getIndirectPassengers()) entity2.discard();
-                }
-            }
-        }
-
-        player.initInventoryMenu();
-        ForgeEventFactory.firePlayerLoggedIn(player);
+    @Redirect(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
+    public void redirectBroadcastMessage(PlayerList list, Component obsolete, ChatType type, UUID uuid, Connection connection, ServerPlayer player) {
+        var component = MCPlayerFormat.parse(WaterConfig.get("JOIN_FORMAT"), player);
+        this.broadcastMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
+        if (player.level.isClientSide()) player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
     }
 
 
-    /**
-     * @author SrRapero720
-     * @reason Mainly reason I do that is for performance, do 2 teleports on ForgeEvents become in a little Tick stun :)
-     * also, MC code is shit and I want to rewrite it
+    @Inject(method = "placeNewPlayer", at = @At("TAIL"))
+    public void injectTailPlaceNewPlayer(Connection connection, ServerPlayer player, CallbackInfo ci) {
+        if (player.level.isClientSide())
+            player.sendMessage(MCPlayerFormat.parse(WaterConfig.get("JOIN_FORMAT"), player), ChatType.SYSTEM, Util.NIL_UUID);
+    }
+
+
+    /*
+     * RESPAWN MIXINS
+     * THIS MIXINS ARE REQUIRED TO RELOCATED SPAWN DATA
      */
-    @Overwrite
-    public ServerPlayer respawn(ServerPlayer player, boolean isBoolean) {
+    @Inject(method = "respawn", at = @At("HEAD"))
+    public void injectRespawnHead(ServerPlayer player, boolean isBooleanic, CallbackInfoReturnable<ServerPlayer> cir) {
         SimplePlayerStorage.saveBackData(player);
-        this.removePlayer(player);
-        player.getLevel().removePlayerImmediately(player, Entity.RemovalReason.DISCARDED);
+    }
+
+    @ModifyVariable(method = "respawn", at = @At(value = "STORE"))
+    public ServerLevel modifyRespawnServerLevel(ServerLevel instance, @NotNull ServerPlayer player, boolean isBooleanic) {
+        var respawnPos = player.getRespawnPosition();
+        var respawnAngle = player.getRespawnAngle();
+        var respawnForce = player.isRespawnForced();
 
         // WATERCORE LOBBY DATA
         var lobbyData = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, server);
         var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
-        
-        var respawnPos = player.getRespawnPosition();
-        var respawnAngle = player.getRespawnAngle();
-        var respawnForce = player.isRespawnForced();
-        
+
         var level = this.server.getLevel(player.getRespawnDimension());
         Optional<Vec3> optional = (level != null && respawnPos != null)
-                ? Player.findRespawnPositionAndUseSpawnBlock(level, respawnPos, respawnAngle, respawnForce, isBoolean)
+                ? Player.findRespawnPositionAndUseSpawnBlock(level, respawnPos, respawnAngle, respawnForce, isBooleanic)
                 : Optional.empty();
 
-        level = level != null && optional.isPresent() ? level : (lobbyLevel == null ? this.server.getLevel(Level.OVERWORLD) : lobbyLevel.getLevel());
-        var freshPlayer = new ServerPlayer(this.server, level, player.getGameProfile());
+        return level != null && optional.isPresent() ? level : (lobbyLevel == null ? this.server.getLevel(Level.OVERWORLD) : lobbyLevel.getLevel());
+    }
 
-        freshPlayer.connection = player.connection;
-        freshPlayer.restoreFrom(player, isBoolean);
-        freshPlayer.setId(player.getId());
-        freshPlayer.setMainArm(player.getMainArm());
 
-        for(String s : player.getTags()) freshPlayer.addTag(s);
+    @Redirect(method = "respawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;setMainArm(Lnet/minecraft/world/entity/HumanoidArm;)V"))
+    public void injectRespawnIsPresent(ServerPlayer freshPlayer, HumanoidArm humanoidArm, ServerPlayer oldPlayer, boolean isBooleanic) {
+        var level = this.server.getLevel(oldPlayer.getRespawnDimension());
+        var optional = (level != null && oldPlayer.getRespawnPosition() != null)
+                ? Player.findRespawnPositionAndUseSpawnBlock(level, oldPlayer.getRespawnPosition(), oldPlayer.getRespawnAngle(), oldPlayer.isRespawnForced(), isBooleanic)
+                : Optional.empty();
 
-        boolean flag2 = false;
-        if (optional.isPresent()) {
-            var blockstate = level.getBlockState(respawnPos);
-            var vec3 = optional.get();
-            float f1;
+        if (optional.isPresent()) return;
 
-            if (!blockstate.is(BlockTags.BEDS) && !blockstate.is(Blocks.RESPAWN_ANCHOR)) f1 = respawnAngle;
-            else {
-                var vec31 = Vec3.atBottomCenterOf(respawnPos).subtract(vec3).normalize();
-                f1 = (float) Mth.wrapDegrees(Mth.atan2(vec31.z, vec31.x) * (double)(180F / (float)Math.PI) - 90.0D);
-            }
+        var lobbyData = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, server);
+        var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
 
-            freshPlayer.moveTo(vec3.x, vec3.y, vec3.z, f1, 0.0F);
-            freshPlayer.setRespawnPosition(level.dimension(), respawnPos, respawnAngle, isBoolean, false);
-            flag2 = !isBoolean && blockstate.is(Blocks.RESPAWN_ANCHOR);
-        } else {
-            freshPlayer.setPos(lobbyData.getX(), lobbyData.getY(), lobbyData.getZ());
-            freshPlayer.setXRot(lobbyData.getRotX());
-            freshPlayer.setYRot(lobbyData.getRotY());
-            freshPlayer.setRespawnPosition(level.dimension(),
-                    new BlockPos(lobbyData.getX(), lobbyData.getY(), lobbyData.getZ()), lobbyData.getRotY(), respawnForce, false);
+        freshPlayer.setPos(lobbyData.getX(), lobbyData.getY(), lobbyData.getZ());
+        freshPlayer.setXRot(lobbyData.getRotX());
+        freshPlayer.setYRot(lobbyData.getRotY());
+        freshPlayer.setRespawnPosition(lobbyLevel.getLevel().dimension(),
+                new BlockPos(lobbyData.getX(), lobbyData.getY(), lobbyData.getZ()), lobbyData.getRotY(), oldPlayer.isRespawnForced(), false);
+    }
 
-            if (respawnPos != null) {
-                freshPlayer.connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.NO_RESPAWN_BLOCK_AVAILABLE, 0.0F));
-            }
-        }
-
-        while(!level.noCollision(freshPlayer) && freshPlayer.getY() < (double) level.getMaxBuildHeight()) {
-            freshPlayer.setPos(freshPlayer.getX(), freshPlayer.getY() + 1.0D, freshPlayer.getZ());
-        }
-
-        var leveldata = freshPlayer.level.getLevelData();
-        var conn = freshPlayer.connection;
-        // PACKETS
-        conn.send(new ClientboundRespawnPacket(freshPlayer.level.dimensionTypeRegistration(), freshPlayer.level.dimension(), BiomeManager.obfuscateSeed(freshPlayer.getLevel().getSeed()), freshPlayer.gameMode.getGameModeForPlayer(), freshPlayer.gameMode.getPreviousGameModeForPlayer(), freshPlayer.getLevel().isDebug(), freshPlayer.getLevel().isFlat(), isBoolean));
-        conn.teleport(freshPlayer.getX(), freshPlayer.getY(), freshPlayer.getZ(), freshPlayer.getYRot(), freshPlayer.getXRot());
-        conn.send(new ClientboundSetDefaultSpawnPositionPacket(level.getSharedSpawnPos(), level.getSharedSpawnAngle()));
-        conn.send(new ClientboundChangeDifficultyPacket(leveldata.getDifficulty(), leveldata.isDifficultyLocked()));
-        conn.send(new ClientboundSetExperiencePacket(freshPlayer.experienceProgress, freshPlayer.totalExperience, freshPlayer.experienceLevel));
-
-        // INFO
-        this.sendLevelInfo(freshPlayer, level);
-        this.sendPlayerPermissionLevel(freshPlayer);
-        level.addRespawnedPlayer(freshPlayer);
-        this.addPlayer(freshPlayer);
-        this.playersByUUID.put(freshPlayer.getUUID(), freshPlayer);
-
-        //PLAYER DATA
-        freshPlayer.initInventoryMenu();
-        freshPlayer.setHealth(freshPlayer.getHealth()); // DEDUNDANT - CODED BY MOJANG LOL
-
-        ForgeEventFactory.firePlayerRespawnEvent(freshPlayer, isBoolean);
-        if (flag2) freshPlayer.connection.send(new ClientboundSoundPacket(SoundEvents.RESPAWN_ANCHOR_DEPLETE, SoundSource.BLOCKS, respawnPos.getX(), respawnPos.getY(), respawnPos.getZ(), 1.0F, 1.0F));
-        this.playersByNameWC.put(freshPlayer.getName().getString().toLowerCase(), freshPlayer);
-        return freshPlayer;
+    @Redirect(method = "respawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;setHealth(F)V"))
+    public void injectTailRespawn(ServerPlayer instance, float v) {
+        this.playersByNameWC.put(instance.getName().getString().toLowerCase(), instance);
+        instance.setHealth(v);
     }
 }
