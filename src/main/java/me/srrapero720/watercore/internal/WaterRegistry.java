@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.internal;
 
 import me.srrapero720.watercore.WaterCore;
-import me.srrapero720.watercore.api.MCPlayerFormat;
+import me.srrapero720.watercore.api.LPMetadata;
 import me.srrapero720.watercore.custom.commands.*;
 import me.srrapero720.watercore.custom.items.BanHammer;
 import me.srrapero720.watercore.custom.items.BaseCoin;
@@ -296,13 +296,13 @@ public class WaterRegistry {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         WaterConsole.log(getClass().toString(), "WATERCoRE running on server");
-        MCPlayerFormat.init();
+        LPMetadata.init();
     }
 
 
 
     @SubscribeEvent
     public static void onServerIsRunning(ServerStartedEvent event) {
-        MCPlayerFormat.init();
+        LPMetadata.init();
     }
 }

@@ -109,7 +109,7 @@ public abstract class PlayerListMixin {
 
     @Redirect(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
     public void redirectBroadcastMessage(PlayerList list, Component obsolete, ChatType type, UUID uuid, Connection connection, ServerPlayer player) {
-        var component = MCPlayerFormat.parse(WaterConfig.get("JOIN_FORMAT"), player);
+        var component = MCPlayerFormat.format(MCPlayerFormat.Format.JOIN, player);
         this.broadcastMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
         if (player.level.isClientSide()) player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
     }
@@ -118,7 +118,7 @@ public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("TAIL"))
     public void injectTailPlaceNewPlayer(Connection connection, ServerPlayer player, CallbackInfo ci) {
         if (player.level.isClientSide())
-            player.sendMessage(MCPlayerFormat.parse(WaterConfig.get("JOIN_FORMAT"), player), ChatType.SYSTEM, Util.NIL_UUID);
+            player.sendMessage(MCPlayerFormat.format(MCPlayerFormat.Format.JOIN, player), ChatType.SYSTEM, Util.NIL_UUID);
     }
 
 

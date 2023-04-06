@@ -24,7 +24,7 @@ public abstract class ServerGamePLMixin {
 
     @ModifyArg(method = "onDisconnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
     public Component modifyOnDisconnect(Component p_11265_) {
-        return MCPlayerFormat.parse(WaterConfig.get("LEAVE_FORMAT"), player);
+        return MCPlayerFormat.format(MCPlayerFormat.Format.LEAVE, player);
     }
 
     @Redirect(method = "handleChat(Lnet/minecraft/server/network/TextFilter$FilteredText;)V", at = @At(
@@ -35,9 +35,9 @@ public abstract class ServerGamePLMixin {
         return ForgeHooks.onServerChatEvent(
                 net,
                 raw,
-                MCPlayerFormat.parse(WaterConfig.get("CHAT_FORMAT"), player),
+                MCPlayerFormat.format(MCPlayerFormat.Format.CHAT, player),
                 filtered,
-                filtered.isEmpty() ? null : MCPlayerFormat.parse(WaterConfig.get("CHAT_FORMAT"), player, filtered)
+                filtered.isEmpty() ? null : MCPlayerFormat.format(MCPlayerFormat.Format.CHAT, player, filtered)
         );
     }
 }

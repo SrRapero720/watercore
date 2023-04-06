@@ -1,31 +1,18 @@
 package me.srrapero720.watercore.api;
 
-import com.mojang.authlib.GameProfile;
 import me.srrapero720.watercore.internal.WaterConfig;
-import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public class MCPlayerFormat {
-    private static net.luckperms.api.LuckPerms LP;
-    private static final String NAME = MCPlayerFormat.class.getSimpleName();
 
-    public static void init() {
-        try {
-            var clazz = Class.forName("net.luckperms.api.LuckPermsProvider");
-            LP = net.luckperms.api.LuckPermsProvider.get();
-
-            WaterConsole.log(NAME, "Using 'LuckPerms' as Prefix provider");
-        } catch (Exception e) {
-            WaterConsole.log(NAME, "Luckperms no found");
-        }
-    }
-
-    public static TextComponent createPlayerDisplayName(Player player) {
+    @Contract("_ -> new")
+    public static @NotNull TextComponent createPlayerDisplayName(Player player) {
         String format = WaterConfig.get("PLAYER_FORMAT");
-        if (LP != null) {
-            var prefixSuffix = getPrefixSuffix(player.getGameProfile());
+        if (LPMetadata.isLoadedApi()) {
+            var prefixSuffix = LPMetadata.getPrefixSuffix(player.getGameProfile());
             return new TextComponent(format.replaceAll(Type.PREFIX, prefixSuffix[0])
                     .replaceAll(Type.PLAYER, player.getName().getString())
                     .replaceAll(Type.SUFFIX, prefixSuffix[1]));
@@ -34,7 +21,8 @@ public class MCPlayerFormat {
         return new TextComponent(player.getName().getString());
     }
 
-    public static TextComponent parse(String format, Player player, String ...extras) {
+    @Contract("_, _, _ -> new")
+    public static @NotNull TextComponent parse(String format, Player player, String ...extras) {
         var displayname = createPlayerDisplayName(player).getString();
         var playername = player.getName().getString();
         var profilename = player.getGameProfile().getName();
@@ -49,20 +37,26 @@ public class MCPlayerFormat {
         return new TextComponent(MCTextFormat.parse(result.toString()));
     }
 
-    public static String @NotNull [] getPrefixSuffix(GameProfile player) {
-        var result = new String[] { "", "" };
-        try {
-            var data = LP.getUserManager().getUser(player.getId()).getCachedData().getMetaData();
-            if (data.getPrefix() != null) result[0] = data.getPrefix();
-            if (data.getSuffix() != null) result[1] = data.getSuffix();
-            return result;
-        } catch(Exception ise) {
-            WaterConsole.error(MCPlayerFormat.class.getName(), ise.getMessage());
-            ise.printStackTrace();
+    @Contract("_, _, _ -> new")
+    public static @NotNull TextComponent format(@NotNull Format format, Player player, String ...extras) {
+        return parse(format.toString(), player, extras);
+    }
+
+
+    public enum Format {
+        CHAT("CHAT_FORMAT"),
+        JOIN("JOIN_FORMAT"),
+        LEAVE("LEAVE_FORMAT");
+
+        final String formatName;
+        Format(String formatName) {
+            this.formatName = formatName;
         }
 
-        return result;
+        @Override
+        public String toString() { return WaterConfig.get(formatName); }
     }
+
 
     public static class Type {
         public static final String PLAYER = "%playername%";
@@ -70,11 +64,5 @@ public class MCPlayerFormat {
         public static final String PROFILENAME = "%profilename%";
         public static final String PREFIX = "%prefix%";
         public static final String SUFFIX = "%suffix%";
-        public static final String NICK = "%nick%";
-        public static final String VANISH = "%vanish%";
-
-        public static String parse() {
-            return "";
-        }
     }
 }

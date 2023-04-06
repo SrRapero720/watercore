@@ -38,6 +38,7 @@ public class WaterConfig {
 
         CONFIGS.put("PLAYER_FORMAT", BUILDER.comment(
                 "Modify how player's displayname works",
+                "Only works with LUCKPERMS",
                 "Placeholders: %prefix% %suffix% %playername%"
         ).define("PLAYER_FORMAT", "%prefix%%playername%%suffix%"));
 
