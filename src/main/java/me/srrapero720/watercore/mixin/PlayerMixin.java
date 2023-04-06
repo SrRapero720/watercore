@@ -17,17 +17,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.Collection;
 
 
-// TODO: USES player#getName() instead self playername
-@Mixin(value = Player.class, priority = 100)
-public abstract class PlayerMixin extends LivingEntity {
-    @Shadow @Final private Collection<MutableComponent> prefixes;
-    @Shadow @Final private Collection<MutableComponent> suffixes;
-    @Shadow private Component displayname;
-
-    protected PlayerMixin(EntityType<? extends LivingEntity> p_20966_, Level p_20967_) { super(p_20966_, p_20967_); }
-
-    @Shadow public abstract @NotNull Component getName();
-    @Shadow protected abstract MutableComponent decorateDisplayNameComponent(MutableComponent p_36219_);
+@Mixin(value = Player.class, priority = 72)
+public class PlayerMixin {
+    @Shadow
+    public @NotNull Component getName() { throw new IllegalCallerException("Uhhh, how you do this crash?"); }
 
     @Redirect(method = "getDisplayName", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/event/ForgeEventFactory;getPlayerDisplayName(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/network/chat/Component;)Lnet/minecraft/network/chat/Component;"))
     public Component getDisplayName(Player instance, Component value) {
