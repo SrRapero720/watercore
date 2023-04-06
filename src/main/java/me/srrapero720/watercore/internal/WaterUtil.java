@@ -40,9 +40,7 @@ public class WaterUtil {
         var centerY = (int) y + 0.25D;
         return new Vec3(currentX, centerY, currentZ);
     }
-    public static long secondsToMilis(long sec) {
-        return sec * 1000;
-    }
+    public static long secondsToMilis(long sec) { return sec * 1000; }
 
     public static int fixAngle(double input) { return fixAngle(Math.round(input)); }
     public static int fixAngle(float input) { return fixAngle(Math.round(input)); }
