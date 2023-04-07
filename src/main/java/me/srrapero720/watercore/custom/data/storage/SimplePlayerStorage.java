@@ -20,7 +20,6 @@ public class SimplePlayerStorage {
         return PLAYER_BACKCOOLDOWN.getOrDefault(player.getName().getString(), 0L);
     }
     public static boolean updateBackCooldown(ServerPlayer player) {
-        WaterConsole.justPrint("Nano: " + System.nanoTime() + " Cooldown: " + (System.nanoTime() + WaterUtil.secondsToMilis(WaterConfig.get("BACK_COOLDOWN"))));
         if (System.nanoTime() >= loadBackCooldown(player)) {
             PLAYER_BACKCOOLDOWN.put(player.getName().getString(), System.nanoTime() + WaterUtil.secondsToMilis(WaterConfig.get("BACK_COOLDOWN")));
             return true;
