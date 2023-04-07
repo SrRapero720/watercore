@@ -5,7 +5,7 @@ and administration items
 
 ### ¿WHAT DO WATERCORE FOR ME?
 - Fix a lot of MemoryLeaks like 
-[MemoryLeakFix](https://github.com/fxmorin/MemoryLeakFix) mod but IN FORGE.
+[MemoryLeakFix](https://github.com/fxmorin/MemoryLeakFix) mod but IN FORGE (read incompatibilities section).
 - Provides a Lazy API to interact with Forge Registries and other mods APIs (Luckperms included)
 - Randomly fix a lot of little issues from other mods.
 - Adds a MixinTrace in your crash reports (like [CraftyCrashes](https://github.com/Chocohead/Crafty-Crashes) or [MixinTrace](https://github.com/comp500/mixintrace))
@@ -35,10 +35,19 @@ and administration items
 ## Players commands
 - `/spawn` || Go to current spawn
 
-## INCOMPATIBILITIES
+## Incompatibilities
 - Saturn (My mod do the same)
 - Corail Tombstone (No support)
 - FTB Ranks (breaks our chat format and player name format)
+- MemoryLeakFix (My mod do the same)
+
+## MemoryLeakFix Disclaimer
+No, I no C&P MemoryLeakFix code or wrap my own port here. Before they release a forge version 
+I ask [if can I make a port of the mod](https://github.com/fxmorin/MemoryLeakFix/issues/66) using the same name and keep the same
+code (just porting stuff), and the owner says no, because forge maybe fix leaks, so I made my own fixes in forge. But currently they
+release a Forge version... and no, I don't want to delete all my hard work because they release a forge version...
+
+WATERCoRE do the same leak fixes for 1.18.2, if you have WATERCoRE you don't need that mod
 
 ***
 <img style="display:block; width: 100%; height: auto; margin: 0 auto;" src="https://media.discordapp.net/attachments/1076151535291088916/1076656790986559538/WATERCoRE.png">
