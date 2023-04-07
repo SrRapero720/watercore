@@ -28,4 +28,7 @@ public class EntityMixin implements IPlayerStorage {
         if (tag.contains("watercore.player_data", 10))
             persistentTag = tag.getCompound("watercore.player_data");
     }
+
+    @Inject(method = "remove", at = @At("TAIL"), allow = 1)
+    protected void injectRemove(CallbackInfo ci) {}
 }
