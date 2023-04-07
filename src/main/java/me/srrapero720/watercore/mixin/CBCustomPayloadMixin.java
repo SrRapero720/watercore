@@ -16,7 +16,5 @@ public class CBCustomPayloadMixin {
     @Shadow @Final private FriendlyByteBuf data;
 
     @Inject(method = "handle(Lnet/minecraft/network/protocol/game/ClientGamePacketListener;)V", at = @At(value = "RETURN"))
-    public void injectHandle(ClientGamePacketListener packet, CallbackInfo ci) {
-        WaterUtil.BUFFERS.add(this.data);
-    }
+    public void injectHandle(ClientGamePacketListener packet, CallbackInfo ci) { WaterUtil.BUFFERS.add(this.data); }
 }
