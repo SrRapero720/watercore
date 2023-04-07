@@ -35,7 +35,7 @@ public abstract class ServerGamePLMixin {
         return ForgeHooks.onServerChatEvent(
                 net,
                 raw,
-                MCPlayerFormat.format(MCPlayerFormat.Format.CHAT, player),
+                MCPlayerFormat.format(MCPlayerFormat.Format.CHAT, player, raw),
                 filtered,
                 filtered.isEmpty() ? null : MCPlayerFormat.format(MCPlayerFormat.Format.CHAT, player, filtered)
         );
