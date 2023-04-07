@@ -17,14 +17,14 @@ import net.minecraft.world.phys.HitResult;
 import me.srrapero720.watercore.internal.WaterUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class SuperWand extends Item {
+public class ItemGodWand extends Item {
     final int damage;
-    public SuperWand() {
+    public ItemGodWand() {
         super(new Properties().tab(WaterRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
         damage = 24;
     }
 
-    public SuperWand(int damage) {
+    public ItemGodWand(int damage) {
         super(new Properties().tab(WaterRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
         this.damage = damage;
     }

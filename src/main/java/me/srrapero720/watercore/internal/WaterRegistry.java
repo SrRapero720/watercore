@@ -4,9 +4,9 @@ import me.srrapero720.watercore.WaterCore;
 import me.srrapero720.watercore.api.LPMetadata;
 import me.srrapero720.watercore.custom.commands.*;
 import me.srrapero720.watercore.custom.items.BanHammer;
-import me.srrapero720.watercore.custom.items.BaseCoin;
-import me.srrapero720.watercore.custom.items.BaseViolin;
-import me.srrapero720.watercore.custom.items.SuperWand;
+import me.srrapero720.watercore.custom.items.ItemCoin;
+import me.srrapero720.watercore.custom.items.ItenViolin;
+import me.srrapero720.watercore.custom.items.ItemGodWand;
 import me.srrapero720.watercore.custom.potions.BlessedPotion;
 import me.srrapero720.watercore.custom.potions.CursedPotion;
 import me.srrapero720.watercore.custom.tabs.SmartCreativeTab;
@@ -112,18 +112,18 @@ public class WaterRegistry {
         register(Type.POTION,"cursed_3", () -> new CursedPotion(WaterUtil.toTicks(180), 3));
 
         /* ITEMS */
-        register(Type.ITEM,"coppercoin", () -> new BaseCoin(Rarity.COMMON));
-        register(Type.ITEM,"ironcoin", () -> new BaseCoin(Rarity.COMMON));
-        register(Type.ITEM,"goldencoin", () -> new BaseCoin(Rarity.UNCOMMON));
-        register(Type.ITEM,"diamondcoin", () -> new BaseCoin(Rarity.UNCOMMON));
-        register(Type.ITEM,"emeraldcoin", () -> new BaseCoin(Rarity.RARE));
-        register(Type.ITEM,"netheritecoin", () -> new BaseCoin(Rarity.EPIC));
-        register(Type.ITEM,"pendoritecoin", () -> new BaseCoin(Rarity.EPIC));
+        register(Type.ITEM,"coppercoin", () -> new ItemCoin(Rarity.COMMON));
+        register(Type.ITEM,"ironcoin", () -> new ItemCoin(Rarity.COMMON));
+        register(Type.ITEM,"goldencoin", () -> new ItemCoin(Rarity.UNCOMMON));
+        register(Type.ITEM,"diamondcoin", () -> new ItemCoin(Rarity.UNCOMMON));
+        register(Type.ITEM,"emeraldcoin", () -> new ItemCoin(Rarity.RARE));
+        register(Type.ITEM,"netheritecoin", () -> new ItemCoin(Rarity.EPIC));
+        register(Type.ITEM,"pendoritecoin", () -> new ItemCoin(Rarity.EPIC));
 
-        register(Type.ITEM,"godwand", SuperWand::new);
+        register(Type.ITEM,"godwand", ItemGodWand::new);
         register(Type.ITEM,"banhammer", BanHammer::new);
-        register(Type.ITEM,"small_violin", () -> new BaseViolin(0.75f));
-        register(Type.ITEM,"violin", () -> new BaseViolin(1.0f));
+        register(Type.ITEM,"small_violin", () -> new ItenViolin(0.75f));
+        register(Type.ITEM,"violin", () -> new ItenViolin(1.0f));
 
         /* BLOCKS */
         //BLOCKS_MAP.put("brass_door", BLOCKS.register("brass_door", BrassDoor::new));

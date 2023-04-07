@@ -5,8 +5,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 
-public class BaseCash extends Item {
-    public BaseCash(Rarity rarity) {
+public class ItemCash extends Item {
+    public ItemCash(Rarity rarity) {
         super(new Item.Properties().tab(WaterRegistry.tab("main")).stacksTo(512).rarity(rarity).setNoRepair());
     }
 

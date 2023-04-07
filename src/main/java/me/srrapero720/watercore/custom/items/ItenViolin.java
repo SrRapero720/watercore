@@ -17,10 +17,10 @@ import net.minecraft.world.level.Level;
 import me.srrapero720.watercore.WaterCore;
 import org.jetbrains.annotations.NotNull;
 
-public class BaseViolin extends Item {
+public class ItenViolin extends Item {
     private boolean playing = false;
     private final float pitch;
-    public BaseViolin(float pitch) {
+    public ItenViolin(float pitch) {
         super(new Properties().rarity(Rarity.EPIC).tab(WaterRegistry.tab("main")));
         this.pitch = pitch;
     }
