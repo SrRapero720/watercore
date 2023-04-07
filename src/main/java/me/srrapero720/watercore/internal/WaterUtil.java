@@ -1,5 +1,6 @@
 package me.srrapero720.watercore.internal;
 
+import me.srrapero720.watercore.api.MCTextFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +29,8 @@ public class WaterUtil {
     public static boolean isModLoading(String id) { return FMLLoader.getLoadingModList().getModFileById(id) != null; }
     public static boolean isModLoaded(String id) { return ModList.get().isLoaded(id); }
 
-    public static @NotNull String getBroadcastPrefix() { return "&e&l[&bWATERC&eo&bRE&e&l] &f"; }
+    public static @NotNull String getBroadcastPrefix() { return getBroadcastPrefix(MCTextFormat.parse("&6")); }
+    public static @NotNull String getBroadcastPrefix(String color) { return "&e&l[&bWATERC&eo&bRE&e&l] " + color; }
 
     public static Vec3 findCenter(double x, double y, double z) {
         var deltaX = x - (int) x;
@@ -101,6 +103,10 @@ public class WaterUtil {
             if (lvl.dimension().location().toString().equals(hint.toString())) return lvl;
 
         return null;
+    }
+
+    public static void runInNewThread(Runnable runnable) {
+        new Thread(runnable).start();
     }
 
     private static void emptyClassInfo() throws NoSuchFieldException, IllegalAccessException {

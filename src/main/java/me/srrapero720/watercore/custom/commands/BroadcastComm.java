@@ -9,8 +9,10 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.MessageArgument;
 import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import me.srrapero720.watercore.internal.WaterConfig;
+import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
 
 public class BroadcastComm {
@@ -29,17 +31,20 @@ public class BroadcastComm {
     }
 
     private static int broadcastToServer(CommandContext<CommandSourceStack> context, String prefix) throws CommandSyntaxException {
-        final var mPrefix = prefix != null ? prefix : "";
         try {
-            var source = context.getSource();
-            var server = source.getServer();
+            var server = context.getSource().getServer();
             var c = MessageArgument.getMessage(context, "message");
-            server.getPlayerList().broadcastMessage(new TextComponent(MCTextFormat.parse(mPrefix + c.getString())), ChatType.SYSTEM, Util.NIL_UUID);
-            return 1;
+            return broadcastToServer(server, c, prefix);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    private static int broadcastToServer(@NotNull MinecraftServer server, @NotNull Component c, String prefix) {
+        final var mPrefix = prefix != null ? prefix : "";
+        server.getPlayerList().broadcastMessage(new TextComponent(MCTextFormat.parse(mPrefix + c.getString())), ChatType.SYSTEM, Util.NIL_UUID);
+        return 0;
     }
 
     private static int broadcastToServer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {

@@ -3,7 +3,7 @@
   "__comment": "WATERCoRE Resources",
   "itemGroup.watercore.MAIN": "WATERCoRE Util",
   "itemGroup.watercore.ADMIN": "WATERCoRE Admin",
-  "watercore.response.banhammer": "Haz sido letalmente baneado por el martillo del BAN",
+  "wc.response.banhammer": "Haz sido letalmente baneado por el martillo del BAN",
 
   "__comment": "WATERCoRE Pociones",
   "item.minecraft.potion.effect.blessed_1": "Bendicion Divina",
@@ -49,7 +49,8 @@
 
   "__comment": "WATERCoRE Items (Herramientas)",
   "item.watercore.godwand": "Centro de los Dioses",
-  "item.watercore.banhammer": "Martillo de baneos",
+  "item.watercore.banhammer": "Martillo del Ban",
+  "item.watercore.banhammer.broadcast": "%s El jugador %s %sfue brutalmente golpeado por el martillo del BAN",
   "item.watercore.small_violin": "Violin mas pequeño del mundo",
   "item.watercore.violin": "Violin",
 

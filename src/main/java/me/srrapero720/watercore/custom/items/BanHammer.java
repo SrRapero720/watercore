@@ -1,5 +1,6 @@
 package me.srrapero720.watercore.custom.items;
 
+import me.srrapero720.watercore.api.MCTextFormat;
 import me.srrapero720.watercore.internal.WaterRegistry;
 import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.Util;
@@ -21,36 +22,36 @@ public class BanHammer extends Item {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof Player) {
-            final var entitypos = entity.position();
-            final var l2 = new LightningBolt(EntityType.LIGHTNING_BOLT, player.level);
+        if (entity instanceof Player banned) {
+            final var l2 = new LightningBolt(EntityType.LIGHTNING_BOLT, banned.level);
             l2.setDamage(24);
-            l2.setPos(entitypos);
-            entity.level.addFreshEntity(l2);
-            entity.kill();
+            l2.setPos(banned.position());
+            banned.level.addFreshEntity(l2);
+            banned.kill();
 
-            var t = new Thread(() -> {
+            WaterUtil.runInNewThread(() -> {
                 try {
-                    // PREVENTS TOMBS NO GET APPEARING IF PLAYER REVIVE EXISTS
                     Thread.sleep(500);
-                    if (!((Player) entity).isDeadOrDying()) entity.kill();
+                    if (banned.isDeadOrDying()) banned.kill();
 
                     // PREVENTS TOMBS NO GET APPEARING
                     Thread.sleep(2000);
-                    var server = entity.level.getServer();
-                    var playerList = server.getPlayerList();
-                    var bans = playerList.getBans();
-                    var mPlayer = (Player) entity;
-                    var banReason = new TranslatableComponent("watercore.response.banhammer").getString();
+                    var playerList = banned.level.getServer().getPlayerList();
+                    var banReason = new TranslatableComponent("wc.response.banhammer").getString();
 
-                    if (!bans.isBanned(mPlayer.getGameProfile()))
-                        bans.add(new UserBanListEntry(mPlayer.getGameProfile(),null, "WATERCoRE", null, banReason));
+                    if (!playerList.getBans().isBanned(banned.getGameProfile()))
+                        playerList.getBans().add(new UserBanListEntry(banned.getGameProfile(), null, "WATERCoRE", null, banReason));
 
-                    playerList.getPlayer(entity.getUUID()).connection.disconnect(new TranslatableComponent("watercore.response.banhammer"));
-                    playerList.broadcastMessage(new TextComponent(WaterUtil.getBroadcastPrefix() + "&6El jugador §4" + entity.getName().getString() + "§6 fue golpeado por el martillo del BAN"), ChatType.SYSTEM, Util.NIL_UUID);
+                    playerList.getPlayerByName(player.getName().getString()).connection.disconnect(new TranslatableComponent("wc.response.banhammer"));
+                    playerList.broadcastMessage(
+                            new TranslatableComponent("item.watercore.banhammer.broadcast",
+                                    WaterUtil.getBroadcastPrefix("&6"),
+                                    MCTextFormat.parse("&c") + banned.getName().getString(),
+                                    MCTextFormat.parse("&6")),
+                            ChatType.SYSTEM, Util.NIL_UUID);
+
                 } catch (Exception e) { WaterConsole.warn("BanHammer", "Ocurrio un error al banear al usuario"); }
             });
-            t.start();
         } else entity.remove(Entity.RemovalReason.DISCARDED);
 
         return super.onLeftClickEntity(stack, player, entity);
