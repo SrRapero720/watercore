@@ -17,7 +17,8 @@
     "ServerPlayerMixin",
     "TagKeyMixin",
     "TraceMixin",
-    "TraceMixinCategory"
+    "TraceMixinCategory",
+    "external.VM423535_VanishUtil"
   ],
   "client": [
     "client.ClientPacketMixin",

@@ -9,7 +9,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.MixinEnvironment;
@@ -26,7 +25,8 @@ public class WaterUtil {
     public static final Set<FriendlyByteBuf> BUFFERS = Collections.synchronizedSet(new HashSet<>());
 
     public static int toTicks(final double sec) { return (int) (sec * 20); }
-    public static boolean isModOnline(String id) { return FMLLoader.getLoadingModList().getModFileById(id) != null; }
+    public static boolean isModLoading(String id) { return FMLLoader.getLoadingModList().getModFileById(id) != null; }
+    public static boolean isModLoaded(String id) { return ModList.get().isLoaded(id); }
 
     public static @NotNull String getBroadcastPrefix() { return "&e&l[&bWATERC&eo&bRE&e&l] &f"; }
 
@@ -106,7 +106,7 @@ public class WaterUtil {
     private static void emptyClassInfo() throws NoSuchFieldException, IllegalAccessException {
         WaterConsole.error("SpongeMixinTool", "Cleaning cache of Mixins is currently disabled. because TraceMixin feature got broken.");
         if (true) return; // Disabled cache cleaning
-        if (WaterUtil.isModOnline("not-that-cc")) return; // Crashes crafty crashes if it crashes
+        if (WaterUtil.isModLoading("not-that-cc")) return; // Crashes crafty crashes if it crashes
         Field cacheField = ClassInfo.class.getDeclaredField("cache");
         cacheField.setAccessible(true);
         @SuppressWarnings("unchecked")
