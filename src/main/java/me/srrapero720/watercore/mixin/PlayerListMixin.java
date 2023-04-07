@@ -1,11 +1,11 @@
 package me.srrapero720.watercore.mixin;
 
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Dynamic;
 import me.srrapero720.watercore.api.MCPlayerFormat;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
-import me.srrapero720.watercore.internal.WaterConfig;
 import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterUtil;
 import net.minecraft.Util;
@@ -131,7 +131,7 @@ public abstract class PlayerListMixin {
         SimplePlayerStorage.saveBackData(player);
     }
 
-    @ModifyVariable(method = "respawn", at = @At(value = "STORE"))
+    @ModifyVariable(method = "respawn", ordinal = 1, at = @At(value = "STORE"))
     public ServerLevel modifyRespawnServerLevel(ServerLevel instance, @NotNull ServerPlayer player, boolean isBooleanic) {
         var respawnPos = player.getRespawnPosition();
         var respawnAngle = player.getRespawnAngle();
@@ -165,7 +165,7 @@ public abstract class PlayerListMixin {
         freshPlayer.setPos(lobbyData.getX(), lobbyData.getY(), lobbyData.getZ());
         freshPlayer.setXRot(lobbyData.getRotX());
         freshPlayer.setYRot(lobbyData.getRotY());
-        freshPlayer.setRespawnPosition(lobbyLevel.getLevel().dimension(),
+        freshPlayer.setRespawnPosition(lobbyLevel.dimension(),
                 new BlockPos(lobbyData.getX(), lobbyData.getY(), lobbyData.getZ()), lobbyData.getRotY(), oldPlayer.isRespawnForced(), false);
     }
 
