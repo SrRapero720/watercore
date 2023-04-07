@@ -11,5 +11,5 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(value = TagKey.class, remap = false)
 public class TagKeyMixin {
     @Redirect(method = "<clinit>", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Interners;newStrongInterner()Lcom/google/common/collect/Interner;"))
-    private static Interner<TagKey<?>> memoryLeakFix$useWeakInterner() { return Interners.newWeakInterner(); }
+    private static Interner<TagKey<?>> redirectWeakInterner() { return Interners.newWeakInterner(); }
 }

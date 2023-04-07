@@ -1,7 +1,6 @@
 package me.srrapero720.watercore.mixin;
 
 import com.mojang.authlib.GameProfile;
-import me.srrapero720.watercore.custom.data.BackData;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -20,13 +19,13 @@ public abstract class ServerPlayerMixin extends Player {
     }
 
     @Inject(method = "teleportTo(Lnet/minecraft/server/level/ServerLevel;DDDFF)V", at = @At(value = "HEAD"))
-    public void injectTeleportTo2(ServerLevel p_9000_, double p_9001_, double p_9002_, double p_9003_, float p_9004_, float p_9005_, CallbackInfo ci) {
+    public void injectTeleportTo1(ServerLevel p_9000_, double p_9001_, double p_9002_, double p_9003_, float p_9004_, float p_9005_, CallbackInfo ci) {
         SimplePlayerStorage.saveBackData((ServerPlayer) (Object) this);
     }
 
 
     @Inject(method = "teleportTo(DDD)V", at = @At(value = "HEAD"))
-    public void injectTeleportTo(double p_8969_, double p_8970_, double p_8971_, CallbackInfo ci) {
+    public void injectTeleportTo2(double p_8969_, double p_8970_, double p_8971_, CallbackInfo ci) {
         SimplePlayerStorage.saveBackData((ServerPlayer) (Object) this);
     }
 }

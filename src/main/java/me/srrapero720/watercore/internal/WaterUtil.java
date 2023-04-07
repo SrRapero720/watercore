@@ -123,7 +123,7 @@ public class WaterUtil {
     }
 
 
-    public static void forceLoadAllMixinsAndClearSpongePoweredCache() {
+    public static void loadMixinsAndClearMixinsCache() {
         MixinEnvironment.getCurrentEnvironment().audit();
         try { //Why is SpongePowered stealing so much ram for this garbage?
             var noGroupField = InjectorGroupInfo.Map.class.getDeclaredField("NO_GROUP");

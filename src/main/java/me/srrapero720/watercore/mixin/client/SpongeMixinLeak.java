@@ -17,7 +17,7 @@ public class SpongeMixinLeak {
     @Redirect(method = "main([Ljava/lang/String;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;renderOnThread()Z"))
     private static boolean loadAllMixinsThenShouldRenderAsync(@NotNull Minecraft instance) {
         WaterConsole.warn("SpongeLeakFixClient", "Forzando carga de todos los mixins y limpiando cache");
-        WaterUtil.forceLoadAllMixinsAndClearSpongePoweredCache();
+        WaterUtil.loadMixinsAndClearMixinsCache();
         return instance.renderOnThread();
     }
 }

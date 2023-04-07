@@ -17,12 +17,12 @@ public abstract class TraceMixin {
 	@Shadow @Final private Throwable exception;
 
 	@Inject(method = "<init>", at = @At(value = "TAIL"))
-	private void fixCause2(CallbackInfo call) {
+	private void injectInitToSMAP(CallbackInfo call) {
 		SMAPper.apply(exception, "java.", "sun.", "net.minecraftforge.fml.", "com.mojang.authlib.");
 	}
 
 	@Inject(method = "getDetails(Ljava/lang/StringBuilder;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/CrashReport;details:Ljava/util/List;"))
-	private void addTrace(StringBuilder crashReportBuilder, CallbackInfo ci) {
+	private void injectGetDetalsToAddTrace(StringBuilder crashReportBuilder, CallbackInfo ci) {
 		WaterConsole.debug("MixinWC", "Creando CrashReport con mixins");
 
 		int trailingNewlineCount = 0;

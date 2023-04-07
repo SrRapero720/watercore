@@ -21,5 +21,5 @@ public class BiomesLeak {
     }
 
     @Redirect(method = "<init>", at = @At(value = "INVOKE",target = "Ljava/lang/ThreadLocal;withInitial(Ljava/util/function/Supplier;)Ljava/lang/ThreadLocal;"))
-    private ThreadLocal<Long2FloatLinkedOpenHashMap> useStaticThreadLocal(Supplier<?> supplier) { return TEMP_CACHE; }
+    private ThreadLocal<Long2FloatLinkedOpenHashMap> redirectStoreThreadLocal(Supplier<?> supplier) { return TEMP_CACHE; }
 }

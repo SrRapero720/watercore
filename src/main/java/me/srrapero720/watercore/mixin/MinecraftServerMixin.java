@@ -25,7 +25,7 @@ public abstract class MinecraftServerMixin {
     @Shadow @Nullable public abstract ServerLevel getLevel(ResourceKey<Level> p_129881_);
 
     @Inject(method = "runServer()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;updateStatusIcon(Lnet/minecraft/network/protocol/status/ServerStatus;)V"))
-    public void onRunningServer(CallbackInfo ci) {
+    public void injectRunServer(CallbackInfo ci) {
         var lobby = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, (MinecraftServer) (Object) this);
         var spawn = PlayerSpawn.fetch(PlayerSpawn.Mode.WORLD, (MinecraftServer) (Object) this);
 

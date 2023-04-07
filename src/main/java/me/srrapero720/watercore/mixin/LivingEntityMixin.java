@@ -14,7 +14,7 @@ import java.util.Optional;
 public abstract class LivingEntityMixin extends EntityMixin {
     @Shadow protected Brain<?> brain;
 
-    // FIX CANARY COMPATIBILITY, ALSO RUBIDIUM BUT IS VERY OBSOLETE
+    // FIX CANARY COMPATIBILITY, ALSO RADIUM BUT IS VERY OBSOLETE
     @Override
     public void injectRemove(CallbackInfo ci) {
         this.brain.memories.keySet().forEach(module -> this.brain.setMemoryInternal(module, Optional.empty().map(ExpirableValue::of)));

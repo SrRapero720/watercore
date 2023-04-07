@@ -1,21 +1,16 @@
 package me.srrapero720.watercore.mixin;
 
 import me.srrapero720.watercore.api.MCPlayerFormat;
-import me.srrapero720.watercore.internal.WaterConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.server.network.TextFilter;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.ServerChatEvent;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(value = ServerGamePacketListenerImpl.class, priority = 72)
 public abstract class ServerGamePLMixin {
@@ -23,7 +18,7 @@ public abstract class ServerGamePLMixin {
 
 
     @ModifyArg(method = "onDisconnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
-    public Component modifyOnDisconnect(Component p_11265_) {
+    public Component modifyOnDisconnectArgument(Component p_11265_) {
         return MCPlayerFormat.format(MCPlayerFormat.Format.LEAVE, player);
     }
 

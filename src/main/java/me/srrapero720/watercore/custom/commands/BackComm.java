@@ -39,8 +39,6 @@ public class BackComm {
         return backRaw(context.getArgument("index", int.class), EntityArgument.getPlayer(context, "player"), context);
     }
 
-
-
     protected static int backRaw(int index, ServerPlayer player, CommandContext<CommandSourceStack> context) {
         var server = player.getServer();
         var levels = server.getAllLevels();
