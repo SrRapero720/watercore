@@ -19,7 +19,7 @@ targetCompatibility = JavaVersion.VERSION_17
 
 
 // <mayor>.<path>.<hotfix>
-version = '1.4.0-BETA4' // 1 <mayor update> .0 <update> .0 <patch> -A/B/C/D... <hotfix>
+version = '1.4.0-BETA3' // 1 <mayor update> .0 <update> .0 <patch> -A/B/C/D... <hotfix>
 group = 'me.srrapero720.watercore'
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
@@ -79,11 +79,9 @@ dependencies {
     implementation files("libs/konkrete1.6.0.jar")
 
 
-    // SUPPORT FOR OTHER MODS
     implementation fg.deobf("curse.maven:ferritecore-429235:4074294")
     implementation fg.deobf("curse.maven:fastload-630620:4271605")
     implementation fg.deobf("curse.maven:lazy-dfu-forge-460819:3544496")
-    implementation fg.deobf("curse.maven:vanishmod-423535:4324040")
 
     //MIXIN: SL312664
     implementation fg.deobf("curse.maven:simple-login-312664:3864949")
