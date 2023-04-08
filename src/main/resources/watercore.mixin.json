@@ -30,6 +30,7 @@
     "client.screen.OptionsScreenMixin",
     "client.screen.ScreenMixin",
     "client.screen.TitleScreenMixin",
+    "external.FM01_Options",
     "external.SL312664_PwScreen",
     "util.ModelManagerAccessor"
   ],
