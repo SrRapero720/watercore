@@ -14,10 +14,12 @@
     "PlayerListMixin",
     "PlayerMixin",
     "ServerGamePLMixin",
+    "ServerLevelMixin",
     "ServerPlayerMixin",
     "TagKeyMixin",
     "TraceMixin",
     "TraceMixinCategory",
+    "WeatherCommandMixin",
     "external.VM423535_VanishUtil"
   ],
   "client": [
