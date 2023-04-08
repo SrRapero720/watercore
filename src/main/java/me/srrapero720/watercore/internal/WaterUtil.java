@@ -28,6 +28,7 @@ public class WaterUtil {
     public static int toTicks(final double sec) { return (int) (sec * 20); }
     public static boolean isModLoading(String id) { return FMLLoader.getLoadingModList().getModFileById(id) != null; }
     public static boolean isModLoaded(String id) { return ModList.get().isLoaded(id); }
+    public static boolean existsPackage(String id) { return Package.getPackage(id) != null; }
 
     public static @NotNull String getBroadcastPrefix() { return getBroadcastPrefix(MCTextFormat.parse("&6")); }
     public static @NotNull String getBroadcastPrefix(String color) { return "&e&l[&bWATERC&eo&bRE&e&l] " + color; }
