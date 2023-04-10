@@ -6,27 +6,21 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.system.MemoryUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 
 @OnlyIn(Dist.CLIENT)
+@Deprecated(since = "1.19.2", forRemoval = true)
 @Mixin(value = TextureUtil.class, priority = 0)
 public class TextureReloadLeak {
 
     /**
      * @author SrRapero720
-     * @reason I'm disappointment with Mojang code
-     * Can be removed in 1.19.3
+     * @reason I have a big disappointment with Mojang code
      */
     @Overwrite
     public static ByteBuffer readResource(InputStream stream) throws IOException {
