@@ -6,7 +6,7 @@
   "refmap": "watercore.mixin-refmap.json",
   "plugin": "me.srrapero720.watercore.internal.WaterMixinPlugin",
   "mixins": [
-    "BiomesLeak",
+    "BiomeMixin",
     "CBCustomPayloadMixin",
     "EntityMixin",
     "LivingEntityMixin",
@@ -24,8 +24,7 @@
   ],
   "client": [
     "client.ClientPacketMixin",
-    "client.CrossHairLeak",
-    "client.MinecraftClientMixin",
+    "client.MinecraftMixin",
     "client.MipmapReload",
     "client.SpongeMixinLeak",
     "client.TextureReloadLeak",
@@ -37,7 +36,7 @@
     "util.ModelManagerAccessor"
   ],
   "server": [
-    "server.SpongeMixinLeak"
+    "server.MinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

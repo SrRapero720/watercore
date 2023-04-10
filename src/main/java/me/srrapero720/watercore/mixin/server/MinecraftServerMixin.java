@@ -12,7 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftServer.class)
 @OnlyIn(Dist.DEDICATED_SERVER)
-public class SpongeMixinLeak {
+public class MinecraftServerMixin {
+
+    // FIXES MIXIN "MEMORY LEAK". IN REALITY IS MORE LIKE CLEANING NON USED STUFF.
     @Inject(method = "loadLevel", at = @At("RETURN"))
     private void onFinishedLoadingWorlds(CallbackInfo ci) {
         WaterConsole.warn("SpongeLeakFixServer", "Starting force-loading all mixins and cleaning cache");

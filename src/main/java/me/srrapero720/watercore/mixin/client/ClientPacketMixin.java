@@ -10,25 +10,23 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(value = ClientPacketListener.class, priority = 0)
 public abstract class ClientPacketMixin {
     @Shadow private ClientLevel level;
 
-    /**
-     * @author SrRapero720
-     * @reason For better performance, I remove the iterator related with light engine (and mixin lambdas no works in
-     * forge)
-     * I love mixins <3
-     */
-    @Overwrite
-    private void queueLightUpdate(ClientboundForgetLevelChunkPacket p_194253_) {
-        this.level.queueLightUpdate(() -> {
+    // I change my old rusty Overwrite with a brand new Redirect
+    // Credits to Forget me chunk...
+    @Redirect(method = "queueLightUpdate(Lnet/minecraft/network/protocol/game/ClientboundForgetLevelChunkPacket;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;queueLightUpdate(Ljava/lang/Runnable;)V"))
+    private void redirectQueueLightUpdate(ClientLevel instance, Runnable runnable, ClientboundForgetLevelChunkPacket packet) {
+        instance.queueLightUpdate(() -> {
             LevelLightEngine levellightengine = this.level.getLightEngine();
 
-            levellightengine.enableLightSources(new ChunkPos(p_194253_.getX(), p_194253_.getZ()), false);
-            this.level.setLightReady(p_194253_.getX(), p_194253_.getZ());
+            levellightengine.enableLightSources(new ChunkPos(packet.getX(), packet.getZ()), false);
+            this.level.setLightReady(packet.getX(), packet.getZ());
         });
     }
 }

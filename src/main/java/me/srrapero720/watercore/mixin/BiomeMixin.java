@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.function.Supplier;
 
 @Mixin(value = Biome.class, priority = 72)
-public class BiomesLeak {
+public class BiomeMixin {
     // NO COMPATIBLE WITH SATURN
-    private static final ThreadLocal<Long2FloatLinkedOpenHashMap> TEMP_CACHE = ThreadLocal.withInitial(BiomesLeak::supplier);
+    private static final ThreadLocal<Long2FloatLinkedOpenHashMap> TEMP_CACHE = ThreadLocal.withInitial(BiomeMixin::supplier);
 
     private static @NotNull Long2FloatLinkedOpenHashMap supplier() {
         final var map = new Long2FloatLinkedOpenHashMap(1024, 0.25F) { @Override protected void rehash(int n) {} };
