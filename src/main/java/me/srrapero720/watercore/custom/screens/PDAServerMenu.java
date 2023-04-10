@@ -1,8 +1,10 @@
 package me.srrapero720.watercore.custom.screens;
 
 
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -15,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class PDAServerMenu {/*extends AbstractContainerMenu implements Supplier<Map<Integer, Slot>> {
+public class PDAServerMenu extends Screen {
     public final static HashMap<String, Object> guistate = new HashMap<>();
     public final Level world;
     public final Player entity;
@@ -25,6 +27,7 @@ public class PDAServerMenu {/*extends AbstractContainerMenu implements Supplier<
     private boolean bound = false;
 
     public PDAServerMenu(int id, Inventory inv, FriendlyByteBuf extraData) {
+        super(new TextComponent(""));
 //        super(WatermineModMenus.PANEL, id);
         this.entity = inv.player;
         this.world = inv.player.level;
@@ -38,12 +41,7 @@ public class PDAServerMenu {/*extends AbstractContainerMenu implements Supplier<
         }
     }
 
-    @Override
-    public boolean stillValid(Player player) {
-        return true;
-    }
-
     public Map<Integer, Slot> get() {
         return customSlots;
-    }*/
+    }
 }

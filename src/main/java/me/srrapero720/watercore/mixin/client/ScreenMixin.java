@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.mixin.client.screen;
+package me.srrapero720.watercore.mixin.client;
 
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-@Mixin(value = Screen.class, priority = 0)
+@Mixin(value = Screen.class, priority = 72)
 public class ScreenMixin {
     @Shadow @Final public List<Widget> renderables;
 
