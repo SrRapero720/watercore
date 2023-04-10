@@ -20,12 +20,12 @@ public class WaterCore {
     public static IEventBus bus() { return FMLJavaModLoadingContext.get().getModEventBus(); }
 
     public WaterCore() {
-        WaterRegistry.register();
-        MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(WaterRegistry.class);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(WaterCore::crashIfBannedModIsPresent);
+        WaterRegistry.register();
+        MinecraftForge.EVENT_BUS.register(WaterRegistry.class);
         WaterConsole.justPrint("WATERCoRE setup completed");
     }
+
 
     public static void crashIfBannedModIsPresent(FMLCommonSetupEvent event) {
         if (WaterUtil.isModLoading("memoryleakfix")) throw new IncompatibleModInstalled("MemoryLeakFix is explicit incompatible with WATERCoRE.");
@@ -33,19 +33,5 @@ public class WaterCore {
 
     public static class IncompatibleModInstalled extends RuntimeException {
         public IncompatibleModInstalled(String info) { super(info); }
-    }
-
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-
-        @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            // SrConsole.debug(MODULE, "Registrando bloque: " + blockRegistryEvent.getName().toString());
-        }
-
-        @SubscribeEvent
-        public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent) {
-            // SrConsole.debug(MODULE, "Registrando item: " + itemRegistryEvent.getName().toString());
-        }
     }
 }
