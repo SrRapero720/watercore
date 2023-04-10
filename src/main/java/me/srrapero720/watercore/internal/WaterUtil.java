@@ -1,5 +1,6 @@
 package me.srrapero720.watercore.internal;
 
+import de.keksuccino.konkrete.json.jsonpath.internal.function.numeric.Min;
 import me.srrapero720.watercore.api.MCTextFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -29,6 +30,7 @@ public class WaterUtil {
     public static boolean isModLoading(String id) { return FMLLoader.getLoadingModList().getModFileById(id) != null; }
     public static boolean isModLoaded(String id) { return ModList.get().isLoaded(id); }
     public static boolean existsPackage(String id) { return Package.getPackage(id) != null; }
+    public static float getDeltaFrames() { return Minecraft.getInstance().isPaused() ? 1.0F : Minecraft.getInstance().getFrameTime(); }
 
     public static @NotNull String getBroadcastPrefix() { return getBroadcastPrefix(MCTextFormat.parse("&6")); }
     public static @NotNull String getBroadcastPrefix(String color) { return "&e&l[&bWATERC&eo&bRE&e&l] " + color; }
