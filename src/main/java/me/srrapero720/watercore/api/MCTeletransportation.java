@@ -16,7 +16,7 @@ public abstract class MCTeletransportation {
     protected float rotY = 0;
 
     public MCTeletransportation() {}
-    public MCTeletransportation(ResourceLocation dimension, double @NotNull [] position, float @NotNull [] angle) {
+    public MCTeletransportation(ResourceLocation dimension, double @NotNull[]  position, float @NotNull[] angle) {
         this.dimension = dimension;
         this.x = position[0];
         this.y = position[1];
