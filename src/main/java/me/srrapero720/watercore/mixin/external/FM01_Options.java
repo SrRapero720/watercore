@@ -13,15 +13,16 @@ import java.io.IOException;
 @Deprecated(since = "Keks confirm a fix", forRemoval = true)
 @Mixin(Options.class)
 public class FM01_Options {
+    private static final int scale;
     static {
         FancyMenu.updateConfig();
+        scale = FancyMenu.config.getOrDefault("defaultguiscale", -1);
     }
-    private final int scale = FancyMenu.config.getOrDefault("defaultguiscale", -1);
 
     @Redirect(method = "processOptions", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options$FieldAccess;process(Ljava/lang/String;I)I", ordinal = 2))
     public int injectProcessOptions(Options.FieldAccess instance, String s, int i) {
-        if ((scale != -1) && (scale != 0)) {
-            File f = FancyMenu.INSTANCE_DATA_DIR;
+        if (scale > 0) {
+            var f = FancyMenu.INSTANCE_DATA_DIR;
             if (!f.exists()) f.mkdirs();
 
             File f2 = new File(f.getPath() + "/default_scale_set.fm");

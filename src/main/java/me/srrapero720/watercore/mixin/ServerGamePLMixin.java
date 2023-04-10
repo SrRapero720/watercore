@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = ServerGamePacketListenerImpl.class, priority = 72)
-public abstract class ServerGamePLMixin {
+public class ServerGamePLMixin {
     @Shadow public ServerPlayer player;
 
 

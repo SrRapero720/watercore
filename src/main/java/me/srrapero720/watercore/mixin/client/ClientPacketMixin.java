@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(value = ClientPacketListener.class, priority = 0)
-public abstract class ClientPacketMixin {
+public class ClientPacketMixin {
     @Shadow private ClientLevel level;
 
     // I change my old rusty Overwrite with a brand new Redirect

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = CrashReportCategory.class, priority = 72)
-public abstract class TraceMixinCategory {
+public class TraceMixinCategory {
 	@Shadow private StackTraceElement[] stackTrace;
 
 	@Inject(method = "getDetails", at = @At("TAIL"))

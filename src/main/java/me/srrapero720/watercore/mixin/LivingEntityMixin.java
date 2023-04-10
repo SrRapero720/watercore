@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 @Deprecated(forRemoval = true, since = "mc1.19.3")
-public abstract class LivingEntityMixin extends EntityMixin {
+public class LivingEntityMixin extends EntityMixin {
     @Shadow protected Brain<?> brain;
 
     // FIX CANARY COMPATIBILITY, ALSO RADIUM BUT IS VERY OBSOLETE
