@@ -29,7 +29,7 @@ public class BanHammer extends Item {
             banned.level.addFreshEntity(l2);
             banned.kill();
 
-            WaterUtil.runInNewThread(() -> {
+            WaterUtil.runNewThread(() -> {
                 try {
                     Thread.sleep(500);
                     if (banned.isDeadOrDying()) banned.kill();

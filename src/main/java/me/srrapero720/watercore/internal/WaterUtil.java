@@ -1,6 +1,5 @@
 package me.srrapero720.watercore.internal;
 
-import de.keksuccino.konkrete.json.jsonpath.internal.function.numeric.Min;
 import me.srrapero720.watercore.api.MCTextFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -108,11 +107,10 @@ public class WaterUtil {
         return null;
     }
 
-    public static void runInNewThread(Runnable runnable) {
-        new Thread(runnable).start();
-    }
+    public static void runNewThread(Runnable runnable) { new Thread(runnable).start(); }
 
-    private static void emptyClassInfo() throws NoSuchFieldException, IllegalAccessException {
+    // TODO: Separate this feature. Create other mod to run this and toggle features.
+    private static void spongeEmptyClassInfo() throws NoSuchFieldException, IllegalAccessException {
         WaterConsole.error("SpongeMixinTool", "Cleaning cache of Mixins is currently disabled. because TraceMixin feature got broken.");
         if (true) return; // Disabled cache cleaning
         if (WaterUtil.isModLoading("not-that-cc")) return; // Crashes crafty crashes if it crashes
@@ -126,16 +124,16 @@ public class WaterUtil {
     }
 
 
-    public static void loadMixinsAndClearMixinsCache() {
+    public static void loadMixinsAndClearCache() {
         MixinEnvironment.getCurrentEnvironment().audit();
-        try { //Why is SpongePowered stealing so much ram for this garbage?
+        try {
             var noGroupField = InjectorGroupInfo.Map.class.getDeclaredField("NO_GROUP");
             noGroupField.setAccessible(true);
             var noGroup = noGroupField.get(null);
             var membersField = noGroup.getClass().getDeclaredField("members");
             membersField.setAccessible(true);
             ((List<?>) membersField.get(noGroup)).clear(); // Clear spongePoweredCache
-            emptyClassInfo();
+            spongeEmptyClassInfo();
         } catch (Exception e) { e.printStackTrace(); }
     }
 

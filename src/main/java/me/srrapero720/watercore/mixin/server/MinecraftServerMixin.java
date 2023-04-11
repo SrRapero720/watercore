@@ -18,6 +18,6 @@ public class MinecraftServerMixin {
     @Inject(method = "loadLevel", at = @At("RETURN"))
     private void onFinishedLoadingWorlds(CallbackInfo ci) {
         WaterConsole.warn("SpongeLeakFixServer", "Starting force-loading all mixins and cleaning cache");
-        WaterUtil.loadMixinsAndClearMixinsCache();
+        WaterUtil.loadMixinsAndClearCache();
     }
 }
