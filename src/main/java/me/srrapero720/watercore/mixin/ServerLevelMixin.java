@@ -17,9 +17,9 @@ public class ServerLevelMixin {
 
     @Inject(method = "advanceWeatherCycle", at = @At("HEAD"))
     public void injectAdvanceWeatherCycle(CallbackInfo ci) {
-        int i = this.serverLevelData.getClearWeatherTime();
-        int j = this.serverLevelData.getThunderTime();
-        int k = this.serverLevelData.getRainTime();
-        WaterConsole.justPrint("Clear: " + i + " Thunder: " + j + " Rain: " + k);
+//        int i = this.serverLevelData.getClearWeatherTime();
+//        int j = this.serverLevelData.getThunderTime();
+//        int k = this.serverLevelData.getRainTime();
+//        WaterConsole.justPrint("Clear: " + i + " Thunder: " + j + " Rain: " + k);
     }
 }

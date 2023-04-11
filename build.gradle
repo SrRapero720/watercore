@@ -23,7 +23,7 @@ targetCompatibility = JavaVersion.VERSION_17
 
 
 // <mayor>.<path>.<hotfix>
-version = '1.4.0-BETA12' // 1 <mayor update> .0 <update> .0 <patch> -A/B/C/D... <hotfix>
+version = '1.4.0-BETA13' // 1 <mayor update> .0 <update> .0 <patch> -A/B/C/D... <hotfix>
 group = 'me.srrapero720.watercore'
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
