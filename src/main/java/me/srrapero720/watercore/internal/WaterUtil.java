@@ -107,12 +107,18 @@ public class WaterUtil {
 
     public static void runNewThread(Runnable runnable) { new Thread(runnable).start(); }
     public static void tryInNewThread(@NotNull TryRunnable toTry, @Nullable CatchRunnable toCatch, @Nullable FinallyRunnable toFinally) {
+        tryInNewThreadWithArg(null, (object -> toTry.run()), toCatch, (object -> { if (toFinally != null) toFinally.run(); }));
+    }
+    public static <T> void tryInNewThreadWithArg(T object, TryRunnableWithArgument<T> toTry, @Nullable CatchRunnable toCatch, @Nullable FinallyRunnableWithArgument<T> toFinally) {
         runNewThread(() -> {
-            try { toTry.run();
+            try { toTry.run(object);
             } catch (Exception e) { if (toCatch != null) toCatch.run(e);
-            } finally { if (toFinally != null) toFinally.run(); }
+            } finally { if (toFinally != null) toFinally.run(object); }
         });
     }
+
+    public interface TryRunnableWithArgument<T> {  void run(T object) throws Exception; }
+    public interface FinallyRunnableWithArgument<T> { void run(T object); }
 
     public interface TryRunnable {  void run() throws Exception; }
     public interface CatchRunnable {  void run(Exception e); }
