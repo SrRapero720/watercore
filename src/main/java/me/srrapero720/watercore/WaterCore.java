@@ -1,5 +1,6 @@
 package me.srrapero720.watercore;
 
+import me.srrapero720.watercore.internal.WaterBans;
 import me.srrapero720.watercore.internal.WaterConsole;
 import me.srrapero720.watercore.internal.WaterRegistry;
 import me.srrapero720.watercore.internal.WaterUtil;
@@ -16,18 +17,9 @@ public class WaterCore {
     public static IEventBus bus() { return FMLJavaModLoadingContext.get().getModEventBus(); }
 
     public WaterCore() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(WaterCore::crashIfBannedModIsPresent);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLCommonSetupEvent event) -> WaterBans.validate());
         WaterRegistry.register();
         MinecraftForge.EVENT_BUS.register(WaterRegistry.class);
         WaterConsole.justPrint("WATERCoRE setup completed");
-    }
-
-
-    public static void crashIfBannedModIsPresent(FMLCommonSetupEvent event) {
-        if (WaterUtil.isModLoading("memoryleakfix")) throw new IncompatibleModInstalled("MemoryLeakFix is explicit incompatible with WATERCoRE.");
-    }
-
-    public static class IncompatibleModInstalled extends RuntimeException {
-        public IncompatibleModInstalled(String info) { super(info); }
     }
 }
