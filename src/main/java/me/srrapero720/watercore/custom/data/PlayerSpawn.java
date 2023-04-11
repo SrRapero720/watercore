@@ -58,7 +58,6 @@ public class PlayerSpawn extends SavedData {
         return self.teletransportation;
     }
 
-
     // SEPARATORS
     public enum Mode {
         LOBBY(new ResourceLocation(WaterCore.ID, "lobbyspawn")),
@@ -70,8 +69,6 @@ public class PlayerSpawn extends SavedData {
         }
 
         @Override
-        public String toString() {
-            return value.toString();
-        }
+        public String toString() { return value.toString().replace(":", "_"); }
     }
 }
