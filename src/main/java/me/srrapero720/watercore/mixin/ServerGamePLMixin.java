@@ -24,6 +24,7 @@ public class ServerGamePLMixin {
 
     @Redirect(method = "handleChat(Lnet/minecraft/server/network/TextFilter$FilteredText;)V", at = @At(
             value = "INVOKE",
+            remap = false,
             target = "Lnet/minecraftforge/common/ForgeHooks;onServerChatEvent(Lnet/minecraft/server/network/ServerGamePacketListenerImpl;Ljava/lang/String;Lnet/minecraft/network/chat/Component;Ljava/lang/String;Lnet/minecraft/network/chat/Component;)Lnet/minecraftforge/event/ServerChatEvent;"
     ))
     public ServerChatEvent redirectHandleChatForgeHooks(ServerGamePacketListenerImpl net, String raw, Component comp, String filtered, Component filteredComp) {

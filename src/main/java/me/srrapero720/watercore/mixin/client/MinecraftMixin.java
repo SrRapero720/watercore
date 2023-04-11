@@ -47,7 +47,7 @@ public class MinecraftMixin {
     }
 
     // IF SCREENSHOT FAILS, CLEARS EVERYTHING
-    @Inject(method = "grabHugeScreenshot", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V" ))
+    @Inject(method = "grabHugeScreenshot", at = @At(value = "INVOKE", remap = false, target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V" ))
     private void freeByteBuffer(File __, int ___, int ____, int _____, int ______, CallbackInfoReturnable<Component> ________) {
         GlUtil.freeMemory(this.WCBBuffer);
     }

@@ -106,7 +106,7 @@ public abstract class PlayerListMixin {
         } else packet.teleport(player.getX(), player.getY(), player.getZ(), player.getYRot(), player.getXRot());
     }
 
-    @Inject(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;addPlayer(Lnet/minecraft/server/level/ServerPlayer;)Z"))
+    @Inject(method = "placeNewPlayer", at = @At(value = "INVOKE", remap = false, target = "Lnet/minecraft/server/players/PlayerList;addPlayer(Lnet/minecraft/server/level/ServerPlayer;)Z"))
     public void injectPlaceNewPlayerPutPlayer(Connection connection, ServerPlayer player, CallbackInfo ci) {
         playersByNameWC.put(player.getName().getString().toLowerCase(), player);
     }

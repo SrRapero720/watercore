@@ -20,7 +20,7 @@ import top.seraphjack.simplelogin.client.SetPasswordScreen;
 @OnlyIn(Dist.CLIENT)
 @Mixin(value = SetPasswordScreen.class)
 public abstract class SL312664_PwScreen extends Screen {
-    @Shadow private EditBox password;
+    @Shadow(remap = false) private EditBox password;
 
     protected SL312664_PwScreen(Component p_96550_) { super(p_96550_); }
 
