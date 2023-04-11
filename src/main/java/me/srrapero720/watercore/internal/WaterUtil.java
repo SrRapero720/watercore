@@ -101,13 +101,22 @@ public class WaterUtil {
     private static final String OBJECT = "java/lang/Object";
 
     public static @Nullable ServerLevel findLevel(@NotNull Iterable<ServerLevel> levels, ResourceLocation hint) {
-        for (var lvl: levels)
-            if (lvl.dimension().location().toString().equals(hint.toString())) return lvl;
-
+        for (var lvl: levels) if (lvl.dimension().location().toString().equals(hint.toString())) return lvl;
         return null;
     }
 
     public static void runNewThread(Runnable runnable) { new Thread(runnable).start(); }
+    public static void tryInNewThread(@NotNull TryRunnable toTry, @Nullable CatchRunnable toCatch, @Nullable FinallyRunnable toFinally) {
+        runNewThread(() -> {
+            try { toTry.run();
+            } catch (Exception e) { if (toCatch != null) toCatch.run(e);
+            } finally { if (toFinally != null) toFinally.run(); }
+        });
+    }
+
+    public interface TryRunnable {  void run() throws Exception; }
+    public interface CatchRunnable {  void run(Exception e); }
+    public interface FinallyRunnable { void run(); }
 
     // TODO: Separate this feature. Create other mod to run this and toggle features.
     private static void spongeEmptyClassInfo() throws NoSuchFieldException, IllegalAccessException {
