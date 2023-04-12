@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.mixin;
 
+import me.srrapero720.watercore.internal.WaterTrace;
 import me.srrapero720.wrappycrashes.SMAPper;
-import me.srrapero720.watercore.internal.WaterUtil;
 import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.CrashReport;
 import org.spongepowered.asm.mixin.Final;
@@ -35,7 +35,7 @@ public class TraceMixin {
 			crashReportBuilder.deleteCharAt(crashReportBuilder.length() - 1);
 			trailingNewlineCount++;
 		}
-		WaterUtil.printTrace(uncategorizedStackTrace, crashReportBuilder);
+		WaterTrace.printTrace(uncategorizedStackTrace, crashReportBuilder);
 		crashReportBuilder.append("\n".repeat(trailingNewlineCount));
 	}
 }

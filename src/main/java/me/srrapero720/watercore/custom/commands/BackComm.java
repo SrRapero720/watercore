@@ -54,7 +54,7 @@ public class BackComm {
             return 0;
         }
 
-        player.teleportTo(WaterUtil.findLevel(levels, post.getDimension()), post.getX(), post.getY(), post.getZ(), post.getRotY(), post.getRotX());
+        player.teleportTo(WaterUtil.fetchLevel(levels, post.getDimension()), post.getX(), post.getY(), post.getZ(), post.getRotY(), post.getRotX());
         return 0;
     }
 }

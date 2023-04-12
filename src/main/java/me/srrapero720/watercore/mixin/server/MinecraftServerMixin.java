@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin.server;
 
-import me.srrapero720.watercore.internal.WaterUtil;
+import me.srrapero720.watercore.internal.WaterTrace;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,6 +18,6 @@ public class MinecraftServerMixin {
     @Inject(method = "loadLevel", at = @At("RETURN"))
     private void onFinishedLoadingWorlds(CallbackInfo ci) {
         WaterConsole.warn("SpongeLeakFixServer", "Starting force-loading all mixins and cleaning cache");
-        WaterUtil.loadMixinsAndClearCache();
+        WaterTrace.loadMixinsAndClearCache();
     }
 }

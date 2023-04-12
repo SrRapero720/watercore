@@ -21,7 +21,7 @@ public class SetLobbySpawnComm {
     public static int saveSpawn(PlayerSpawn.Mode mode, CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
         var server = player.getServer();
-        var position = WaterUtil.findCenter(player.getX(), player.getY(), player.getZ());
+        var position = WaterUtil.calculateNearbyCenter(player.getX(), player.getY(), player.getZ());
 
         PlayerSpawn.fetch(mode, server)
                 .setDimension(player.getLevel().dimension())

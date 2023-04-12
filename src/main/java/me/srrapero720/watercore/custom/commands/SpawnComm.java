@@ -27,7 +27,7 @@ public class SpawnComm {
         var player = context.getSource().getPlayerOrException();
 
         var spawn = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, player.server);
-        var result = WaterUtil.findLevel(player.server.getAllLevels(), spawn.getDimension());
+        var result = WaterUtil.fetchLevel(player.server.getAllLevels(), spawn.getDimension());
 
         player.teleportTo(result, spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getRotY(), spawn.getRotX());
         return 0;

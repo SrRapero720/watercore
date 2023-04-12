@@ -15,7 +15,7 @@ public class WaterBans {
     }
 
     public static void validate() {
-        for(var entry: entries) if (WaterUtil.isModLoading(entry.id)) throw new IncompatibleModInstalled(entry.toString());
+        for(var entry: entries) if (WaterUtil.isModFMLoading(entry.id)) throw new IncompatibleModInstalled(entry.toString());
     }
 
 

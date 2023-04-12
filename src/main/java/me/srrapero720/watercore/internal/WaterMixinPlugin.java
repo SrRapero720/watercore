@@ -16,9 +16,9 @@ public class WaterMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String target, String mixin) {
-        if (mixin.contains("SL312664")) return WaterUtil.isModLoading("simplelogin");
-        if (mixin.contains("VM423535")) return WaterUtil.isModLoading("vmod");
-        if (mixin.contains("FM01")) return WaterUtil.isModLoading("fancymenu");
+        if (mixin.contains("SL312664")) return WaterUtil.isModFMLoading("simplelogin");
+        if (mixin.contains("VM423535")) return WaterUtil.isModFMLoading("vmod");
+        if (mixin.contains("FM01")) return WaterUtil.isModFMLoading("fancymenu");
         return true;
     }
 

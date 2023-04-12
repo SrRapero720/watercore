@@ -87,7 +87,7 @@ public abstract class PlayerListMixin {
     public ResourceKey<Level> injectLocalPlaceNewPlayer(ResourceKey<Level> levelResourceKey, Connection connection, ServerPlayer player) {
         var tag = this.load(player);
         var spawnData = PlayerSpawn.fetch(PlayerSpawn.Mode.WORLD, server);
-        var spawnLevel = WaterUtil.findLevel(server.getAllLevels(), spawnData.getDimension());
+        var spawnLevel = WaterUtil.fetchLevel(server.getAllLevels(), spawnData.getDimension());
         var spawnLevelRes = spawnLevel == null ? Level.OVERWORLD : spawnLevel.dimension();
 
         return tag != null
@@ -143,7 +143,7 @@ public abstract class PlayerListMixin {
 
         // WATERCORE LOBBY DATA
         var lobbyData = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, server);
-        var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
+        var lobbyLevel = WaterUtil.fetchLevel(server.getAllLevels(), lobbyData.getDimension());
 
         var level = this.server.getLevel(player.getRespawnDimension());
         Optional<Vec3> optional = (level != null && respawnPos != null)
@@ -164,7 +164,7 @@ public abstract class PlayerListMixin {
         if (optional.isPresent()) return;
 
         var lobbyData = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, server);
-        var lobbyLevel = WaterUtil.findLevel(server.getAllLevels(), lobbyData.getDimension());
+        var lobbyLevel = WaterUtil.fetchLevel(server.getAllLevels(), lobbyData.getDimension());
 
         freshPlayer.setPos(lobbyData.getX(), lobbyData.getY(), lobbyData.getZ());
         freshPlayer.setXRot(lobbyData.getRotX());
