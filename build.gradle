@@ -23,7 +23,7 @@ targetCompatibility = JavaVersion.VERSION_17
 
 
 // <mayor>.<path>.<hotfix>
-version = '1.4.0-BETA14' // 1 <mayor update> .0 <update> .0 <patch> -A/B/C/D... <hotfix>
+version = watercore_version // 1 <mayor update> .0 <update> .0 <patch> -A/B/C/D... <hotfix>
 group = 'me.srrapero720.watercore'
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
@@ -72,28 +72,31 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.2.0'
-    implementation fg.deobf("com.simibubi.create:create-${minecraft_version}:${create_version}:slim") { transitive = false }
-    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${minecraft_version}:${flywheel_version}")
-    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
+    //BASICS
+    minecraft "net.minecraftforge:forge:${mcV}-${fgV}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
+    // CREATE STUFF
+    implementation fg.deobf("com.simibubi.create:create-${mcV}:${createV}:slim") { transitive = false }
+    implementation fg.deobf("com.jozufozu.flywheel:flywheel-forge-${mcV}:${flywheelV}")
+    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrateV}")
 
-    implementation files("libs/drippy2.1.2.jar")
-    implementation files("libs/fancymenu2.14.2.jar")
-    implementation files("libs/konkrete1.6.0.jar")
-
+    // SUIT OF FANCYMENU
+    implementation files("libs/drippy2.1.2.jar", "libs/fancymenu2.14.2.jar", "libs/konkrete1.6.0.jar")
 
     // SUPPORT FOR OTHER MODS
     implementation fg.deobf("curse.maven:ferritecore-429235:4074294")
     implementation fg.deobf("curse.maven:fastload-630620:4271605")
     implementation fg.deobf("curse.maven:lazy-dfu-forge-460819:3544496")
+
+    //MIXIN: VM423535
     implementation fg.deobf("curse.maven:vanishmod-423535:4324040")
 
     //MIXIN: SL312664
     implementation fg.deobf("curse.maven:simple-login-312664:3864949")
 
+    //LUCKPERMS
     implementation fg.deobf("net.luckperms:api:5.4")
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 mixin {
