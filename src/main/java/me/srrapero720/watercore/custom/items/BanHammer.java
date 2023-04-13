@@ -3,6 +3,7 @@ package me.srrapero720.watercore.custom.items;
 import me.srrapero720.watercore.api.MCTextFormat;
 import me.srrapero720.watercore.internal.WaterRegistry;
 import me.srrapero720.watercore.internal.WaterConsole;
+import me.srrapero720.watercore.internal.WaterThreads;
 import net.minecraft.Util;
 import net.minecraft.network.chat.*;
 import net.minecraft.server.players.UserBanListEntry;
@@ -29,7 +30,7 @@ public class BanHammer extends Item {
             banned.level.addFreshEntity(l2);
             banned.kill();
 
-            WaterUtil.runNewThread(() -> {
+            WaterThreads.runNewThread(() -> {
                 try {
                     Thread.sleep(500);
                     if (banned.isDeadOrDying()) banned.kill();

@@ -107,9 +107,14 @@ public class WaterUtil {
     }
 
     public static <T> T tryWithReturn(ReturnableRunnable<T> runnable, T defaultVar) {
-        try {return runnable.run();
+        try { return runnable.run();
         } catch (Exception ignored) { return defaultVar; }
     }
 
-    public interface ReturnableRunnable<T> { T run(); }
+    public static void trySimple(SimpleTryRunnable runnable) {
+        try { runnable.run(); } catch (Exception ignored) {}
+    }
+
+    public interface ReturnableRunnable<T> { T run() throws Exception; }
+    public interface SimpleTryRunnable { void run() throws Exception; }
 }
