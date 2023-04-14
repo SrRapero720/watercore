@@ -12,7 +12,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class WaterNetwork {
+public class WNetwork {
     private static int MSGID = 0;
     private static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(WaterCore.ID, "main"),

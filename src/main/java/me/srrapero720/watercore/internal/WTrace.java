@@ -12,19 +12,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class WaterTrace {
+public class WTrace {
     // TODO: Separate this feature. Create other mod to run this and toggle features.
     private static void spongeEmptyClassInfo() throws NoSuchFieldException, IllegalAccessException {
-        WaterConsole.error("SpongeMixinTool", "Cleaning cache of Mixins is currently disabled. because TraceMixin feature got broken.");
+        WConsole.error("SpongeMixinTool", "Cleaning cache of Mixins is currently disabled. because TraceMixin feature got broken.");
         if (true) return; // Disabled cache cleaning
-        if (WaterUtil.isModFMLoading("not-that-cc")) return; // Crashes crafty crashes if it crashes
+        if (WUtil.isModFMLoading("not-that-cc")) return; // Crashes crafty crashes if it crashes
         Field cacheField = ClassInfo.class.getDeclaredField("cache");
         cacheField.setAccessible(true);
         @SuppressWarnings("unchecked")
         var cache = ((Map<String, ClassInfo>)cacheField.get(null));
-        ClassInfo jlo = cache.get(WaterUtil.OBJECT);
+        ClassInfo jlo = cache.get(WUtil.OBJECT);
         cache.clear();
-        cache.put(WaterUtil.OBJECT, jlo);
+        cache.put(WUtil.OBJECT, jlo);
     }
 
     public static void loadMixinsAndClearCache() {

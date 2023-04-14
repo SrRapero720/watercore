@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
-import me.srrapero720.watercore.internal.WaterUtil;
+import me.srrapero720.watercore.internal.WUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -21,20 +21,20 @@ public class SetLobbySpawnComm {
     public static int saveSpawn(PlayerSpawn.Mode mode, CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
         var server = player.getServer();
-        var position = WaterUtil.calculateNearbyCenter(player.getX(), player.getY(), player.getZ());
+        var position = WUtil.calculateNearbyCenter(player.getX(), player.getY(), player.getZ());
 
         PlayerSpawn.fetch(mode, server)
                 .setDimension(player.getLevel().dimension())
-                .setCoordinates(position, WaterUtil.fixAngle(player.getXRot()), WaterUtil.fixAngle(player.getYRot()));
+                .setCoordinates(position, WUtil.fixAngle(player.getXRot()), WUtil.fixAngle(player.getYRot()));
                 //.save(new CompoundTag()); // This is necessary?
 
 
         // TODO: Implement something on MCFormat
         context.getSource().sendSuccess(new TranslatableComponent("wc.command.setspawn.success",
-                "§c" + WaterUtil.twoDecimal(position.x),
-                "§c" + WaterUtil.twoDecimal(position.y),
-                "§c" + WaterUtil.twoDecimal(position.z),
-                "§c" + WaterUtil.fixAngle(player.getYRot()),
+                "§c" + WUtil.twoDecimal(position.x),
+                "§c" + WUtil.twoDecimal(position.y),
+                "§c" + WUtil.twoDecimal(position.z),
+                "§c" + WUtil.fixAngle(player.getYRot()),
                 "§c" + player.getLevel().dimension().location()), true);
 
         return 0;

@@ -1,8 +1,8 @@
 package me.srrapero720.watercore.mixin;
 
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
-import me.srrapero720.watercore.internal.WaterConsole;
-import me.srrapero720.watercore.internal.WaterRegistry;
+import me.srrapero720.watercore.internal.WConsole;
+import me.srrapero720.watercore.internal.WRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -30,18 +30,18 @@ public abstract class MinecraftServerMixin {
         var spawn = PlayerSpawn.fetch(PlayerSpawn.Mode.WORLD, (MinecraftServer) (Object) this);
 
         if (lobby.invalid()) {
-            WaterConsole.warn("MinecraftServer", "No found any WorldSpawn pos. using default");
+            WConsole.warn("MinecraftServer", "No found any WorldSpawn pos. using default");
             lobby.setDimension(Level.OVERWORLD);
             lobby.setCoordinates(levels.get(Level.OVERWORLD).getSharedSpawnPos(), 0, 0);
         }
 
         if (spawn.invalid()) {
-            WaterConsole.warn("MinecraftServer", "No found any LobbySpawn pos. using default");
+            WConsole.warn("MinecraftServer", "No found any LobbySpawn pos. using default");
             spawn.setDimension(Level.OVERWORLD);
             spawn.setCoordinates(levels.get(Level.OVERWORLD).getSharedSpawnPos(), 0, 0);
         }
 
-        var lobbyLevel = getLevel(WaterRegistry.findDimension("lobby"));
+        var lobbyLevel = getLevel(WRegistry.findDimension("lobby"));
         var statelobby = lobbyLevel.getBlockState(new BlockPos(0, 128, 0));
         if (statelobby.is(Blocks.AIR))
             lobbyLevel.setBlock(new BlockPos(0, 128, 0), Blocks.BEDROCK.defaultBlockState(), 0);

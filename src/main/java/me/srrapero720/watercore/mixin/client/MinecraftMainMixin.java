@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.mixin.client;
 
-import me.srrapero720.watercore.internal.WaterTrace;
-import me.srrapero720.watercore.internal.WaterConsole;
+import me.srrapero720.watercore.internal.WTrace;
+import me.srrapero720.watercore.internal.WConsole;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.main.Main;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MinecraftMainMixin {
     @Redirect(method = "main([Ljava/lang/String;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;renderOnThread()Z"))
     private static boolean loadAllMixinsThenShouldRenderAsync(@NotNull Minecraft instance) {
-        WaterConsole.warn("SpongeLeakFixServer", "Starting force-loading all mixins and cleaning cache");
-        WaterTrace.loadMixinsAndClearCache();
+        WConsole.warn("SpongeLeakFixServer", "Starting force-loading all mixins and cleaning cache");
+        WTrace.loadMixinsAndClearCache();
         return instance.renderOnThread();
     }
 }

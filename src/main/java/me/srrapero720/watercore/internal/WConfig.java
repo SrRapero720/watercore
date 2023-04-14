@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WaterConfig {
+public class WConfig {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
     private static final Map<String, ForgeConfigSpec.ConfigValue<?>> CONFIGS = new HashMap<>();
@@ -57,7 +57,7 @@ public class WaterConfig {
                 .define("BACK_COOLDOWN", 20L));
 
         CONFIGS.put("BROADCAST_PREFIX", BUILDER.comment("prefix from /broadcast output")
-                .define("BROADCAST_PREFIX", WaterUtil.getBroadcastPrefix()));
+                .define("BROADCAST_PREFIX", WUtil.getBroadcastPrefix()));
 
 
 

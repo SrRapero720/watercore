@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin;
 
-import me.srrapero720.watercore.api.MCPlayerFormat;
+import me.srrapero720.watercore.api.placeholder.provider.PlayerPlaceholder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -19,7 +19,7 @@ public class ServerGamePLMixin {
 
     @ModifyArg(method = "onDisconnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
     public Component modifyOnDisconnectArgument(Component p_11265_) {
-        return MCPlayerFormat.format(MCPlayerFormat.Format.LEAVE, player);
+        return PlayerPlaceholder.format(PlayerPlaceholder.Format.LEAVE, player);
     }
 
     @Redirect(method = "handleChat(Lnet/minecraft/server/network/TextFilter$FilteredText;)V", at = @At(
@@ -31,9 +31,9 @@ public class ServerGamePLMixin {
         return ForgeHooks.onServerChatEvent(
                 net,
                 raw,
-                MCPlayerFormat.format(MCPlayerFormat.Format.CHAT, player, raw),
+                PlayerPlaceholder.format(PlayerPlaceholder.Format.CHAT, player, raw),
                 filtered,
-                filtered.isEmpty() ? null : MCPlayerFormat.format(MCPlayerFormat.Format.CHAT, player, filtered)
+                filtered.isEmpty() ? null : PlayerPlaceholder.format(PlayerPlaceholder.Format.CHAT, player, filtered)
         );
     }
 }

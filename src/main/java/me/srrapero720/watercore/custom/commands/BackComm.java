@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
-import me.srrapero720.watercore.internal.WaterUtil;
+import me.srrapero720.watercore.internal.WUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -54,7 +54,7 @@ public class BackComm {
             return 0;
         }
 
-        player.teleportTo(WaterUtil.fetchLevel(levels, post.getDimension()), post.getX(), post.getY(), post.getZ(), post.getRotY(), post.getRotX());
+        player.teleportTo(WUtil.fetchLevel(levels, post.getDimension()), post.getX(), post.getY(), post.getZ(), post.getRotY(), post.getRotX());
         return 0;
     }
 }

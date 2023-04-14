@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.custom.data;
 
 import me.srrapero720.watercore.WaterCore;
-import me.srrapero720.watercore.api.MCTeletransportation;
+import me.srrapero720.watercore.api.data.MCTeleportal;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerSpawn extends SavedData {
     // DATA MANAGMENT
-    private final MCTeletransportation teletransportation;
+    private final MCTeleportal teletransportation;
     public PlayerSpawn() {
-        this.teletransportation = new MCTeletransportation() {
+        this.teletransportation = new MCTeleportal() {
             @Override
             protected void onDataUpdated() { PlayerSpawn.this.setDirty(); }
         };
@@ -53,7 +53,7 @@ public class PlayerSpawn extends SavedData {
 
 
     // FETCH WHAT DATA
-    public static MCTeletransportation fetch(Mode mode,  @NotNull MinecraftServer server) {
+    public static MCTeleportal fetch(Mode mode, @NotNull MinecraftServer server) {
         var self = server.overworld().getDataStorage().computeIfAbsent(PlayerSpawn::load, PlayerSpawn::create, mode.toString());
         return self.teletransportation;
     }

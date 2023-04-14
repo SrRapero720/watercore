@@ -2,8 +2,8 @@ package me.srrapero720.watercore.mixin.client;
 
 import com.mojang.blaze3d.platform.*;
 import io.netty.buffer.AbstractReferenceCountedByteBuf;
-import me.srrapero720.watercore.internal.WaterConsole;
-import me.srrapero720.watercore.internal.WaterUtil;
+import me.srrapero720.watercore.internal.WConsole;
+import me.srrapero720.watercore.internal.WUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -34,7 +34,7 @@ public class MinecraftMixin {
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void releaseAfterTick(CallbackInfo ci) {
-        WaterUtil.BUFFERS.removeIf((buffer) -> {
+        WUtil.BUFFERS.removeIf((buffer) -> {
             if (buffer.source instanceof AbstractReferenceCountedByteBuf) return true;
             return buffer.refCnt() == 0 && buffer.release();
         });
@@ -56,7 +56,7 @@ public class MinecraftMixin {
     // FIX MEMORYLEAK: WORLD KEEPS LOADED.
     @Inject(method = "updateScreenAndTick", at = @At(value = "INVOKE",target = "Lnet/minecraft/client/Minecraft;runTick(Z)V",shift = At.Shift.BEFORE))
     private void injectUpdateScreenAndTick(Screen screen, CallbackInfo ci) {
-        WaterConsole.log("r", "Cleaning crosshair, hitresult and cameraEntity");
+        WConsole.log("r", "Cleaning crosshair, hitresult and cameraEntity");
         this.crosshairPickEntity = null;
         this.hitResult = null;
         this.cameraEntity = null;

@@ -1,9 +1,9 @@
 package me.srrapero720.watercore.custom.items;
 
-import me.srrapero720.watercore.api.MCTextFormat;
-import me.srrapero720.watercore.internal.WaterRegistry;
-import me.srrapero720.watercore.internal.WaterConsole;
-import me.srrapero720.watercore.internal.WaterThreads;
+import me.srrapero720.watercore.api.placeholder.provider.FormatPlaceholder;
+import me.srrapero720.watercore.api.thread.ThreadUtil;
+import me.srrapero720.watercore.internal.WRegistry;
+import me.srrapero720.watercore.internal.WConsole;
 import net.minecraft.Util;
 import net.minecraft.network.chat.*;
 import net.minecraft.server.players.UserBanListEntry;
@@ -14,11 +14,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import me.srrapero720.watercore.internal.WaterUtil;
+import me.srrapero720.watercore.internal.WUtil;
 
 public class BanHammer extends Item {
     public BanHammer() {
-        super(new Properties().tab(WaterRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
+        super(new Properties().tab(WRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
     }
 
     @Override
@@ -30,7 +30,7 @@ public class BanHammer extends Item {
             banned.level.addFreshEntity(l2);
             banned.kill();
 
-            WaterThreads.runNewThread(() -> {
+            ThreadUtil.thread(() -> {
                 try {
                     Thread.sleep(500);
                     if (banned.isDeadOrDying()) banned.kill();
@@ -46,12 +46,12 @@ public class BanHammer extends Item {
                     playerList.getPlayerByName(player.getName().getString()).connection.disconnect(new TranslatableComponent("wc.response.banhammer"));
                     playerList.broadcastMessage(
                             new TranslatableComponent("item.watercore.banhammer.broadcast",
-                                    WaterUtil.getBroadcastPrefix("&6"),
-                                    MCTextFormat.parse("&c") + banned.getName().getString(),
-                                    MCTextFormat.parse("&6")),
+                                    WUtil.getBroadcastPrefix("&6"),
+                                    FormatPlaceholder.colors("&c") + banned.getName().getString(),
+                                    FormatPlaceholder.colors("&6")),
                             ChatType.SYSTEM, Util.NIL_UUID);
 
-                } catch (Exception e) { WaterConsole.warn("BanHammer", "Ocurrio un error al banear al usuario"); }
+                } catch (Exception e) { WConsole.warn("BanHammer", "Ocurrio un error al banear al usuario"); }
             });
         } else entity.remove(Entity.RemovalReason.DISCARDED);
 

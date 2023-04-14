@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import java.util.List;
 import java.util.Set;
 
-public class WaterMixinPlugin implements IMixinConfigPlugin {
+public class WMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {}
 
@@ -16,9 +16,9 @@ public class WaterMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String target, String mixin) {
-        if (mixin.contains("SL312664")) return WaterUtil.isModFMLoading("simplelogin");
-        if (mixin.contains("VM423535")) return WaterUtil.isModFMLoading("vmod");
-        if (mixin.contains("FM01")) return WaterUtil.isModFMLoading("fancymenu");
+        if (mixin.contains("SL312664")) return WUtil.isModFMLoading("simplelogin");
+        if (mixin.contains("VM423535")) return WUtil.isModFMLoading("vmod");
+        if (mixin.contains("FM01")) return WUtil.isModFMLoading("fancymenu");
         return true;
     }
 

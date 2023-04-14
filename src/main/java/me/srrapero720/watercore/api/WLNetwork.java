@@ -1,4 +1,4 @@
 package me.srrapero720.watercore.api;
 
-public class WCNetwork {
+public class WLNetwork {
 }

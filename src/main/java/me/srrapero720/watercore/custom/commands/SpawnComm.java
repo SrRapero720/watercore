@@ -4,8 +4,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
-import me.srrapero720.watercore.internal.WaterRegistry;
-import me.srrapero720.watercore.internal.WaterUtil;
+import me.srrapero720.watercore.internal.WRegistry;
+import me.srrapero720.watercore.internal.WUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ public class SpawnComm {
 
     public static int teleportPlayerToLobby(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
-        var level = player.server.getLevel(WaterRegistry.findDimension("lobby"));
+        var level = player.server.getLevel(WRegistry.findDimension("lobby"));
         player.teleportTo(level, 0, 128, 0, 0, 0);
         return 0;
     }
@@ -27,7 +27,7 @@ public class SpawnComm {
         var player = context.getSource().getPlayerOrException();
 
         var spawn = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, player.server);
-        var result = WaterUtil.fetchLevel(player.server.getAllLevels(), spawn.getDimension());
+        var result = WUtil.fetchLevel(player.server.getAllLevels(), spawn.getDimension());
 
         player.teleportTo(result, spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getRotY(), spawn.getRotX());
         return 0;

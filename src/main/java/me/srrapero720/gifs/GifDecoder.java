@@ -36,7 +36,6 @@ import java.util.ArrayList;
  * any purpose, however, refer to the Unisys LZW patent for any additional
  * restrictions. Please forward any corrections to questions at fmsware.com.
  *
- * @deprecated Use Konkrete instead
  * @author Kevin Weiner, FM Software; LZW decoder adapted from John Cristy's ImageMagick.
  * @version 1.03 November 2003 */
 @Deprecated(since = "watercore-1.4.0")

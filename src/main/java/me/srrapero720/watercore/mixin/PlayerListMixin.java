@@ -1,11 +1,11 @@
 package me.srrapero720.watercore.mixin;
 
 import com.mojang.serialization.Dynamic;
-import me.srrapero720.watercore.api.MCPlayerFormat;
+import me.srrapero720.watercore.api.placeholder.provider.PlayerPlaceholder;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
-import me.srrapero720.watercore.internal.WaterConsole;
-import me.srrapero720.watercore.internal.WaterUtil;
+import me.srrapero720.watercore.internal.WConsole;
+import me.srrapero720.watercore.internal.WUtil;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -87,11 +87,11 @@ public abstract class PlayerListMixin {
     public ResourceKey<Level> injectLocalPlaceNewPlayer(ResourceKey<Level> levelResourceKey, Connection connection, ServerPlayer player) {
         var tag = this.load(player);
         var spawnData = PlayerSpawn.fetch(PlayerSpawn.Mode.WORLD, server);
-        var spawnLevel = WaterUtil.fetchLevel(server.getAllLevels(), spawnData.getDimension());
+        var spawnLevel = WUtil.fetchLevel(server.getAllLevels(), spawnData.getDimension());
         var spawnLevelRes = spawnLevel == null ? Level.OVERWORLD : spawnLevel.dimension();
 
         return tag != null
-                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(WaterConsole::justPrint).orElse(spawnLevelRes)
+                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(WConsole::justPrint).orElse(spawnLevelRes)
                 : spawnLevelRes;
     }
 
@@ -113,7 +113,7 @@ public abstract class PlayerListMixin {
 
     @Redirect(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
     public void redirectBroadcastMessage(PlayerList list, Component obsolete, ChatType type, UUID uuid, Connection connection, ServerPlayer player) {
-        var component = MCPlayerFormat.format(MCPlayerFormat.Format.JOIN, player);
+        var component = PlayerPlaceholder.format(PlayerPlaceholder.Format.JOIN, player);
         this.broadcastMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
         if (player.level.isClientSide()) player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
     }
@@ -122,7 +122,7 @@ public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("TAIL"))
     public void injectTailPlaceNewPlayer(Connection connection, ServerPlayer player, CallbackInfo ci) {
         if (player.level.isClientSide())
-            player.sendMessage(MCPlayerFormat.format(MCPlayerFormat.Format.JOIN, player), ChatType.SYSTEM, Util.NIL_UUID);
+            player.sendMessage(PlayerPlaceholder.format(PlayerPlaceholder.Format.JOIN, player), ChatType.SYSTEM, Util.NIL_UUID);
     }
 
 
@@ -143,7 +143,7 @@ public abstract class PlayerListMixin {
 
         // WATERCORE LOBBY DATA
         var lobbyData = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, server);
-        var lobbyLevel = WaterUtil.fetchLevel(server.getAllLevels(), lobbyData.getDimension());
+        var lobbyLevel = WUtil.fetchLevel(server.getAllLevels(), lobbyData.getDimension());
 
         var level = this.server.getLevel(player.getRespawnDimension());
         Optional<Vec3> optional = (level != null && respawnPos != null)
@@ -164,7 +164,7 @@ public abstract class PlayerListMixin {
         if (optional.isPresent()) return;
 
         var lobbyData = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, server);
-        var lobbyLevel = WaterUtil.fetchLevel(server.getAllLevels(), lobbyData.getDimension());
+        var lobbyLevel = WUtil.fetchLevel(server.getAllLevels(), lobbyData.getDimension());
 
         freshPlayer.setPos(lobbyData.getX(), lobbyData.getY(), lobbyData.getZ());
         freshPlayer.setXRot(lobbyData.getRotX());

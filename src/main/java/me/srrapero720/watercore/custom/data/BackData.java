@@ -1,16 +1,14 @@
 package me.srrapero720.watercore.custom.data;
 
-import me.srrapero720.watercore.api.MCTeletransportation;
+import me.srrapero720.watercore.api.data.MCTeleportal;
 import me.srrapero720.watercore.custom.data.storage.IPlayerStorage;
-import me.srrapero720.watercore.internal.WaterConsole;
-import me.srrapero720.watercore.internal.WaterUtil;
+import me.srrapero720.watercore.internal.WConsole;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.portal.PortalInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class BackData extends MCTeletransportation {
+public final class BackData extends MCTeleportal {
     public BackData(ResourceLocation dim, double x, double y, double z, float xRot, float yRot) {
         super(dim, new double[] { x, y, z }, new float[] { xRot, yRot });
     }
@@ -29,7 +27,7 @@ public final class BackData extends MCTeletransportation {
 
     @Deprecated(forRemoval = true)
     public static void saveLastPosition(@NotNull ServerPlayer player) {
-        WaterConsole.warn("saveLastPosition", "called method...");
+        WConsole.warn("saveLastPosition", "called method...");
         var data = ((IPlayerStorage) player).getWatercoreData();
         data.putBoolean("backValid", true);
         data.putString("backDimension", player.getLevel().dimension().location().toString());

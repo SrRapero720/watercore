@@ -1,6 +1,7 @@
 package me.srrapero720.watercore.internal;
 
-import me.srrapero720.watercore.api.MCTextFormat;
+import me.srrapero720.watercore.api.placeholder.provider.FormatPlaceholder;
+import me.srrapero720.watercore.api.thread.ThreadUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -18,10 +19,10 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.util.*;
 
-public class WaterUtil {
+public class WUtil {
     public static final Set<FriendlyByteBuf> BUFFERS = Collections.synchronizedSet(new HashSet<>());
     public static final String OBJECT = "java/lang/Object";
-    public static final File GAME_DIR = isClientSide() ? mc().gameDirectory : new File("");
+    public static final File GAME_DIR = new File("");
 
     public static int toTicks(final double sec) { return (int) (sec * 20); }
 
@@ -37,7 +38,7 @@ public class WaterUtil {
     public static boolean isNoside() { return !isClientSide() && !isServerSide(); }
 
     // PREFIX BUILER
-    public static @NotNull String getBroadcastPrefix() { return getBroadcastPrefix(MCTextFormat.parse("&6")); }
+    public static @NotNull String getBroadcastPrefix() { return getBroadcastPrefix(FormatPlaceholder.colors("&6")); }
     public static @NotNull String getBroadcastPrefix(String color) { return "&e&l[&bWATERC&eo&bRE&e&l] " + color; }
 
     @Contract(pure = true)
@@ -81,11 +82,11 @@ public class WaterUtil {
     }
 
     @SuppressWarnings("ConstantValue")
-    public static boolean isLong(String s) { return tryWithReturn(() -> Long.valueOf(s) != null, false); }
+    public static boolean isLong(String s) { return ThreadUtil.tryAndReturn((def) -> Long.valueOf(s) != null, false); }
     @SuppressWarnings("ConstantValue")
-    public static boolean isFloat(String s) { return tryWithReturn(() -> Float.valueOf(s) != null, false); }
+    public static boolean isFloat(String s) { return ThreadUtil.tryAndReturn((def) -> Float.valueOf(s) != null, false); }
     @SuppressWarnings("ConstantValue")
-    public static boolean isInt(String s) { return tryWithReturn(() -> Integer.valueOf(s) != null, false); }
+    public static boolean isInt(String s) { return ThreadUtil.tryAndReturn((def) -> Integer.valueOf(s) != null, false); }
 
     /* THANKS STACKOVERFLOW
     * https://stackoverflow.com/questions/5051395/java-float-123-129456-to-123-12-without-rounding
@@ -106,15 +107,4 @@ public class WaterUtil {
         return Float.parseFloat(sbFloat.toString());
     }
 
-    public static <T> T tryWithReturn(ReturnableRunnable<T> runnable, T defaultVar) {
-        try { return runnable.run();
-        } catch (Exception ignored) { return defaultVar; }
-    }
-
-    public static void trySimple(SimpleTryRunnable runnable) {
-        try { runnable.run(); } catch (Exception ignored) {}
-    }
-
-    public interface ReturnableRunnable<T> { T run() throws Exception; }
-    public interface SimpleTryRunnable { void run() throws Exception; }
 }

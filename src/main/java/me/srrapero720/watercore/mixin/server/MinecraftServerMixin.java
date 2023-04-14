@@ -1,10 +1,10 @@
 package me.srrapero720.watercore.mixin.server;
 
-import me.srrapero720.watercore.internal.WaterTrace;
+import me.srrapero720.watercore.internal.WTrace;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import me.srrapero720.watercore.internal.WaterConsole;
+import me.srrapero720.watercore.internal.WConsole;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,7 +17,7 @@ public class MinecraftServerMixin {
     // FIXES MIXIN "MEMORY LEAK". IN REALITY IS MORE LIKE CLEANING NON USED STUFF.
     @Inject(method = "loadLevel", at = @At("RETURN"))
     private void onFinishedLoadingWorlds(CallbackInfo ci) {
-        WaterConsole.warn("SpongeLeakFixServer", "Starting force-loading all mixins and cleaning cache");
-        WaterTrace.loadMixinsAndClearCache();
+        WConsole.warn("SpongeLeakFixServer", "Starting force-loading all mixins and cleaning cache");
+        WTrace.loadMixinsAndClearCache();
     }
 }

@@ -3,7 +3,7 @@ package me.srrapero720.watercore.internal;
 import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
 
-public class WaterConsole {
+public class WConsole {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final String PREFIX = "WATERCoRE: ";
 

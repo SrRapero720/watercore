@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.custom.items;
 
-import me.srrapero720.watercore.internal.WaterRegistry;
+import me.srrapero720.watercore.internal.WRegistry;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -14,18 +14,18 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import me.srrapero720.watercore.internal.WaterUtil;
+import me.srrapero720.watercore.internal.WUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class ItemGodWand extends Item {
     final int damage;
     public ItemGodWand() {
-        super(new Properties().tab(WaterRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
+        super(new Properties().tab(WRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
         damage = 24;
     }
 
     public ItemGodWand(int damage) {
-        super(new Properties().tab(WaterRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
+        super(new Properties().tab(WRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair());
         this.damage = damage;
     }
 
@@ -54,10 +54,10 @@ public class ItemGodWand extends Item {
     }
 
     public void applyGodEffects(Player player) {
-        player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, WaterUtil.toTicks(0.5), 3, false, false, false));
-        player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, WaterUtil.toTicks(7), 5, false, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, WUtil.toTicks(0.5), 3, false, false, false));
+        player.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, WUtil.toTicks(7), 5, false, false, false));
 
-        for (MobEffectInstance i: WaterRegistry.findPotionOnly("blessed_3").getEffects())
+        for (MobEffectInstance i: WRegistry.findPotionOnly("blessed_3").getEffects())
             player.addEffect(new MobEffectInstance(i.getEffect(), i.getDuration(), i.getAmplifier(), i.isAmbient(), i.isVisible(), false));
     }
 

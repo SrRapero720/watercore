@@ -1,8 +1,8 @@
 package me.srrapero720.watercore.mixin;
 
-import me.srrapero720.watercore.internal.WaterTrace;
+import me.srrapero720.watercore.internal.WTrace;
 import me.srrapero720.wrappycrashes.SMAPper;
-import me.srrapero720.watercore.internal.WaterConsole;
+import me.srrapero720.watercore.internal.WConsole;
 import net.minecraft.CrashReport;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +23,7 @@ public class TraceMixin {
 
 	@Inject(method = "getDetails(Ljava/lang/StringBuilder;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/CrashReport;details:Ljava/util/List;"))
 	private void injectGetDetalsToAddTrace(StringBuilder crashReportBuilder, CallbackInfo ci) {
-		WaterConsole.debug("MixinWC", "Creando CrashReport con mixins");
+		WConsole.debug("MixinWC", "Creando CrashReport con mixins");
 
 		int trailingNewlineCount = 0;
 		// Remove trailing \n
@@ -35,7 +35,7 @@ public class TraceMixin {
 			crashReportBuilder.deleteCharAt(crashReportBuilder.length() - 1);
 			trailingNewlineCount++;
 		}
-		WaterTrace.printTrace(uncategorizedStackTrace, crashReportBuilder);
+		WTrace.printTrace(uncategorizedStackTrace, crashReportBuilder);
 		crashReportBuilder.append("\n".repeat(trailingNewlineCount));
 	}
 }

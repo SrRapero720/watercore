@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.api;
+package me.srrapero720.watercore.api.data;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class MCTeletransportation {
+public abstract class MCTeleportal {
     protected ResourceLocation dimension;
     protected double x = 0;
     protected double y = 128;
@@ -15,8 +15,8 @@ public abstract class MCTeletransportation {
     protected float rotX = 0;
     protected float rotY = 0;
 
-    public MCTeletransportation() {}
-    public MCTeletransportation(ResourceLocation dimension, double @NotNull[]  position, float @NotNull[] angle) {
+    public MCTeleportal() {}
+    public MCTeleportal(ResourceLocation dimension, double @NotNull[]  position, float @NotNull[] angle) {
         this.dimension = dimension;
         this.x = position[0];
         this.y = position[1];
@@ -40,27 +40,27 @@ public abstract class MCTeletransportation {
     protected abstract void onDataUpdated();
 
     // ADVANCED SETTERS
-    public MCTeletransportation setDimension(ResourceLocation location) {
+    public MCTeleportal setDimension(ResourceLocation location) {
         if (location == null) throw new IllegalArgumentException("WATERCoRE API: ResourceLocation cannot be null");
         this.dimension = location;
         this.onDataUpdated();
         return this;
     }
 
-    public MCTeletransportation setDimension(@NotNull String dim) {
+    public MCTeleportal setDimension(@NotNull String dim) {
         if (dim.isEmpty()) throw new IllegalArgumentException("WATERCoRE API: You tried to set a empty data dimension");
         this.dimension = new ResourceLocation(dim);
         this.onDataUpdated();
         return this;
     }
 
-    public MCTeletransportation setDimension(@NotNull ResourceKey<Level> dimension) {
+    public MCTeleportal setDimension(@NotNull ResourceKey<Level> dimension) {
         this.dimension = dimension.location();
         this.onDataUpdated();
         return this;
     }
 
-    public MCTeletransportation setCoordinates(double x, double y, double z, float rotX, float rotY) {
+    public MCTeleportal setCoordinates(double x, double y, double z, float rotX, float rotY) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -70,7 +70,7 @@ public abstract class MCTeletransportation {
         return this;
     }
 
-    public MCTeletransportation setCoordinates(@NotNull BlockPos blockPos, float rotX, float rotY) {
+    public MCTeleportal setCoordinates(@NotNull BlockPos blockPos, float rotX, float rotY) {
         this.x = blockPos.getX();
         this.y = blockPos.getY();
         this.z = blockPos.getZ();
@@ -80,7 +80,7 @@ public abstract class MCTeletransportation {
         return this;
     }
 
-    public MCTeletransportation setCoordinates(@NotNull Vec3 cords, float rotX, float rotY) {
+    public MCTeleportal setCoordinates(@NotNull Vec3 cords, float rotX, float rotY) {
         this.x = cords.x;
         this.y = cords.y;
         this.z = cords.z;

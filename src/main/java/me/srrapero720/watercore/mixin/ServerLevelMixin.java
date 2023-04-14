@@ -1,6 +1,5 @@
 package me.srrapero720.watercore.mixin;
 
-import me.srrapero720.watercore.internal.WaterConsole;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.ServerLevelData;
 import org.spongepowered.asm.mixin.Final;

@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.internal;
 
 import me.srrapero720.watercore.WaterCore;
-import me.srrapero720.watercore.api.LPMetadata;
+import me.srrapero720.watercore.api.luckperms.LPMetadata;
 import me.srrapero720.watercore.custom.commands.*;
 import me.srrapero720.watercore.custom.items.BanHammer;
 import me.srrapero720.watercore.custom.items.ItemCoin;
@@ -43,9 +43,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = WaterCore.ID)
-public class WaterRegistry {
+public class WRegistry {
     public enum Type { TABS, SOUND, POTION, ITEM, BLOCKS, BLOCK_ENTITIES, LEVELS}
-    private static final Map<String, WaterRegistry> REGISTRIES = new HashMap<>();
+    private static final Map<String, WRegistry> REGISTRIES = new HashMap<>();
     private final String MOD_ID;
 
     // REGISTRY FOR TABS [STATIC]
@@ -74,7 +74,7 @@ public class WaterRegistry {
     private final Map<String, ResourceKey<Level>> LEVELS = new HashMap<>();
     private final Map<String, ResourceKey<DimensionType>> DIMENSION_TYPES = new HashMap<>();
 
-    public WaterRegistry(String modId) {
+    public WRegistry(String modId) {
         this.MOD_ID = modId;
         POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, this.MOD_ID);
         SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, this.MOD_ID);
@@ -103,13 +103,13 @@ public class WaterRegistry {
         register(Type.SOUND,"violin", () -> new SoundEvent(new ResourceLocation(WaterCore.ID, "violin")));
 
         /* POTIONS */
-        register(Type.POTION,"blessed_1", () -> new BlessedPotion(WaterUtil.toTicks(180), 1));
-        register(Type.POTION,"blessed_2", () -> new BlessedPotion(WaterUtil.toTicks(180), 2));
-        register(Type.POTION,"blessed_3", () -> new BlessedPotion(WaterUtil.toTicks(180), 3));
+        register(Type.POTION,"blessed_1", () -> new BlessedPotion(WUtil.toTicks(180), 1));
+        register(Type.POTION,"blessed_2", () -> new BlessedPotion(WUtil.toTicks(180), 2));
+        register(Type.POTION,"blessed_3", () -> new BlessedPotion(WUtil.toTicks(180), 3));
 
-        register(Type.POTION,"cursed_1", () -> new CursedPotion(WaterUtil.toTicks(180), 1));
-        register(Type.POTION,"cursed_2", () -> new CursedPotion(WaterUtil.toTicks(180), 2));
-        register(Type.POTION,"cursed_3", () -> new CursedPotion(WaterUtil.toTicks(180), 3));
+        register(Type.POTION,"cursed_1", () -> new CursedPotion(WUtil.toTicks(180), 1));
+        register(Type.POTION,"cursed_2", () -> new CursedPotion(WUtil.toTicks(180), 2));
+        register(Type.POTION,"cursed_3", () -> new CursedPotion(WUtil.toTicks(180), 3));
 
         /* ITEMS */
         register(Type.ITEM,"coppercoin", () -> new ItemCoin(Rarity.COMMON));
@@ -135,7 +135,7 @@ public class WaterRegistry {
         register(Type.LEVELS,"events", () -> new ResourceLocation(WaterCore.ID, "events"));
 
         /* CONFIG */
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, WaterConfig.SPEC, WaterCore.ID + "-server.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, WConfig.SPEC, WaterCore.ID + "-server.toml");
     }
 
     /* POTIONS GETTERS */
@@ -210,7 +210,7 @@ public class WaterRegistry {
         if (result != null) return result.get(); else return null;
     }
     public static @Nullable RegistryObject<BlockEntityType<?>> findBlockEntity(String name) {
-        for (var reg: REGISTRIES.values()) if (reg.block(name) != null) return reg.blockEntity(name);
+        for (var reg: REGISTRIES.values()) if (reg.blockEntity(name) != null) return reg.blockEntity(name);
         return null;
     }
 
@@ -233,7 +233,7 @@ public class WaterRegistry {
 
 
     public static void register(Type type, String id, @NotNull Supplier<?> supplier) {
-        var main = REGISTRIES.get(WaterCore.ID) == null ? new WaterRegistry(WaterCore.ID) : REGISTRIES.get(WaterCore.ID);
+        var main = REGISTRIES.get(WaterCore.ID) == null ? new WRegistry(WaterCore.ID) : REGISTRIES.get(WaterCore.ID);
         main.register(type, new ResourceLocation(WaterCore.ID, id), supplier);
     }
 
@@ -254,18 +254,18 @@ public class WaterRegistry {
                 LEVELS.put(id, ResourceKey.create(Registry.DIMENSION_REGISTRY, res));
                 DIMENSION_TYPES.put(id, ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, res));
             }
-            default -> WaterConsole.error(WaterRegistry.class.getSimpleName(), "Failed to register missing type");
+            default -> WConsole.error(WRegistry.class.getSimpleName(), "Failed to register missing type");
         }
     }
 
 
     public static void register() {
-        WaterConsole.log("WaterRegistry", "Loading WATERCoRE registries");
+        WConsole.log("WaterRegistry", "Loading WATERCoRE registries");
         for (var main: REGISTRIES.values()) {
-            WaterConsole.log("WaterRegistry", "Reading " + main.getModId());
+            WConsole.log("WaterRegistry", "Reading " + main.getModId());
             main.register(WaterCore.bus());
         }
-        WaterConsole.log("WaterRegistry", "all WATERCoRE registries are loaded");
+        WConsole.log("WaterRegistry", "all WATERCoRE registries are loaded");
     }
 
 
@@ -295,7 +295,7 @@ public class WaterRegistry {
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-        WaterConsole.log(getClass().toString(), "WATERCoRE running on server");
+        WConsole.log(getClass().toString(), "WATERCoRE running on server");
         LPMetadata.init();
     }
 

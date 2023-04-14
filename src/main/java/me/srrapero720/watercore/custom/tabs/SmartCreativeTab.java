@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.custom.tabs;
 
-import me.srrapero720.watercore.internal.WaterRegistry;
+import me.srrapero720.watercore.internal.WRegistry;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -13,5 +13,5 @@ public class SmartCreativeTab extends CreativeModeTab {
     }
 
     @Override
-    public @NotNull ItemStack makeIcon() { return new ItemStack(WaterRegistry.findItemOnly(iconName)); }
+    public @NotNull ItemStack makeIcon() { return new ItemStack(WRegistry.findItemOnly(iconName)); }
 }

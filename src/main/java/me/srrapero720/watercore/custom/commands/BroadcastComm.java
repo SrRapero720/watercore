@@ -3,7 +3,7 @@ package me.srrapero720.watercore.custom.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import me.srrapero720.watercore.api.MCTextFormat;
+import me.srrapero720.watercore.api.placeholder.provider.FormatPlaceholder;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -11,7 +11,7 @@ import net.minecraft.commands.arguments.MessageArgument;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import me.srrapero720.watercore.internal.WaterConfig;
+import me.srrapero720.watercore.internal.WConfig;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +26,7 @@ public class BroadcastComm {
         dispatcher.register(Commands.literal("broadcast")
                 .requires((p_137800_) -> p_137800_.hasPermission(3))
                 .then(Commands.argument("message", MessageArgument.message())
-                .executes((context -> broadcastToServer(context, MCTextFormat.parse(WaterConfig.get("BROADCAST_PREFIX"))))))
+                .executes((context -> broadcastToServer(context, FormatPlaceholder.colors(WConfig.get("BROADCAST_PREFIX"))))))
         );
     }
 
@@ -43,7 +43,7 @@ public class BroadcastComm {
 
     private static int broadcastToServer(@NotNull MinecraftServer server, @NotNull Component c, String prefix) {
         final var mPrefix = prefix != null ? prefix : "";
-        server.getPlayerList().broadcastMessage(new TextComponent(MCTextFormat.parse(mPrefix + c.getString())), ChatType.SYSTEM, Util.NIL_UUID);
+        server.getPlayerList().broadcastMessage(new TextComponent(FormatPlaceholder.colors(mPrefix + c.getString())), ChatType.SYSTEM, Util.NIL_UUID);
         return 0;
     }
 

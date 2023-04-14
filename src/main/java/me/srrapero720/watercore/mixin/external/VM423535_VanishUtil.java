@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin.external;
 
-import me.srrapero720.watercore.api.MCPlayerFormat;
+import me.srrapero720.watercore.api.placeholder.provider.PlayerPlaceholder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +16,6 @@ import java.util.UUID;
 public class VM423535_VanishUtil {
     @Redirect(method = "sendJoinOrLeaveMessageToPlayers", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;sendMessage(Lnet/minecraft/network/chat/Component;Ljava/util/UUID;)V"))
     private static void redirectSendJoinOrLeaveNewComponent(@NotNull ServerPlayer instance, Component p_9144_, UUID p_9145_, List<ServerPlayer> playerList, @NotNull ServerPlayer sender, boolean leaveMessage, boolean beforeStatusChange) {
-        instance.sendMessage(MCPlayerFormat.format(leaveMessage ? MCPlayerFormat.Format.LEAVE : MCPlayerFormat.Format.JOIN, instance), sender.getUUID());
+        instance.sendMessage(PlayerPlaceholder.format(leaveMessage ? PlayerPlaceholder.Format.LEAVE : PlayerPlaceholder.Format.JOIN, instance), sender.getUUID());
     }
 }
