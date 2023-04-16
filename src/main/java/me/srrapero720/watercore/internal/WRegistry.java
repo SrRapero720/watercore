@@ -10,6 +10,7 @@ import me.srrapero720.watercore.custom.items.ItemGodWand;
 import me.srrapero720.watercore.custom.potions.BlessedPotion;
 import me.srrapero720.watercore.custom.potions.CursedPotion;
 import me.srrapero720.watercore.custom.tabs.SmartCreativeTab;
+import me.srrapero720.watercore.internal.forge.W$ServerConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -135,7 +136,7 @@ public class WRegistry {
         register(Type.LEVELS,"events", () -> new ResourceLocation(WaterCore.ID, "events"));
 
         /* CONFIG */
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, WConfig.SPEC, WaterCore.ID + "-server.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, W$ServerConfig.SPEC, WaterCore.ID + "-server.toml");
     }
 
     /* POTIONS GETTERS */

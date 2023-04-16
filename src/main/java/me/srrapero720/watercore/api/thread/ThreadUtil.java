@@ -1,6 +1,7 @@
 package me.srrapero720.watercore.api.thread;
 
 import me.srrapero720.watercore.internal.WConsole;
+import me.srrapero720.watercore.internal.WUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,11 +30,37 @@ public class ThreadUtil {
         thread.start();
     }
 
+    public static void threadNonDaemon(Runnable runnable) {
+        var thread = new Thread(runnable);
+        thread.setName("WATERCoRE-" + String.valueOf(Math.random() * 100).replace(".", "-"));
+        thread.setDaemon(false);
+        thread.setUncaughtExceptionHandler(EXCEPTION_HANDLER);
+        thread.start();
+    }
+
     public static <T> void threadTryArgument(T object, TryRunnableWithArgument<T> toTry, @Nullable CatchRunnable toCatch, @Nullable FinallyRunnableWithArgument<T> toFinally) {
         thread(() -> {
             try { toTry.run(object);
             } catch (Exception e) { if (toCatch != null) toCatch.run(e);
             } finally { if (toFinally != null) toFinally.run(object); }
+        });
+    }
+
+    public static void threadLogger() {
+        threadNonDaemon(() -> {
+            var lastRun = System.nanoTime();
+            do {
+                // ANTI SPAM
+                if (lastRun < System.nanoTime()) {
+                    lastRun = System.nanoTime() + WUtil.secToMillis(5);
+                }
+
+                var threads = Thread.getAllStackTraces().keySet();
+
+                System.out.printf("%-15s \t %-15s \t %-15s \t %s\n", "Name", "State", "Priority", "isDaemon");
+                for (var t : threads) System.out.printf("%-15s \t %-15s \t %-15d \t %s\n", t.getName(), t.getState(), t.getPriority(), t.isDaemon());
+
+            } while (true);
         });
     }
 

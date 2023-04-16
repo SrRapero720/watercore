@@ -2,6 +2,7 @@ package me.srrapero720.watercore.custom.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import me.srrapero720.watercore.api.thread.ThreadUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -17,6 +18,9 @@ public class WatercoreComm {
                 //TELEPORT ADMIN TO OTHER PLAYER'S BACK HISTORY
                 .then(Commands.literal("back")
                         .then(Commands.argument("player", EntityArgument.players()).executes(BackComm::backWithoutIndexAndArgPlayer))
-                        .then(Commands.argument("index", IntegerArgumentType.integer(0, 10)).executes(BackComm::backArgPlayer))));
+                        .then(Commands.argument("index", IntegerArgumentType.integer(0, 10)).executes(BackComm::backArgPlayer)))
+
+                // THREAD LOGGER
+                .then(Commands.literal("thread-logger").executes((context -> { ThreadUtil.threadLogger(); return 0; }))));
     }
 }

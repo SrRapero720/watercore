@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.custom.data.storage;
 
 import me.srrapero720.watercore.custom.data.BackData;
-import me.srrapero720.watercore.internal.WConfig;
+import me.srrapero720.watercore.internal.forge.W$ServerConfig;
 import me.srrapero720.watercore.internal.WUtil;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,7 @@ public class SimplePlayerStorage {
     }
     public static boolean updateBackCooldown(ServerPlayer player) {
         if (System.nanoTime() >= loadBackCooldown(player)) {
-            PLAYER_BACKCOOLDOWN.put(player.getName().getString(), System.nanoTime() + WUtil.secToMillis(WConfig.get("BACK_COOLDOWN")));
+            PLAYER_BACKCOOLDOWN.put(player.getName().getString(), System.nanoTime() + WUtil.secToMillis(W$ServerConfig.get("back_cooldown")));
             return true;
         }
         return false;
