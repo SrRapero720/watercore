@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.internal;
 
-import me.srrapero720.watercore.api.placeholder.provider.FormatPlaceholder;
+import me.srrapero720.watercore.api.placeholder.Placeholder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class WMLBanned {
 
     public record Entry(String id, String name, String reason) {
         @Override
-        public @NotNull String toString() { return FormatPlaceholder.colors("&6&l".concat(this.name.concat(" &c".concat(this.reason)))); }
+        public @NotNull String toString() { return Placeholder.parse("&6&l".concat(this.name.concat(" &c".concat(this.reason)))); }
     }
 
     public static final class IncompatibleModInstalled extends RuntimeException {

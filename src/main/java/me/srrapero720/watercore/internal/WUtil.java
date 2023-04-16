@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.internal;
 
-import me.srrapero720.watercore.api.placeholder.provider.FormatPlaceholder;
+import me.srrapero720.watercore.api.placeholder.Placeholder;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -38,8 +38,8 @@ public class WUtil {
     public static boolean isNoside() { return !isClientSide() && !isServerSide(); }
 
     // PREFIX BUILER
-    public static @NotNull String getBroadcastPrefix() { return getBroadcastPrefix(FormatPlaceholder.colors("&6")); }
-    public static @NotNull String getBroadcastPrefix(String color) { return "&e&l[&bWATERC&eo&bRE&e&l] " + color; }
+    public static @NotNull String broadcastPrefix() { return broadcastPrefix(Placeholder.get("&6").toString()); }
+    public static @NotNull String broadcastPrefix(String color) { return "&e&l[&bWATERC&eo&bRE&e&l] " + color; }
 
     @Contract(pure = true)
     @OnlyIn(Dist.CLIENT)

@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.custom.items;
 
-import me.srrapero720.watercore.api.placeholder.provider.FormatPlaceholder;
+import me.srrapero720.watercore.api.placeholder.provider.Color;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.internal.WRegistry;
 import me.srrapero720.watercore.internal.WConsole;
@@ -46,9 +46,8 @@ public class BanHammer extends Item {
                     playerList.getPlayerByName(player.getName().getString()).connection.disconnect(new TranslatableComponent("wc.response.banhammer"));
                     playerList.broadcastMessage(
                             new TranslatableComponent("item.watercore.banhammer.broadcast",
-                                    WUtil.getBroadcastPrefix("&6"),
-                                    FormatPlaceholder.colors("&c") + banned.getName().getString(),
-                                    FormatPlaceholder.colors("&6")),
+                                    WUtil.broadcastPrefix("&6"),
+                                    Color.RED + banned.getName().getString(), Color.GOLD),
                             ChatType.SYSTEM, Util.NIL_UUID);
 
                 } catch (Exception e) { WConsole.warn("BanHammer", "Ocurrio un error al banear al usuario"); }
