@@ -64,5 +64,7 @@
   "wc.command.setspawn.success": "§6Guardada la posicion en %s %s %s [%s] §6en %s",
   "wc.command.setspawn.failed": "§cOcurrio un error inesperado al guardar la posicion",
   "wc.command.back.failed": "§cNo hay ubicacion anterior disponible",
-  "wc.command.back.cooldown": "§cTienes que esperar %s segundos antes de volver a usar este comando"
+  "wc.command.back.cooldown": "§cTienes que esperar %s segundos antes de volver a usar este comando",
+  "wc.command.watercore.threads.list": "%s§6La lista de Hilos activos se ha enviado a la consola",
+  "wc.command.watercore.threads.logger": "%s§6Thread loggger actualizado"
 }

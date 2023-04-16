@@ -2,10 +2,12 @@ package me.srrapero720.watercore.api.thread;
 
 import me.srrapero720.watercore.internal.WConsole;
 import me.srrapero720.watercore.internal.WUtil;
+import net.minecraft.network.protocol.PacketUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ThreadUtil {
+    private static Thread THREAD_LOGGER = null;
     private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER = (t, e) ->
             WConsole.error(t.getName(), "Handled fatal exception occurred on ThreadUtils - " + e);
 
@@ -22,20 +24,22 @@ public class ThreadUtil {
         threadTryArgument(null, (object -> toTry.run()), toCatch, (object -> { if (toFinally != null) toFinally.run(); }));
     }
 
-    public static void thread(Runnable runnable) {
+    public static Thread thread(Runnable runnable) {
         var thread = new Thread(runnable);
         thread.setName("WATERCoRE-" + String.valueOf(Math.random() * 100).replace(".", "-"));
         thread.setDaemon(true);
         thread.setUncaughtExceptionHandler(EXCEPTION_HANDLER);
         thread.start();
+        return thread;
     }
 
-    public static void threadNonDaemon(Runnable runnable) {
+    public static Thread threadNonDaemon(Runnable runnable) {
         var thread = new Thread(runnable);
         thread.setName("WATERCoRE-" + String.valueOf(Math.random() * 100).replace(".", "-"));
         thread.setDaemon(false);
         thread.setUncaughtExceptionHandler(EXCEPTION_HANDLER);
         thread.start();
+        return thread;
     }
 
     public static <T> void threadTryArgument(T object, TryRunnableWithArgument<T> toTry, @Nullable CatchRunnable toCatch, @Nullable FinallyRunnableWithArgument<T> toFinally) {
@@ -47,21 +51,36 @@ public class ThreadUtil {
     }
 
     public static void threadLogger() {
-        threadNonDaemon(() -> {
+        threadLoggerKill();
+        THREAD_LOGGER = threadNonDaemon(() -> {
             var lastRun = System.nanoTime();
             do {
                 // ANTI SPAM
                 if (lastRun < System.nanoTime()) {
                     lastRun = System.nanoTime() + WUtil.secToMillis(5);
                 }
-
-                var threads = Thread.getAllStackTraces().keySet();
-
-                System.out.printf("%-15s \t %-15s \t %-15s \t %s\n", "Name", "State", "Priority", "isDaemon");
-                for (var t : threads) System.out.printf("%-15s \t %-15s \t %-15d \t %s\n", t.getName(), t.getState(), t.getPriority(), t.isDaemon());
-
+                trySimple(ThreadUtil::showThreads);
             } while (true);
         });
+    }
+
+    public static void threadLoggerKill() {
+        trySimple(() -> {
+            if (threadLoggerEnabled()) THREAD_LOGGER.interrupt();
+            THREAD_LOGGER = null;
+            System.gc();
+        });
+    }
+
+    public static boolean threadLoggerEnabled() {
+        return THREAD_LOGGER != null && !THREAD_LOGGER.isInterrupted();
+    }
+
+    public static void showThreads() {
+        var threads = Thread.getAllStackTraces().keySet();
+
+        System.out.printf("%-15s \t %-15s \t %-15s \t %s\n", "Name", "State", "Priority", "isDaemon");
+        for (var t : threads) System.out.printf("%-15s \t %-15s \t %-15d \t %s\n", t.getName(), t.getState(), t.getPriority(), t.isDaemon());
     }
 
     public interface ReturnableRunnable<T> { T run(T defaultVar) throws Exception; }
