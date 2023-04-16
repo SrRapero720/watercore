@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.mixin;
 
 import com.mojang.serialization.Dynamic;
-import me.srrapero720.watercore.api.placeholder.provider.PlayerPlaceholder;
+import me.srrapero720.watercore.api.ego.PlayerName;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
 import me.srrapero720.watercore.internal.WConsole;
@@ -113,7 +113,7 @@ public abstract class PlayerListMixin {
 
     @Redirect(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
     public void redirectBroadcastMessage(PlayerList list, Component obsolete, ChatType type, UUID uuid, Connection connection, ServerPlayer player) {
-        var component = PlayerPlaceholder.format(PlayerPlaceholder.Format.JOIN, player);
+        var component = PlayerName.format(PlayerName.Format.JOIN, player);
         this.broadcastMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
         if (player.level.isClientSide()) player.sendMessage(component, ChatType.SYSTEM, Util.NIL_UUID);
     }
@@ -122,7 +122,7 @@ public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("TAIL"))
     public void injectTailPlaceNewPlayer(Connection connection, ServerPlayer player, CallbackInfo ci) {
         if (player.level.isClientSide())
-            player.sendMessage(PlayerPlaceholder.format(PlayerPlaceholder.Format.JOIN, player), ChatType.SYSTEM, Util.NIL_UUID);
+            player.sendMessage(PlayerName.format(PlayerName.Format.JOIN, player), ChatType.SYSTEM, Util.NIL_UUID);
     }
 
 

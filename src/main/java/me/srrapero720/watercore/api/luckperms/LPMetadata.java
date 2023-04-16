@@ -3,6 +3,7 @@ package me.srrapero720.watercore.api.luckperms;
 import com.mojang.authlib.GameProfile;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.internal.WConsole;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Experimental
@@ -26,6 +27,24 @@ public class LPMetadata {
             var data = LP.getUserManager().getUser(player.getId()).getCachedData().getMetaData();
             return new PrefixSuffix(data.getPrefix(), data.getSuffix());
         }, new PrefixSuffix("", ""));
+    }
+
+    public static String playerPrefix(Player player) { return playerPrefix(player.getGameProfile()); }
+    public static String playerPrefix(GameProfile player) {
+        return ThreadUtil.tryAndReturn((defaultVar) -> {
+            var data = LP.getUserManager().getUser(player.getId()).getCachedData().getMetaData();
+            var prefix = data.getPrefix();
+            return prefix == null ? defaultVar : prefix;
+        }, "");
+    }
+
+    public static String playerSuffix(Player player) { return playerSuffix(player.getGameProfile()); }
+    public static String playerSuffix(GameProfile player) {
+        return ThreadUtil.tryAndReturn((defaultVar) -> {
+            var data = LP.getUserManager().getUser(player.getId()).getCachedData().getMetaData();
+            var suffix = data.getSuffix();
+            return suffix == null ? defaultVar : suffix;
+        }, "");
     }
 
 

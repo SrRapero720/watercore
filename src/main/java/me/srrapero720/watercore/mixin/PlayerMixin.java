@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin;
 
-import me.srrapero720.watercore.api.placeholder.provider.PlayerPlaceholder;
+import me.srrapero720.watercore.api.ego.PlayerName;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +16,6 @@ public class PlayerMixin {
 
     @Redirect(method = "getDisplayName", at = @At(value = "INVOKE", remap = false, target = "Lnet/minecraftforge/event/ForgeEventFactory;getPlayerDisplayName(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/network/chat/Component;)Lnet/minecraft/network/chat/Component;"))
     public Component redirectGetDisplayName(Player instance, Component value) {
-        return PlayerPlaceholder.createPlayerDisplayName((Player) (Object) this);
+        return PlayerName.displayname((Player) (Object) this);
     }
 }
