@@ -48,19 +48,35 @@ public class LPMetadata {
     }
 
 
-    public static int playerIntMetadata(GameProfile player, String nodePerm, int def) {
-        var metadata = playerStringMetadata(player, nodePerm);
-        return Math.max(ThreadUtil.tryAndReturn((defaultVar) -> Integer.parseInt(metadata), def), 0);
-    }
-
+//    public static int playerIntMetadata(GameProfile player, String nodePerm, int def) {
+//        var metadata = playerStringMetadata(player, nodePerm);
+//        return Math.max(ThreadUtil.tryAndReturn((defaultVar) -> Integer.parseInt(metadata), def), 0);
+//    }
+//
+//
+//    // YOU NEVER NEED TO HAVE ACCESS TO THAT METHOD
+//    private static String playerStringMetadata(GameProfile player, String nodePerm) {
+//        return ThreadUtil.tryAndReturn((defaultVar) -> {
+//            var user = LP.getUserManager().getUser(player.getId());
+//            var context = LP.getContextManager().getQueryOptions(user);
+//            return context.map(queryOptions -> user.getCachedData().getMetaData(queryOptions).getMetaValue(nodePerm)).orElse(null);
+//        }, null);
+//    }
 
     // YOU NEVER NEED TO HAVE ACCESS TO THAT METHOD
-    private static String playerStringMetadata(GameProfile player, String nodePerm) {
+    private static String playerStringMetadata_beta(Player player, String nodePerm) {
         return ThreadUtil.tryAndReturn((defaultVar) -> {
-            var user = LP.getUserManager().getUser(player.getId());
-            var context = LP.getContextManager().getQueryOptions(user);
-            return context.map(queryOptions -> user.getCachedData().getMetaData(queryOptions).getMetaValue(nodePerm)).orElse(null);
+            var data = LP.getUserManager().getUser(player.getGameProfile().getId()).getCachedData().getMetaData();
+            return data.getMetaValue(nodePerm);
         }, null);
+    }
+
+    // YOU NEVER NEED TO HAVE ACCESS TO THAT METHOD
+    private static int playerIntMetadata_beta(Player player, String nodePerm, int def) {
+        return ThreadUtil.tryAndReturn((defaultVar) -> {
+            var data = LP.getUserManager().getUser(player.getGameProfile().getId()).getCachedData().getMetaData();
+            return data.getMetaValue(nodePerm, Integer::parseInt).orElse(def);
+        }, def);
     }
 
     /* NODE BUILDER */
