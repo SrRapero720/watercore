@@ -11,6 +11,8 @@ public class ThreadUtil {
     private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER = (t, e) ->
             WConsole.error(t.getName(), "Fatal exception on ThreadUtils - " + e);
 
+    public static void printStackTrace(Exception e) { e.printStackTrace(); }
+
     public static <T> T tryAndReturn(ReturnableRunnable<T> runnable, T defaultVar) {
         return tryAndReturn(runnable, null, defaultVar);
     }
