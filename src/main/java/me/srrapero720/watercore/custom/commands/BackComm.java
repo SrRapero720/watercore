@@ -4,21 +4,35 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.srrapero720.watercore.api.luckperms.LuckyCore;
+import me.srrapero720.watercore.api.luckperms.LuckyNode;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
 import me.srrapero720.watercore.internal.WUtil;
+import me.srrapero720.watercore.internal.forge.W$ServerConfig;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.NotNull;
 
-public class BackComm {
-    public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
+
+public class BackComm extends AbstractComm {
+    public net.luckperms.api.node.Node COOLDOWN_NODE;
+    public BackComm(CommandDispatcher<CommandSourceStack> dispatcher) {
+        super(dispatcher);
+
+        // LUCKY STUFF
+        if (LuckyCore.isPresent()) COOLDOWN_NODE = LuckyNode.registerMetaNode("command.back.cooldown", W$ServerConfig.get("back_cooldown"));
+
+        // COMMAND REGISTER
         dispatcher.register(Commands.literal("back").executes(BackComm::backWithoutIndexAndRunPlayer)
                 .then(Commands.argument("index", IntegerArgumentType.integer(0, 10)).executes(BackComm::backRunPlayer)));
     }
 
+
+    //========================================== //
+    //    UTILITY REQUIRED FOR THAT COMMAND
+    //========================================== //
     protected static int backWithoutIndexAndRunPlayer(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         return backRaw(0, context.getSource().getPlayerOrException(), context);
     }

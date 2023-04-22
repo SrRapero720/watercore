@@ -8,14 +8,20 @@ import me.srrapero720.watercore.internal.WRegistry;
 import me.srrapero720.watercore.internal.WUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import org.jetbrains.annotations.NotNull;
 
-public class SpawnComm {
-    public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("spawn").executes(SpawnComm::teleportPlayer));
-        dispatcher.register(Commands.literal("lobby").executes(SpawnComm::teleportPlayer));
+public class SpawnComm extends AbstractComm {
+    public SpawnComm(CommandDispatcher<CommandSourceStack> dispatcher) {
+        super(dispatcher);
+
+        var spawn = dispatcher.register(Commands.literal("spawn").executes(SpawnComm::teleportPlayer));
+        dispatcher.register(Commands.literal("lobby").redirect(spawn));
+        dispatcher.register(Commands.literal("hub").redirect(spawn));
     }
 
+
+    //========================================== //
+    //    UTILITY REQUIRED FOR THAT COMMAND
+    //========================================== //
     public static int teleportPlayerToLobby(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
         var level = player.server.getLevel(WRegistry.findDimension("lobby"));

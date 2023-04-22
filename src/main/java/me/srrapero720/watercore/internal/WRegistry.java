@@ -1,16 +1,18 @@
 package me.srrapero720.watercore.internal;
 
+import com.mojang.brigadier.CommandDispatcher;
 import me.srrapero720.watercore.WaterCore;
 import me.srrapero720.watercore.api.luckperms.LuckyCore;
 import me.srrapero720.watercore.custom.commands.*;
 import me.srrapero720.watercore.custom.items.BanHammer;
 import me.srrapero720.watercore.custom.items.ItemCoin;
-import me.srrapero720.watercore.custom.items.ItenViolin;
 import me.srrapero720.watercore.custom.items.ItemGodWand;
+import me.srrapero720.watercore.custom.items.ItenViolin;
 import me.srrapero720.watercore.custom.potions.BlessedPotion;
 import me.srrapero720.watercore.custom.potions.CursedPotion;
 import me.srrapero720.watercore.custom.tabs.SmartCreativeTab;
 import me.srrapero720.watercore.internal.forge.W$ServerConfig;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +25,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -39,7 +40,9 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -68,8 +71,12 @@ public class WRegistry {
     private final DeferredRegister<Block> BLOCKS;
     private final Map<String, RegistryObject<Block>> BLOCKS_MAP = new HashMap<>();
 
+    // REGISTRY FOR TILES
     private final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES;
     private final Map<String, RegistryObject<BlockEntityType<?>>> BLOCK_ENTITIES_MAP = new HashMap<>();
+
+    // REGISTER FOR COMMANDS
+    private static final List<CommSupplier> COMMANDS_LIST = new ArrayList<>();
 
     // REGISTRY FOR DIMENSIONS
     private final Map<String, ResourceKey<Level>> LEVELS = new HashMap<>();
@@ -134,6 +141,14 @@ public class WRegistry {
         register(Type.LEVELS,"engineers", () -> new ResourceLocation(WaterCore.ID, "enginners"));
         register(Type.LEVELS,"magical", () -> new ResourceLocation(WaterCore.ID, "magical"));
         register(Type.LEVELS,"events", () -> new ResourceLocation(WaterCore.ID, "events"));
+
+        /* COMMANDS */
+        register(BackComm::new);
+        register(BroadcastComm::new);
+        register(SetLobbySpawnComm::new);
+        register(SpawnComm::new);
+        register(WatercoreComm::new);
+
 
         /* CONFIG */
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, W$ServerConfig.SPEC, WaterCore.ID + "-server.toml");
@@ -220,6 +235,9 @@ public class WRegistry {
     public ResourceKey<Level> dimension(String name) { return LEVELS.get(name);}
     public ResourceKey<DimensionType> dimensionType(String name) { return DIMENSION_TYPES.get(name); }
 
+    /* COMMANDS */
+    public static List<CommSupplier> getCommandRegistry() { return COMMANDS_LIST; }
+
     //STATIC DIMENSION
     public static @Nullable ResourceKey<Level> findDimension(String name) {
         for (var reg: REGISTRIES.values()) if (reg.dimension(name) != null) return reg.dimension(name);
@@ -230,6 +248,10 @@ public class WRegistry {
     public static @Nullable ResourceKey<DimensionType> findDimensionType(String name) {
         for (var reg: REGISTRIES.values()) if (reg.dimensionType(name) != null) return reg.dimensionType(name);
         return null;
+    }
+
+    public static void register(@NotNull CommSupplier supplier) {
+        COMMANDS_LIST.add(supplier);
     }
 
 
@@ -269,19 +291,6 @@ public class WRegistry {
         WConsole.log("WaterRegistry", "all WATERCoRE registries are loaded");
     }
 
-
-    /* REGISTER FOR COMMANDS */
-    @SubscribeEvent
-    public static void onGameCommandRegister(RegisterCommandsEvent event) {
-        BackComm.register(event.getDispatcher());
-        BroadcastComm.register(event.getDispatcher());
-        SetLobbySpawnComm.register(event.getDispatcher());
-        SpawnComm.register(event.getDispatcher());
-        WatercoreComm.register(event.getDispatcher());
-//        ConfigCommand.register(event.getDispatcher());
-
-    }
-
     @SubscribeEvent
     public static void onPlayerClone(PlayerEvent.Clone event) {
         // MANTENIENE LA DATA ORIGINAL
@@ -300,10 +309,13 @@ public class WRegistry {
         LuckyCore.init();
     }
 
-
-
     @SubscribeEvent
     public static void onServerIsRunning(ServerStartedEvent event) {
         LuckyCore.init();
+    }
+
+
+    public interface CommSupplier {
+        AbstractComm load(CommandDispatcher<CommandSourceStack> dispatcher);
     }
 }

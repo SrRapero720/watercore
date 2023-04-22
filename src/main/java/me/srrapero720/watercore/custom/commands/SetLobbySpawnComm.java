@@ -8,16 +8,21 @@ import me.srrapero720.watercore.internal.WUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TranslatableComponent;
-import org.jetbrains.annotations.NotNull;
 
-public class SetLobbySpawnComm {
-    public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(Commands.literal("setlobbyspawn").requires((c) -> c.hasPermission(3))
-                .executes((context) -> saveSpawn(PlayerSpawn.Mode.LOBBY, context)));
+public class SetLobbySpawnComm extends AbstractComm {
+    public SetLobbySpawnComm(CommandDispatcher<CommandSourceStack> dispatcher) {
+        super(dispatcher);
         dispatcher.register(Commands.literal("setworldspawn").requires((c) -> c.hasPermission(3))
                 .executes((context) -> saveSpawn(PlayerSpawn.Mode.WORLD, context)));
+        var slb = dispatcher.register(Commands.literal("setlobbyspawn").requires((c) -> c.hasPermission(3))
+                .executes((context) -> saveSpawn(PlayerSpawn.Mode.LOBBY, context)));
+        dispatcher.register(Commands.literal("sethubspawn").requires((c) -> c.hasPermission(3)).redirect(slb));
     }
 
+
+    //========================================== //
+    //    UTILITY REQUIRED FOR THAT COMMAND
+    //========================================== //
     public static int saveSpawn(PlayerSpawn.Mode mode, CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
         var server = player.getServer();
@@ -26,7 +31,6 @@ public class SetLobbySpawnComm {
         PlayerSpawn.fetch(mode, server)
                 .setDimension(player.getLevel().dimension())
                 .setCoordinates(position, WUtil.fixAngle(player.getXRot()), WUtil.fixAngle(player.getYRot()));
-                //.save(new CompoundTag()); // This is necessary?
 
 
         // TODO: Implement something on MCFormat
