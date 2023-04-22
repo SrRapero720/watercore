@@ -22,7 +22,7 @@ public class BackComm extends AbstractComm {
         super(dispatcher);
 
         // LUCKY STUFF
-        if (LuckyCore.isPresent()) COOLDOWN_NODE = LuckyNode.registerMetaNode("command.back.cooldown", W$ServerConfig.get("back_cooldown"));
+        if (LuckyCore.isPresent()) COOLDOWN_NODE = LuckyNode.registerMetaNode("watercore.command.back.cooldown", W$ServerConfig.get("back_cooldown"));
 
         // COMMAND REGISTER
         dispatcher.register(Commands.literal("back").executes(BackComm::backWithoutIndexAndRunPlayer)
