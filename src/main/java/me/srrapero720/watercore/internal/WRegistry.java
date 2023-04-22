@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.internal;
 
 import me.srrapero720.watercore.WaterCore;
-import me.srrapero720.watercore.api.luckperms.LPMetadata;
+import me.srrapero720.watercore.api.luckperms.LuckyCore;
 import me.srrapero720.watercore.custom.commands.*;
 import me.srrapero720.watercore.custom.items.BanHammer;
 import me.srrapero720.watercore.custom.items.ItemCoin;
@@ -297,13 +297,13 @@ public class WRegistry {
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
         WConsole.log(getClass().toString(), "WATERCoRE running on server");
-        LPMetadata.init();
+        LuckyCore.init();
     }
 
 
 
     @SubscribeEvent
     public static void onServerIsRunning(ServerStartedEvent event) {
-        LPMetadata.init();
+        LuckyCore.init();
     }
 }
