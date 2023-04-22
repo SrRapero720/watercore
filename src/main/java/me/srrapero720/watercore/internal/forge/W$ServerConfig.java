@@ -25,25 +25,25 @@ public class W$ServerConfig {
 
         CONFIGS.put("join_format", BUILDER.comment(
                 "Modify message of joining players",
-                "Placeholders: %displayname% %playername% %alias%"
-        ).define("join_format", "" + "&e&l[&b%displayname%&e&l] &aJoined"));
+                "Placeholders: {displayname} {playername} {profilename}"
+        ).define("join_format", "" + "&e&l[&b{displayname}&e&l] &aJoined"));
 
         CONFIGS.put("leave_format", BUILDER.comment(
                 "Modify message of leaving players",
-                "Placeholders: %displayname% %playername% %alias%"
-        ).define("leave_format", "&e&l[&b%displayname%&e&l] &cLeave"));
+                "Placeholders: {displayname} {playername} {profilename}"
+        ).define("leave_format", "&e&l[&b{displayname}&e&l] &cLeave"));
 
         CONFIGS.put("chat_format", BUILDER.comment(
                 "Modify chat format",
-                "Placeholders: %displayname% %playername% %alias%",
-                "NOTE: %displayname% is for Luckperms prefix + nickname + suffix"
-        ).define("chat_format", "&e&l[&b%displayname%&e&l]&7"));
+                "Placeholders: {displayname} {playername} {profilename}",
+                "NOTE: {displayname} is for Luckperms prefix + nickname + suffix"
+        ).define("chat_format", "&e&l[&b{displayname}&e&l]&7"));
 
         CONFIGS.put("displayname_format", BUILDER.comment(
                 "Modify how player's displayname works",
                 "Only works with LUCKPERMS",
-                "Placeholders: %prefix% %suffix% %playername%"
-        ).define("displayname_format", "%prefix%%playername%%suffix%"));
+                "Placeholders: {prefix} {suffix} {playername}"
+        ).define("displayname_format", "{prefix}{playername}{suffix}"));
 
         //WATERCoRE ->
         BUILDER.pop();
