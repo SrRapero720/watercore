@@ -54,7 +54,9 @@ public class LuckyMeta {
 
             var LP = LuckyCore.instance();
             var user = LP.getUserManager().getUser(profile.getId());
-            var perm = user.getCachedData().getPermissionData(net.luckperms.api.query.QueryOptions.nonContextual()).queryPermission(node);
+            var perm = user.getCachedData()
+                    .getPermissionData((net.luckperms.api.query.QueryOptions) Class.forName("net.luckperms.api.query.QueryOptions").getMethod("nonContextual").invoke(null))
+                    .queryPermission(node);
 
             return perm.node().getContexts().getValues(key).toArray(new String[]{})[0];
         }, def);
