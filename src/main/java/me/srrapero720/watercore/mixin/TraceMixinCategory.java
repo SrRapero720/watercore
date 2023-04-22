@@ -17,13 +17,13 @@ public class TraceMixinCategory {
 
 	@Inject(method = "getDetails", at = @At("TAIL"))
 	private void injectGetDetailsToAddTrace(StringBuilder crashReportBuilder, CallbackInfo ci) {
-		WConsole.debug("MixinWC", "Agregando trace");
+		WConsole.debug("TraceMixinCategory", "Running MixinTrace");
 		WTrace.printTrace(stackTrace, crashReportBuilder);
 	}
 
 	@Inject(method = "fillInStackTrace", at = @At(value = "INVOKE", target = "Ljava/lang/System;arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V", shift = At.Shift.AFTER))
 	private void injectFillInStackTraceToSMAPCause(int p_128149_, CallbackInfoReturnable<Integer> cir) {
-		WConsole.warn("trimStackTrace", "Running ahead");
+		WConsole.debug("TraceMixinCategory", "Running CraftyCrashes-1");
 		SMAPper.apply(stackTrace, "java.", "sun.", "net.minecraftforge.fml.", "com.mojang.authlib.");
 	}
 }
