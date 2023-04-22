@@ -1,10 +1,11 @@
 package me.srrapero720.watercore.internal;
 
-import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+@Deprecated
 public class WConsole {
-    private static final Logger LOGGER = LogUtils.getLogger();
+    private static final Logger LOGGER = LoggerFactory.getLogger("WATERCoRE");
     private static final String PREFIX = "WATERCoRE: ";
 
     public static <T> void detect(T clazzOrObject) {
