@@ -6,9 +6,10 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.srrapero720.watercore.api.luckperms.LuckyCore;
 import me.srrapero720.watercore.api.luckperms.LuckyNode;
+import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
 import me.srrapero720.watercore.internal.WUtil;
-import me.srrapero720.watercore.internal.forge.W$ServerConfig;
+import me.srrapero720.watercore.internal.forge.W$SConfig;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -22,7 +23,8 @@ public class BackComm extends AbstractComm {
         super(dispatcher);
 
         // LUCKY STUFF
-        if (LuckyCore.isPresent()) COOLDOWN_NODE = LuckyNode.registerMetaNode("watercore.command.back.cooldown", W$ServerConfig.get("back_cooldown"));
+        if (LuckyCore.isPresent()) COOLDOWN_NODE = (net.luckperms.api.node.Node)
+                LuckyNode.registerMetaNode("watercore.command.back.cooldown", String.valueOf(W$SConfig.backCooldown()));
 
         // COMMAND REGISTER
         dispatcher.register(Commands.literal("back").executes(BackComm::backWithoutIndexAndRunPlayer)
@@ -37,7 +39,7 @@ public class BackComm extends AbstractComm {
         return backRaw(0, context.getSource().getPlayerOrException(), context);
     }
 
-    protected static int backWithoutIndex(ServerPlayer player, CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    protected static int backWithoutIndex(ServerPlayer player, CommandContext<CommandSourceStack> context) {
         return backRaw(0, player, context);
     }
 
@@ -54,21 +56,23 @@ public class BackComm extends AbstractComm {
     }
 
     protected static int backRaw(int index, ServerPlayer player, CommandContext<CommandSourceStack> context) {
-        var server = player.getServer();
-        var levels = server.getAllLevels();
-        var post = SimplePlayerStorage.getBack(index, player);
+        return ThreadUtil.tryAndReturn((defaultVar) -> {
+            var server = player.getServer();
+            var levels = server.getAllLevels();
+            var post = SimplePlayerStorage.getBack(index, player);
 
-        if (post == null) {
-            context.getSource().sendFailure(new TranslatableComponent("wc.command.back.failed"));
+            if (post == null) {
+                context.getSource().sendFailure(new TranslatableComponent("wc.command.back.failed"));
+                return 0;
+            }
+
+            if (!SimplePlayerStorage.updateBackCooldown(player)) {
+                context.getSource().sendFailure(new TranslatableComponent("wc.command.back.cooldown", SimplePlayerStorage.loadBackCooldown(player)));
+                return 0;
+            }
+
+            player.teleportTo(WUtil.fetchLevel(levels, post.getDimension()), post.getX(), post.getY(), post.getZ(), post.getRotY(), post.getRotX());
             return 0;
-        }
-
-        if (!SimplePlayerStorage.updateBackCooldown(player)) {
-            context.getSource().sendFailure(new TranslatableComponent("wc.command.back.cooldown", SimplePlayerStorage.loadBackCooldown(player)));
-            return 0;
-        }
-
-        player.teleportTo(WUtil.fetchLevel(levels, post.getDimension()), post.getX(), post.getY(), post.getZ(), post.getRotY(), post.getRotX());
-        return 0;
+        }, ThreadUtil::printStackTrace, 1);
     }
 }

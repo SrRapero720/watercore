@@ -5,7 +5,7 @@ import me.srrapero720.watercore.api.luckperms.LuckyMeta;
 import me.srrapero720.watercore.api.luckperms.LuckyNode;
 import me.srrapero720.watercore.api.placeholder.Placeholder;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
-import me.srrapero720.watercore.internal.forge.W$ServerConfig;
+import me.srrapero720.watercore.internal.forge.W$SConfig;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Contract;
@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class PlayerName {
     public static final Map<String, Holder> HOLDERS = new HashMap<>();
@@ -34,7 +35,7 @@ public class PlayerName {
             if (!LuckyCore.isPresent()) return new TextComponent(player.getName().getString());
             var nodeValue = LuckyMeta.getMetaNodeValue(player, "watercore.api.displayname");
 
-            String format = nodeValue != null ? nodeValue : W$ServerConfig.get("displayname_format");
+            String format = nodeValue != null ? nodeValue : W$SConfig.displaynameFormat();
             if (format == null) return defaultVar;
 
             for (var holder : HOLDERS.values())
@@ -74,14 +75,14 @@ public class PlayerName {
     public interface PlayerSupplier { String get(Player player); }
 
     public enum Format {
-        CHAT("chat_format"),
-        JOIN("join_format"),
-        LEAVE("leave_format");
+        CHAT(W$SConfig::chatFormat),
+        JOIN(W$SConfig::joinFormat),
+        LEAVE(W$SConfig::leaveFormat);
 
-        final String formatName;
-        Format(String formatName) { this.formatName = formatName; }
+        final Supplier<String> formatName;
+        Format(Supplier<String> formatName) { this.formatName = formatName; }
 
         @Override
-        public String toString() { return W$ServerConfig.get(formatName); }
+        public String toString() { return formatName.get(); }
     }
 }

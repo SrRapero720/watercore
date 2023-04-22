@@ -11,7 +11,7 @@ import me.srrapero720.watercore.custom.items.ItenViolin;
 import me.srrapero720.watercore.custom.potions.BlessedPotion;
 import me.srrapero720.watercore.custom.potions.CursedPotion;
 import me.srrapero720.watercore.custom.tabs.SmartCreativeTab;
-import me.srrapero720.watercore.internal.forge.W$ServerConfig;
+import me.srrapero720.watercore.internal.forge.W$SConfig;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -151,7 +151,7 @@ public class WRegistry {
 
 
         /* CONFIG */
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, W$ServerConfig.SPEC, WaterCore.ID + "-server.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, W$SConfig.SPEC, WaterCore.ID + "-server.toml");
     }
 
     /* POTIONS GETTERS */

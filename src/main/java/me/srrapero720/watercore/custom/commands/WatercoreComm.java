@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.srrapero720.watercore.api.luckperms.LuckyMeta;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.internal.WUtil;
-import me.srrapero720.watercore.internal.forge.W$ServerConfig;
+import me.srrapero720.watercore.internal.forge.W$SConfig;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -61,7 +61,7 @@ public class WatercoreComm extends AbstractComm {
         var player = context.getSource().getPlayerOrException();
 
         // BENCH 1
-        var metaValue = LuckyMeta.getMetaNodeValue(player, WUtil.getCommPerm("command.back", "cooldown"), String.valueOf((int) W$ServerConfig.get("back_cooldown")));
+        var metaValue = LuckyMeta.getMetaNodeValue(player, WUtil.getCommPerm("command.back", "cooldown"), String.valueOf(W$SConfig.backCooldown()));
         context.getSource().sendSuccess(new TextComponent(WUtil.broadcastPrefix() + "Benchmark-1: result of back cooldown is" + metaValue), true);
 
         // BENCH 2
