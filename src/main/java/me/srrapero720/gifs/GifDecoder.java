@@ -15,7 +15,6 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /** Class GifDecoder - Decodes a GIF file into one or more frames.
- *
  * Example:
  *
  * <pre>
@@ -97,7 +96,7 @@ public class GifDecoder {
     protected byte[] pixelStack;
     protected byte[] pixels;
     
-    protected ArrayList frames; // frames read from current file
+    protected ArrayList<GifFrame> frames; // frames read from current file
     protected int frameCount;
     
     static class GifFrame {
@@ -112,14 +111,13 @@ public class GifDecoder {
     
     /** Gets display duration for specified frame.
      *
-     * @param n
-     *            int index of frame
+     * @param n int index of frame
      * @return delay in milliseconds */
     public int getDelay(int n) {
         //
         delay = -1;
         if ((n >= 0) && (n < frameCount)) {
-            delay = ((GifFrame) frames.get(n)).delay;
+            delay = frames.get(n).delay;
         }
         return delay;
     }
@@ -239,7 +237,7 @@ public class GifDecoder {
     public BufferedImage getFrame(int n) {
         BufferedImage im = null;
         if ((n >= 0) && (n < frameCount)) {
-            im = ((GifFrame) frames.get(n)).image;
+            im = frames.get(n).image;
         }
         return im;
     }
@@ -313,7 +311,7 @@ public class GifDecoder {
         status = STATUS_OK;
         try {
             name = name.trim().toLowerCase();
-            if ((name.indexOf("file:") >= 0) || (name.indexOf(":/") > 0)) {
+            if ((name.contains("file:")) || (name.indexOf(":/") > 0)) {
                 URL url = new URL(name);
                 in = new BufferedInputStream(url.openStream());
             } else {
@@ -454,7 +452,7 @@ public class GifDecoder {
     protected void init() {
         status = STATUS_OK;
         frameCount = 0;
-        frames = new ArrayList();
+        frames = new ArrayList<>();
         gct = null;
         lct = null;
     }
@@ -485,7 +483,7 @@ public class GifDecoder {
                         break;
                     n += count;
                 }
-            } catch (IOException e) {}
+            } catch (IOException ignored) {}
             
             if (n < blockSize) {
                 status = STATUS_FORMAT_ERROR;
