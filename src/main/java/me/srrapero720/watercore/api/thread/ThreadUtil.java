@@ -87,8 +87,8 @@ public class ThreadUtil {
     public static void showThreads() {
         var threads = Thread.getAllStackTraces().keySet();
 
-        System.out.printf("%-15s \t %-15s \t %-15s \t %s\n", "Name", "State", "Priority", "isDaemon");
-        for (var t : threads) System.out.printf("%-15s \t %-15s \t %-15d \t %s\n", t.getName(), t.getState(), t.getPriority(), t.isDaemon());
+        LOGGER.info("{} \t {} \t {} \t {}\n", "Name", "State", "Priority", "isDaemon");
+        for (var t : threads) LOGGER.info("{} \t {} \t {} \t {}\n", t.getName(), t.getState(), t.getPriority(), t.isDaemon());
     }
 
     public interface ReturnableRunnable<T> { T run(T defaultVar) throws Exception; }
