@@ -8,6 +8,7 @@
   "mixins": [
     "BiomeMixin",
     "CBCustomPayloadMixin",
+    "CommandMixin",
     "EntityMixin",
     "LivingEntityMixin",
     "MinecraftServerMixin",
@@ -24,12 +25,12 @@
   ],
   "client": [
     "client.ClientPacketMixin",
+    "client.LanguageScreenMixin",
+    "client.MinecraftMainMixin",
     "client.MinecraftMixin",
     "client.MipmapReload",
-    "client.MinecraftMainMixin",
-    "client.TextureReloadLeak",
-    "client.LanguageScreenMixin",
     "client.ScreenMixin",
+    "client.TextureReloadLeak",
     "external.FM01_Options",
     "external.SL312664_PwScreen",
     "util.ModelManagerAccessor"
