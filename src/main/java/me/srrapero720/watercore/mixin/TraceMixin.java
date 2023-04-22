@@ -23,7 +23,6 @@ public class TraceMixin {
 
 	@Inject(method = "getDetails(Ljava/lang/StringBuilder;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/CrashReport;details:Ljava/util/List;"))
 	private void injectGetDetalsToAddTrace(StringBuilder crashReportBuilder, CallbackInfo ci) {
-		WConsole.debug("MixinWC", "Creando CrashReport con mixins");
 
 		int trailingNewlineCount = 0;
 		// Remove trailing \n
