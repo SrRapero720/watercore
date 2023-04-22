@@ -1,19 +1,27 @@
 package me.srrapero720.watercore.api.thread;
 
+import com.mojang.logging.LogUtils;
 import me.srrapero720.watercore.internal.WConsole;
 import me.srrapero720.watercore.internal.WUtil;
-import net.minecraft.network.protocol.PacketUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ThreadUtil {
     private static Thread THREAD_LOGGER = null;
+    private static final org.slf4j.Logger LOGGER = LogUtils.getLogger();
     private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER = (t, e) ->
             WConsole.error(t.getName(), "Handled fatal exception occurred on ThreadUtils - " + e);
 
     public static <T> T tryAndReturn(ReturnableRunnable<T> runnable, T defaultVar) {
+        return tryAndReturn(runnable, null, defaultVar);
+    }
+
+    public static <T> T tryAndReturn(ReturnableRunnable<T> runnable, @Nullable CatchRunnable catchRunnable, T defaultVar) {
         try { return runnable.run(defaultVar);
-        } catch (Exception ignored) { return defaultVar; }
+        } catch (Exception exception) {
+            if (catchRunnable != null) catchRunnable.run(exception);
+            return defaultVar;
+        } finally { defaultVar = null; runnable = null; }
     }
 
     public static void trySimple(SimpleTryRunnable runnable) {
