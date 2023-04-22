@@ -17,11 +17,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.net.URL;
 import java.util.*;
 
 public class WUtil {
     public static final Set<FriendlyByteBuf> BUFFERS = Collections.synchronizedSet(new HashSet<>());
     public static final String OBJECT = "java/lang/Object";
+    public static final String GD_URL = "https://drive.google.com/uc?id=%FILE_ID%&export=download";
     public static final File GAME_DIR = new File("");
 
     public static int toTicks(final double sec) { return (int) (sec * 20); }
@@ -38,7 +40,7 @@ public class WUtil {
     public static boolean isNoside() { return !isClientSide() && !isServerSide(); }
 
     // PREFIX BUILER
-    public static @NotNull String broadcastPrefix() { return broadcastPrefix(Placeholder.get("&6").toString()); }
+    public static @NotNull String broadcastPrefix() { return Placeholder.parse(broadcastPrefix("&6")); }
     public static @NotNull String broadcastPrefix(String color) { return "&e&l[&bWATERC&eo&bRE&e&l] " + color; }
 
     @Contract(pure = true)
@@ -107,4 +109,24 @@ public class WUtil {
         return Float.parseFloat(sbFloat.toString());
     }
 
+
+    // GOOGLE DRIVE DIRECT DOWNLOAD GENERATOR
+    public static String googleDriveDownload(String url) {
+        if (!url.contains("drive.google.com/file/d/")) return null;
+        return ThreadUtil.tryAndReturn((defaultVar) -> {
+            var url1 = new URL(url);
+            var paths = url1.getPath().split("/");
+            return paths[2];
+        }, null);
+    }
+
+
+    // BUILD FORGE PERMISSION FROM COMMANDS
+    public static String getCommPerm(String command) {
+        return "command." + command;
+    }
+
+    public static String getCommPerm(String command, String concat) {
+        return "command." + command + "." + command;
+    }
 }
