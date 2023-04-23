@@ -37,7 +37,6 @@ import java.util.ArrayList;
  *
  * @author Kevin Weiner, FM Software; LZW decoder adapted from John Cristy's ImageMagick.
  * @version 1.03 November 2003 */
-@Deprecated(since = "watercore-1.4.0")
 public class GifDecoder {
     
     /** File read status: No errors. */
