@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class PlayerName {
+    public final static LuckyNode DISPLAYNAME = LuckyNode.read("watercore.displayname");
     public static final Map<String, Holder> HOLDERS = new HashMap<>();
 
     static {
@@ -24,16 +25,13 @@ public class PlayerName {
         HOLDERS.put("profilename", new Holder("profilename", player -> player.getGameProfile().getName()));
         HOLDERS.put("prefix", new Holder("prefix", LuckyMeta::prefix));
         HOLDERS.put("suffix", new Holder("suffix", LuckyMeta::suffix));
-
-        // REGISTER SOME THINGS
-        LuckyNode.registerMetaNode("watercore.api.displayname", "{prefix}{playername}{suffix}");
     }
 
     @Contract("_ -> new")
     public static @NotNull TextComponent displayname(Player player) {
         return ThreadUtil.tryAndReturn(defaultVar -> {
             if (!LuckyCore.isPresent()) return new TextComponent(player.getName().getString());
-            var nodeValue = LuckyMeta.getMetaNodeValue(player, "watercore.api.displayname");
+            var nodeValue = LuckyMeta.getMetaNodeValue(player, DISPLAYNAME.getNode());
 
             String format = nodeValue != null ? nodeValue : W$SConfig.displaynameFormat();
             if (format == null) return defaultVar;
