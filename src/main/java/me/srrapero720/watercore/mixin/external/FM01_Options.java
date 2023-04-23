@@ -21,12 +21,12 @@ public class FM01_Options {
 
     @Redirect(method = "processOptions", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Options$FieldAccess;process(Ljava/lang/String;I)I", ordinal = 2))
     public int injectProcessOptions(Options.FieldAccess instance, String s, int i) {
-        if (scale > 0) {
+        if ((scale != -1) && (scale != 0)) {
             var f = FancyMenu.INSTANCE_DATA_DIR;
             if (!f.exists()) f.mkdirs();
 
-            File f2 = new File(f.getPath() + "/default_scale_set.fm");
-            File f3 = new File("mods/fancymenu/defaultscaleset.fancymenu");
+            var f2 = new File(f.getPath() + "/default_scale_set.fm");
+            var f3 = new File("mods/fancymenu/defaultscaleset.fancymenu");
             if (!f2.exists() && !f3.exists()) {
                 try {
                     f2.createNewFile();
@@ -39,6 +39,6 @@ public class FM01_Options {
                 return scale;
             }
         }
-        return i;
+        return instance.process(s, i);
     }
 }
