@@ -18,8 +18,6 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "TagKeyMixin",
-    "TraceMixin",
-    "TraceMixinCategory",
     "WeatherCommandMixin",
     "external.VM423535_VanishUtil"
   ],
