@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
-import me.srrapero720.watercore.internal.WUtil;
+import me.srrapero720.watercore.internal.WCoreUtil;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -26,19 +26,19 @@ public class SetLobbySpawnComm extends AbstractComm {
     public static int saveSpawn(PlayerSpawn.Mode mode, CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
         var server = player.getServer();
-        var position = WUtil.calculateNearbyCenter(player.getX(), player.getY(), player.getZ());
+        var position = WCoreUtil.calculateNearbyCenter(player.getX(), player.getY(), player.getZ());
 
         PlayerSpawn.fetch(mode, server)
                 .setDimension(player.getLevel().dimension())
-                .setCoordinates(position, WUtil.fixAngle(player.getXRot()), WUtil.fixAngle(player.getYRot()));
+                .setCoordinates(position, WCoreUtil.fixAngle(player.getXRot()), WCoreUtil.fixAngle(player.getYRot()));
 
 
         // TODO: Implement something on MCFormat
         context.getSource().sendSuccess(new TranslatableComponent("wc.command.setspawn.success",
-                "§c" + WUtil.twoDecimal(position.x),
-                "§c" + WUtil.twoDecimal(position.y),
-                "§c" + WUtil.twoDecimal(position.z),
-                "§c" + WUtil.fixAngle(player.getYRot()),
+                "§c" + WCoreUtil.twoDecimal(position.x),
+                "§c" + WCoreUtil.twoDecimal(position.y),
+                "§c" + WCoreUtil.twoDecimal(position.z),
+                "§c" + WCoreUtil.fixAngle(player.getYRot()),
                 "§c" + player.getLevel().dimension().location()), true);
 
         return 0;

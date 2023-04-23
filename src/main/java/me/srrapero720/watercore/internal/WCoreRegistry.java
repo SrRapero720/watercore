@@ -3,6 +3,7 @@ package me.srrapero720.watercore.internal;
 import com.mojang.brigadier.CommandDispatcher;
 import me.srrapero720.watercore.WaterCore;
 import me.srrapero720.watercore.api.luckperms.LuckyCore;
+import me.srrapero720.watercore.api.luckperms.LuckyNode;
 import me.srrapero720.watercore.custom.commands.*;
 import me.srrapero720.watercore.custom.items.BanHammer;
 import me.srrapero720.watercore.custom.items.ItemCoin;
@@ -10,7 +11,7 @@ import me.srrapero720.watercore.custom.items.ItemGodWand;
 import me.srrapero720.watercore.custom.items.ItenViolin;
 import me.srrapero720.watercore.custom.potions.BlessedPotion;
 import me.srrapero720.watercore.custom.potions.CursedPotion;
-import me.srrapero720.watercore.custom.tabs.SmartCreativeTab;
+import me.srrapero720.watercore.custom.tabs.WCoreTab;
 import me.srrapero720.watercore.internal.forge.W$SConfig;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.Registry;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -47,9 +49,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = WaterCore.ID)
-public class WRegistry {
+public class WCoreRegistry {
     public enum Type { TABS, SOUND, POTION, ITEM, BLOCKS, BLOCK_ENTITIES, LEVELS}
-    private static final Map<String, WRegistry> REGISTRIES = new HashMap<>();
+    private static final Map<String, WCoreRegistry> REGISTRIES = new HashMap<>();
     private final String MOD_ID;
 
     // REGISTRY FOR TABS [STATIC]
@@ -82,7 +84,7 @@ public class WRegistry {
     private final Map<String, ResourceKey<Level>> LEVELS = new HashMap<>();
     private final Map<String, ResourceKey<DimensionType>> DIMENSION_TYPES = new HashMap<>();
 
-    public WRegistry(String modId) {
+    public WCoreRegistry(String modId) {
         this.MOD_ID = modId;
         POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, this.MOD_ID);
         SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, this.MOD_ID);
@@ -103,21 +105,21 @@ public class WRegistry {
 
     static {
         /* TABS */
-        register(Type.TABS,"main", () -> new SmartCreativeTab("watercore.MAIN", "ironcoin"));
-        register(Type.TABS,"admin", () -> new SmartCreativeTab("watercore.ADMIN", "banhammer"));
+        register(Type.TABS,"main", () -> new WCoreTab("watercore.MAIN", "ironcoin"));
+        register(Type.TABS,"admin", () -> new WCoreTab("watercore.ADMIN", "banhammer"));
 
         /* SOUNDS */
         register(Type.SOUND,"watermine", () -> new SoundEvent(new ResourceLocation(WaterCore.ID, "watermine")));
         register(Type.SOUND,"violin", () -> new SoundEvent(new ResourceLocation(WaterCore.ID, "violin")));
 
         /* POTIONS */
-        register(Type.POTION,"blessed_1", () -> new BlessedPotion(WUtil.toTicks(180), 1));
-        register(Type.POTION,"blessed_2", () -> new BlessedPotion(WUtil.toTicks(180), 2));
-        register(Type.POTION,"blessed_3", () -> new BlessedPotion(WUtil.toTicks(180), 3));
+        register(Type.POTION,"blessed_1", () -> new BlessedPotion(WCoreUtil.toTicks(180), 1));
+        register(Type.POTION,"blessed_2", () -> new BlessedPotion(WCoreUtil.toTicks(180), 2));
+        register(Type.POTION,"blessed_3", () -> new BlessedPotion(WCoreUtil.toTicks(180), 3));
 
-        register(Type.POTION,"cursed_1", () -> new CursedPotion(WUtil.toTicks(180), 1));
-        register(Type.POTION,"cursed_2", () -> new CursedPotion(WUtil.toTicks(180), 2));
-        register(Type.POTION,"cursed_3", () -> new CursedPotion(WUtil.toTicks(180), 3));
+        register(Type.POTION,"cursed_1", () -> new CursedPotion(WCoreUtil.toTicks(180), 1));
+        register(Type.POTION,"cursed_2", () -> new CursedPotion(WCoreUtil.toTicks(180), 2));
+        register(Type.POTION,"cursed_3", () -> new CursedPotion(WCoreUtil.toTicks(180), 3));
 
         /* ITEMS */
         register(Type.ITEM,"coppercoin", () -> new ItemCoin(Rarity.COMMON));
@@ -149,9 +151,12 @@ public class WRegistry {
         register(SpawnComm::new);
         register(WatercoreComm::new);
 
+        /* LUCKPERMS CONFIGURATION REGISTER */
+        LuckyNode.register("watercore.displayname", W$SConfig.displaynameFormat());
+        LuckyNode.register("watercore.command.back.cooldown", String.valueOf(W$SConfig.backCooldown()));
 
         /* CONFIG */
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, W$SConfig.SPEC, WaterCore.ID + "-server.toml");
+        register(ModConfig.Type.SERVER, W$SConfig.SPEC, WaterCore.ID);
     }
 
     /* POTIONS GETTERS */
@@ -254,9 +259,12 @@ public class WRegistry {
         COMMANDS_LIST.add(supplier);
     }
 
+    public static void register(ModConfig.Type type, ForgeConfigSpec spec, String filename) {
+        ModLoadingContext.get().registerConfig(type, spec, filename + ".toml");
+    }
 
     public static void register(Type type, String id, @NotNull Supplier<?> supplier) {
-        var main = REGISTRIES.get(WaterCore.ID) == null ? new WRegistry(WaterCore.ID) : REGISTRIES.get(WaterCore.ID);
+        var main = REGISTRIES.get(WaterCore.ID) == null ? new WCoreRegistry(WaterCore.ID) : REGISTRIES.get(WaterCore.ID);
         main.register(type, new ResourceLocation(WaterCore.ID, id), supplier);
     }
 
@@ -277,7 +285,7 @@ public class WRegistry {
                 LEVELS.put(id, ResourceKey.create(Registry.DIMENSION_REGISTRY, res));
                 DIMENSION_TYPES.put(id, ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, res));
             }
-            default -> WConsole.error(WRegistry.class.getSimpleName(), "Failed to register missing type");
+            default -> WConsole.error(WCoreRegistry.class.getSimpleName(), "Failed to register missing type");
         }
     }
 

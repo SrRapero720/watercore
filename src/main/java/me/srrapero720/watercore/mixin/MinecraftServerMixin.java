@@ -2,7 +2,7 @@ package me.srrapero720.watercore.mixin;
 
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.internal.WConsole;
-import me.srrapero720.watercore.internal.WRegistry;
+import me.srrapero720.watercore.internal.WCoreRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -41,7 +41,7 @@ public abstract class MinecraftServerMixin {
             spawn.setCoordinates(levels.get(Level.OVERWORLD).getSharedSpawnPos(), 0, 0);
         }
 
-        var lobbyLevel = getLevel(WRegistry.findDimension("lobby"));
+        var lobbyLevel = getLevel(WCoreRegistry.findDimension("lobby"));
         var statelobby = lobbyLevel.getBlockState(new BlockPos(0, 128, 0));
         if (statelobby.is(Blocks.AIR))
             lobbyLevel.setBlock(new BlockPos(0, 128, 0), Blocks.BEDROCK.defaultBlockState(), 0);

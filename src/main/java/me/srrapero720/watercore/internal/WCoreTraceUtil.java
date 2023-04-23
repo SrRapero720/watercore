@@ -12,19 +12,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class WTrace {
+public class WCoreTraceUtil {
     // TODO: Separate this feature. Create other mod to run this and toggle features.
     private static void spongeEmptyClassInfo() throws NoSuchFieldException, IllegalAccessException {
         WConsole.error("SpongeMixinTool", "Cleaning cache of Mixins is currently disabled. because TraceMixin feature got broken.");
         if (true) return; // Disabled cache cleaning
-        if (WUtil.isModFMLoading("not-that-cc")) return; // Crashes crafty crashes if it crashes
+        if (WCoreUtil.isModFMLoading("not-that-cc")) return; // Crashes crafty crashes if it crashes
         Field cacheField = ClassInfo.class.getDeclaredField("cache");
         cacheField.setAccessible(true);
         @SuppressWarnings("unchecked")
         var cache = ((Map<String, ClassInfo>)cacheField.get(null));
-        ClassInfo jlo = cache.get(WUtil.OBJECT);
+        ClassInfo jlo = cache.get(WCoreUtil.OBJECT);
         cache.clear();
-        cache.put(WUtil.OBJECT, jlo);
+        cache.put(WCoreUtil.OBJECT, jlo);
     }
 
     public static void loadMixinsAndClearCache() {

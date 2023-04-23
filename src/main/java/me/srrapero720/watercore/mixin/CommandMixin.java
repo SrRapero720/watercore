@@ -2,7 +2,7 @@ package me.srrapero720.watercore.mixin;
 
 import com.mojang.brigadier.AmbiguityConsumer;
 import com.mojang.brigadier.CommandDispatcher;
-import me.srrapero720.watercore.internal.WRegistry;
+import me.srrapero720.watercore.internal.WCoreRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ public class CommandMixin {
 
     @Redirect(method = "<init>", at = @At(value = "INVOKE", remap = false, target = "Lcom/mojang/brigadier/CommandDispatcher;findAmbiguities(Lcom/mojang/brigadier/AmbiguityConsumer;)V"))
     public void redirectCommands(CommandDispatcher<CommandSourceStack> instance, AmbiguityConsumer<CommandSourceStack> consumer) {
-        for (var comm: WRegistry.getCommandRegistry()) comm.load(instance);
+        for (var comm: WCoreRegistry.getCommandRegistry()) comm.load(instance);
         instance.findAmbiguities(consumer);
     }
 }

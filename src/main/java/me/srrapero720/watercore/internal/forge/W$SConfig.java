@@ -1,8 +1,7 @@
 package me.srrapero720.watercore.internal.forge;
 
-import me.srrapero720.watercore.internal.WUtil;
+import me.srrapero720.watercore.internal.WCoreUtil;
 import net.minecraftforge.common.ForgeConfigSpec;
-import org.jetbrains.annotations.NotNull;
 
 public class W$SConfig {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
@@ -108,7 +107,7 @@ public class W$SConfig {
 
         //WATERCoRE -> commands -> broadcast
         BUILDER.push("/broadcast").comment("Alias 'broadcast-raw' is also affected by this configuration");
-        BROADCAST_PREFIX = BUILDER.comment("prefix from /broadcast output").define("broadcast_prefix", WUtil.broadcastPrefix());
+        BROADCAST_PREFIX = BUILDER.comment("prefix from /broadcast output").define("broadcast_prefix", WCoreUtil.broadcastPrefix());
 
         //WATERCoRE -> commands
         BUILDER.pop();

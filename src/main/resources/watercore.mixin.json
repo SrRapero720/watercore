@@ -4,7 +4,7 @@
   "package": "me.srrapero720.watercore.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "watercore.mixin-refmap.json",
-  "plugin": "me.srrapero720.watercore.internal.WMixinPlugin",
+  "plugin": "me.srrapero720.watercore.internal.WCoreMixinPlugin",
   "mixins": [
     "BiomeMixin",
     "CBCustomPayloadMixin",

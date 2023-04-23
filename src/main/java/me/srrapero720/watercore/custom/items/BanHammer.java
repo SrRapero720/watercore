@@ -2,7 +2,7 @@ package me.srrapero720.watercore.custom.items;
 
 import me.srrapero720.watercore.api.placeholder.provider.Color;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
-import me.srrapero720.watercore.internal.WRegistry;
+import me.srrapero720.watercore.internal.WCoreRegistry;
 import me.srrapero720.watercore.internal.WConsole;
 import net.minecraft.Util;
 import net.minecraft.network.chat.*;
@@ -14,11 +14,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import me.srrapero720.watercore.internal.WUtil;
+import me.srrapero720.watercore.internal.WCoreUtil;
 
 public class BanHammer extends Item {
     public BanHammer() {
-        super(new Properties().tab(WRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
+        super(new Properties().tab(WCoreRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class BanHammer extends Item {
                     playerList.getPlayerByName(player.getName().getString()).connection.disconnect(new TranslatableComponent("wc.response.banhammer"));
                     playerList.broadcastMessage(
                             new TranslatableComponent("item.watercore.banhammer.broadcast",
-                                    WUtil.broadcastPrefix("&6"),
+                                    WCoreUtil.broadcastPrefix("&6"),
                                     Color.RED + banned.getName().getString(), Color.GOLD),
                             ChatType.SYSTEM, Util.NIL_UUID);
 

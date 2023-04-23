@@ -21,13 +21,13 @@ public class BroadcastComm extends AbstractComm {
 
         // COMMAND REGISTER
         dispatcher.register(Commands.literal("broadcast")
-                .requires((p_137800_) -> p_137800_.hasPermission(3))
+                .requires((req) -> req.hasPermission(3))
                 .then(Commands.argument("message", MessageArgument.message())
                         .executes((context -> broadcastToServer(context, Placeholder.parse(W$SConfig.getBroadcastPrefix())))))
         );
 
         dispatcher.register(Commands.literal("broadcast-raw")
-                .requires((p_137800_) -> p_137800_.hasPermission(3))
+                .requires((req) -> req.hasPermission(3))
                 .then(Commands.argument("message", MessageArgument.message())
                         .executes(BroadcastComm::broadcastToServer))
         );

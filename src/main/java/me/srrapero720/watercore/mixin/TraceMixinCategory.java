@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin;
 
-import me.srrapero720.watercore.internal.WTrace;
+import me.srrapero720.watercore.internal.WCoreTraceUtil;
 import me.srrapero720.wrappycrashes.SMAPper;
 import me.srrapero720.watercore.internal.WConsole;
 import net.minecraft.CrashReportCategory;
@@ -18,7 +18,7 @@ public class TraceMixinCategory {
 	@Inject(method = "getDetails", at = @At("TAIL"))
 	private void injectGetDetailsToAddTrace(StringBuilder crashReportBuilder, CallbackInfo ci) {
 		WConsole.debug("TraceMixinCategory", "Running MixinTrace");
-		WTrace.printTrace(stackTrace, crashReportBuilder);
+		WCoreTraceUtil.printTrace(stackTrace, crashReportBuilder);
 	}
 
 	@Inject(method = "fillInStackTrace", at = @At(value = "INVOKE", target = "Ljava/lang/System;arraycopy(Ljava/lang/Object;ILjava/lang/Object;II)V", shift = At.Shift.AFTER))

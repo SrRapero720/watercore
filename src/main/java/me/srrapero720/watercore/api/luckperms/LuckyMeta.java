@@ -6,9 +6,9 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class LuckyMeta {
-    //========================================== //
-    //           METADATA FROM NODES
-    //========================================== //
+    /* ====================================================
+    *                METADATA FROM NODES
+    *  ==================================================== */
     public static String getMetaNodeValue(Player profile, String key, String def) { return getMetaNodeValue(profile.getGameProfile(), key, def); }
     public static String getMetaNodeValue(GameProfile profile, String key, String def) {
         return ThreadUtil.tryAndReturn(defaultVar -> {
@@ -17,7 +17,8 @@ public class LuckyMeta {
             var LP = LuckyCore.instance();
             var user = LP.getUserManager().getUser(profile.getId());
 
-            return user.getCachedData().getMetaData().getMetaValue(key);
+            var result = user.getCachedData().getMetaData().getMetaValue(key);
+            return result != null ? result : defaultVar;
         }, def);
     }
 
@@ -25,9 +26,9 @@ public class LuckyMeta {
     public static String getMetaNodeValue(GameProfile profile, String key) { return getMetaNodeValue(profile, key, null); }
 
 
-    //========================================== //
-    //        METADATA FROM NODES BUT INT
-    //========================================== //
+    /* ====================================================
+    *                META-NODE VALUES
+    *  ==================================================== */
     public static int getIntMetaNodeValue(Player profile, String key, int def) { return getIntMetaNodeValue(profile.getGameProfile(), key, def); }
     public static int getIntMetaNodeValue(GameProfile profile, String key, int def) {
         return ThreadUtil.tryAndReturn(defaultVar -> {
@@ -44,9 +45,9 @@ public class LuckyMeta {
     public static int getIntMetaNodeValue(GameProfile profile, String key) { return getIntMetaNodeValue(profile, key, -1); }
 
 
-    //========================================== //
-    //             CONTEXT DATA
-    //========================================== //
+    /* ====================================================
+    *                  CONTEXT DATA
+    *  ==================================================== */
     public static String getContextData(Player profile, String node, String key, String def) { return getContextData(profile.getGameProfile(), node, key, def); }
     public static String getContextData(GameProfile profile, String node, String key, String def) {
         return ThreadUtil.tryAndReturn((defaultVar) -> {
@@ -67,9 +68,9 @@ public class LuckyMeta {
     }
 
 
-    //========================================== //
-    //             PREFIX AND SUFFIX
-    //========================================== //
+    /* ====================================================
+    *                PREFIX AND SUFFIX
+    *  ==================================================== */
     public static LuckyCore.PrefixSuffix prefixSuffix(GameProfile player) {
         return ThreadUtil.tryAndReturn((defaultVar) -> {
             if (!LuckyCore.isPresent()) return defaultVar;

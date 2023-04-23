@@ -3,13 +3,13 @@ package me.srrapero720.watercore.api.luckperms;
 import jdk.jfr.Experimental;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.internal.WConsole;
-import me.srrapero720.watercore.internal.WUtil;
+import me.srrapero720.watercore.internal.WCoreUtil;
 
 @Experimental
 public class LuckyCore {
     static net.luckperms.api.LuckPerms LP;
     private static final String NAME = "LuckyCore";
-    public static boolean isPresent() { return LP != null || !WUtil.isClientSide(); }
+    public static boolean isPresent() { return LP != null || !WCoreUtil.isClientSide(); }
     public static net.luckperms.api.LuckPerms instance() { return LP; }
 
     public static void init() {
@@ -28,5 +28,10 @@ public class LuckyCore {
             this.prefix = prefix == null ? "" : prefix;
             this.suffix = suffix == null ? "" : suffix;
         }
+    }
+
+    @SuppressWarnings("unused")
+    public static class SafeModeException extends RuntimeException {
+
     }
 }

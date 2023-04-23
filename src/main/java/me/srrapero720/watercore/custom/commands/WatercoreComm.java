@@ -4,9 +4,10 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.srrapero720.watercore.api.ego.PlayerName;
 import me.srrapero720.watercore.api.luckperms.LuckyMeta;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
-import me.srrapero720.watercore.internal.WUtil;
+import me.srrapero720.watercore.internal.WCoreUtil;
 import me.srrapero720.watercore.internal.forge.W$SConfig;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -46,27 +47,29 @@ public class WatercoreComm extends AbstractComm {
     public static int threadLoggerExecution(CommandContext<CommandSourceStack> context) {
         if (ThreadUtil.threadLoggerEnabled()) ThreadUtil.threadLoggerKill();
         else ThreadUtil.threadLogger();
-        context.getSource().sendSuccess(new TranslatableComponent("wc.command.watercore.threads.logger", WUtil.broadcastPrefix()), false);
+        context.getSource().sendSuccess(new TranslatableComponent("wc.command.watercore.threads.logger", WCoreUtil.broadcastPrefix()), false);
         return 0;
     }
 
     public static int threadListExecution(CommandContext<CommandSourceStack> context) {
         ThreadUtil.showThreads();
-        context.getSource().sendSuccess(new TranslatableComponent("wc.command.watercore.threads.list", WUtil.broadcastPrefix()), false);
+        context.getSource().sendSuccess(new TranslatableComponent("wc.command.watercore.threads.list", WCoreUtil.broadcastPrefix()), false);
         return 0;
     }
 
     public static int runTest(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        context.getSource().sendSuccess(new TextComponent(WUtil.broadcastPrefix().concat("Running...")), true);
+        context.getSource().sendSuccess(new TextComponent(WCoreUtil.broadcastPrefix().concat("Running...")), true);
         var player = context.getSource().getPlayerOrException();
 
         // BENCH 1
-        var metaValue = LuckyMeta.getMetaNodeValue(player, WUtil.getCommPerm("command.back", "cooldown"), String.valueOf(W$SConfig.backCooldown()));
-        context.getSource().sendSuccess(new TextComponent(WUtil.broadcastPrefix() + "Benchmark-1: result of back cooldown is" + metaValue), true);
+        var backCooldown = LuckyMeta.getIntMetaNodeValue(player, BackComm.COOLDOWN_NODE.getNode(), W$SConfig.backCooldown());
+        context.getSource().sendSuccess(new TextComponent(WCoreUtil.broadcastPrefix() + "Benchmark-1: Result of back cooldown is " + backCooldown), true);
 
         // BENCH 2
-//        var contextValie = LuckyMeta.getContextData(player, )
-
+        var displayName = LuckyMeta.getMetaNodeValue(player, PlayerName.DISPLAYNAME.getNode(), null);
+        context.getSource().sendSuccess(new TextComponent(WCoreUtil.broadcastPrefix() + "Benchmark-2: Result of displayname is " + displayName), true);
+        context.getSource().sendSuccess(new TextComponent(WCoreUtil.broadcastPrefix() + "Benchmark-2: Running PlayerName.displayname()"), true);
+        context.getSource().sendSuccess(new TextComponent(WCoreUtil.broadcastPrefix() + "Benchmark-2: Result of running that is " + PlayerName.displayname(player)), true);
         return 0;
     }
 }

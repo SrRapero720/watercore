@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WMLBanned {
+public class WCoreBanned {
     private static final List<Entry> entries;
     static {
         entries = new ArrayList<>();
@@ -15,7 +15,7 @@ public class WMLBanned {
     }
 
     public static void validate() {
-        for(var entry: entries) if (WUtil.isModFMLoading(entry.id)) throw new IncompatibleModInstalled(entry.toString());
+        for(var entry: entries) if (WCoreUtil.isModFMLoading(entry.id)) throw new IncompatibleModInstalled(entry.toString());
     }
 
 

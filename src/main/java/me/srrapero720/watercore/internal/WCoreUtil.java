@@ -20,7 +20,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.*;
 
-public class WUtil {
+public class WCoreUtil {
     public static final Set<FriendlyByteBuf> BUFFERS = Collections.synchronizedSet(new HashSet<>());
     public static final String OBJECT = "java/lang/Object";
     public static final String GD_URL = "https://drive.google.com/uc?id=%FILE_ID%&export=download";
