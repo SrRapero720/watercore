@@ -7,10 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WCoreBanned {
-    private static final List<Entry> entries;
+    private static final List<Entry> entries = new ArrayList<>();
     static {
-        entries = new ArrayList<>();
-//        entries.add(new Entry("fancymenu", "FancyMenu", "is explicit incompatible with WATERCoRE, this is a dummy test"));
         entries.add(new Entry("memoryleakfix", "MemoryLeakFix", "is explicit incompatible with WATERCoRE, we do the same"));
     }
 

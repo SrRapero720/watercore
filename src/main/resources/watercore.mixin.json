@@ -26,7 +26,7 @@
     "client.LanguageScreenMixin",
     "client.MinecraftMainMixin",
     "client.MinecraftMixin",
-    "client.MipmapReload",
+    "client.VideoSettingsScreenMixin",
     "client.ScreenMixin",
     "client.TextureReloadLeak",
     "external.FM01_Options",

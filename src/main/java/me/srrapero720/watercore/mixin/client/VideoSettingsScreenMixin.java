@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(value = VideoSettingsScreen.class, priority = 0)
-public class MipmapReload {
+public class VideoSettingsScreenMixin {
     @Redirect(method = "removed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;delayTextureReload()Ljava/util/concurrent/CompletableFuture;"))
     private CompletableFuture<Void> reloadMipMapLevels(Minecraft client) {
         WCoreInternals.qol$mipmapUpdate(client, (ModelManagerAccessor) client.getModelManager());

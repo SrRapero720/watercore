@@ -1,6 +1,7 @@
 package me.srrapero720.watercore.mixin.external;
 
 import de.keksuccino.fancymenu.FancyMenu;
+import de.keksuccino.fancymenu.menu.fancy.MenuCustomizationEvents;
 import de.keksuccino.konkrete.file.FileUtils;
 import net.minecraft.client.Options;
 import org.spongepowered.asm.mixin.Mixin;

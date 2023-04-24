@@ -4,7 +4,7 @@ import com.mojang.serialization.Dynamic;
 import me.srrapero720.watercore.api.ego.PlayerName;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
-import me.srrapero720.watercore.internal.WConsole;
+import me.srrapero720.watercore.internal.WLogger;
 import me.srrapero720.watercore.internal.WCoreUtil;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -92,7 +92,7 @@ public abstract class PlayerListMixin {
         var spawnLevelRes = spawnLevel == null ? Level.OVERWORLD : spawnLevel.dimension();
 
         return tag != null
-                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(WConsole::justPrint).orElse(spawnLevelRes)
+                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(WLogger::justPrint).orElse(spawnLevelRes)
                 : spawnLevelRes;
     }
 

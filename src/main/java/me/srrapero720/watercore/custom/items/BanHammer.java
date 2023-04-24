@@ -3,7 +3,7 @@ package me.srrapero720.watercore.custom.items;
 import me.srrapero720.watercore.api.placeholder.provider.Color;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.internal.WCoreRegistry;
-import me.srrapero720.watercore.internal.WConsole;
+import me.srrapero720.watercore.internal.WLogger;
 import net.minecraft.Util;
 import net.minecraft.network.chat.*;
 import net.minecraft.server.players.UserBanListEntry;
@@ -50,7 +50,7 @@ public class BanHammer extends Item {
                                     Color.RED + banned.getName().getString(), Color.GOLD),
                             ChatType.SYSTEM, Util.NIL_UUID);
 
-                } catch (Exception e) { WConsole.warn("BanHammer", "Ocurrio un error al banear al usuario"); }
+                } catch (Exception e) { WLogger.warn("Ocurrio un error al banear al usuario"); }
             });
         } else entity.remove(Entity.RemovalReason.DISCARDED);
 

@@ -57,13 +57,13 @@ public final class WCoreInternals {
         var spawn = PlayerSpawn.fetch(PlayerSpawn.Mode.WORLD, server);
 
         if (lobby.invalid()) {
-            WConsole.warn("MinecraftServer", "No found any WORLDSPAWN pos. using default worldspawn");
+            WLogger.warn("No found any WORLDSPAWN pos. using default worldspawn");
             lobby.setDimension(Level.OVERWORLD);
             lobby.setCoordinates(server.getLevel(Level.OVERWORLD).getSharedSpawnPos(), 0, 0);
         }
 
         if (spawn.invalid()) {
-            WConsole.warn("MinecraftServer", "No found any LOBBYSPAWN pos. using default worldspawn");
+            WLogger.warn("No found any LOBBYSPAWN pos. using default worldspawn");
             spawn.setDimension(Level.OVERWORLD);
             spawn.setCoordinates(server.getLevel(Level.OVERWORLD).getSharedSpawnPos(), 0, 0);
         }
@@ -91,12 +91,11 @@ public final class WCoreInternals {
      * ==================================================== */
     @SuppressWarnings("unchecked")
     private static void leaks$flushClassInfo() throws NoSuchFieldException, IllegalAccessException, SecurityException {
-        var LOGGER = LogUtils.getLogger();
-        LOGGER.warn("Cleaning ClassInfo cache...");
+        WLogger.warn("Cleaning ClassInfo cache...");
 
         // Craftitrace ensure working
         if (WCoreUtil.isModFMLoading("craftitrace") || WCoreUtil.isModLoaded("craftitrace")) {
-            LOGGER.error("Cleaning cache is disabled if craftitrace is installed (keeps working that mod)");
+            WLogger.error("Cleaning cache is disabled if craftitrace is installed (keeps working that mod)");
             return;
         }
 
@@ -110,8 +109,7 @@ public final class WCoreInternals {
     }
 
     public static void leaks$flushSpongePoweredMixinCache() {
-        var LOGGER = LogUtils.getLogger();
-        LOGGER.warn("Force-loading all classes with pending mixins and cleaning sponge cache");
+        WLogger.warn("Force-loading all classes with pending mixins and cleaning sponge cache");
 
         MixinEnvironment.getCurrentEnvironment().audit();
         ThreadUtil.trySimple(() -> {
@@ -127,7 +125,7 @@ public final class WCoreInternals {
             //CLEARS SPONGEPOWERED MIXIN CACHE
             ((List<?>) membersField.get(noGroup)).clear();
             leaks$flushClassInfo();
-            LOGGER.info("All classes with mixins are loaded and flushed");
+            WLogger.log("All classes with mixins are loaded and flushed");
         }, ThreadUtil::printStackTrace);
     }
 

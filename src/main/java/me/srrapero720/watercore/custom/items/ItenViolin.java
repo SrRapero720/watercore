@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.custom.items;
 
 import me.srrapero720.watercore.internal.WCoreRegistry;
-import me.srrapero720.watercore.internal.WConsole;
+import me.srrapero720.watercore.internal.WLogger;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,7 +45,7 @@ public class ItenViolin extends Item {
 
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
-        WConsole.warn("BaseViolin", "Running onUsingTick");
+        WLogger.warn("Running onUsingTick");
         super.onUsingTick(stack, player, count);
     }
 
@@ -64,7 +64,7 @@ public class ItenViolin extends Item {
 
     @Override
     public boolean useOnRelease(ItemStack stack) {
-        WConsole.warn("BaseViolin", "Running useOnRelease");
+        WLogger.warn("Running useOnRelease");
         return super.useOnRelease(stack);
     }
 }

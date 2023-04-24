@@ -1,8 +1,8 @@
 package me.srrapero720.watercore;
 
 import me.srrapero720.watercore.internal.WCoreBanned;
-import me.srrapero720.watercore.internal.WConsole;
 import me.srrapero720.watercore.internal.WCoreRegistry;
+import me.srrapero720.watercore.internal.WLogger;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -18,7 +18,8 @@ public class WaterCore {
     public WaterCore() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLCommonSetupEvent event) -> WCoreBanned.validate());
         WCoreRegistry.register();
+
         MinecraftForge.EVENT_BUS.register(WCoreRegistry.class);
-        WConsole.justPrint("WATERCoRE setup completed");
+        WLogger.warn(":: Setup completed :::");
     }
 }

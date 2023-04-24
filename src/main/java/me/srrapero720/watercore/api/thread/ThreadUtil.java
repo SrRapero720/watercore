@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.api.thread;
 
 import com.mojang.logging.LogUtils;
-import me.srrapero720.watercore.internal.WConsole;
+import me.srrapero720.watercore.internal.WLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,7 +9,7 @@ public class ThreadUtil {
     private static Thread THREADLG = null;
     private static final org.slf4j.Logger LOGGER = LogUtils.getLogger();
     private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER = (t, e) ->
-            WConsole.error(t.getName(), "Fatal exception on ThreadUtils - " + e);
+            WLogger.error("Fatal exception on ThreadUtils - " + e);
 
     public static void printStackTrace(Exception e) { e.printStackTrace(); }
 

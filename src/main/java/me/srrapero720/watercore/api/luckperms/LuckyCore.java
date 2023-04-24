@@ -2,7 +2,7 @@ package me.srrapero720.watercore.api.luckperms;
 
 import jdk.jfr.Experimental;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
-import me.srrapero720.watercore.internal.WConsole;
+import me.srrapero720.watercore.internal.WLogger;
 import me.srrapero720.watercore.internal.WCoreUtil;
 
 @Experimental
@@ -17,8 +17,8 @@ public class LuckyCore {
             var clazz = Class.forName("net.luckperms.api.LuckPermsProvider");
             LP = (net.luckperms.api.LuckPerms) clazz.getMethod("get").invoke(null);
 
-            WConsole.log(NAME, "Luckperms is present");
-        }, (e) -> WConsole.log(NAME, "Failed to load Luckperms. Is even installed? or we are in bukkit?"), null);
+            WLogger.log("Luckperms is present");
+        }, (e) -> WLogger.log("Failed to load Luckperms. Is even installed? or we are in bukkit?"), null);
     }
 
 

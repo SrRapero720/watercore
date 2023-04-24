@@ -285,18 +285,18 @@ public class WCoreRegistry {
                 LEVELS.put(id, ResourceKey.create(Registry.DIMENSION_REGISTRY, res));
                 DIMENSION_TYPES.put(id, ResourceKey.create(Registry.DIMENSION_TYPE_REGISTRY, res));
             }
-            default -> WConsole.error(WCoreRegistry.class.getSimpleName(), "Failed to register missing type");
+            default -> WLogger.error("Failed to register missing type");
         }
     }
 
 
     public static void register() {
-        WConsole.log("WaterRegistry", "Loading WATERCoRE registries");
+        WLogger.log("Loading WATERCoRE registries");
         for (var main: REGISTRIES.values()) {
-            WConsole.log("WaterRegistry", "Reading " + main.getModId());
+            WLogger.log("Reading " + main.getModId());
             main.register(WaterCore.bus());
         }
-        WConsole.log("WaterRegistry", "all WATERCoRE registries are loaded");
+        WLogger.log("all WATERCoRE registries are loaded");
     }
 
     @SubscribeEvent
@@ -313,7 +313,7 @@ public class WCoreRegistry {
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-        WConsole.log(getClass().toString(), "WATERCoRE running on server");
+        WLogger.log("WATERCoRE running on server");
         LuckyCore.init();
     }
 

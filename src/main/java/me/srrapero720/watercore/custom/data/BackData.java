@@ -2,7 +2,7 @@ package me.srrapero720.watercore.custom.data;
 
 import me.srrapero720.watercore.api.data.MCTeleportal;
 import me.srrapero720.watercore.custom.data.storage.IPlayerStorage;
-import me.srrapero720.watercore.internal.WConsole;
+import me.srrapero720.watercore.internal.WLogger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +27,7 @@ public final class BackData extends MCTeleportal {
 
     @Deprecated(forRemoval = true)
     public static void saveLastPosition(@NotNull ServerPlayer player) {
-        WConsole.warn("saveLastPosition", "called method...");
+        WLogger.warn("called method...");
         var data = ((IPlayerStorage) player).getWatercoreData();
         data.putBoolean("backValid", true);
         data.putString("backDimension", player.getLevel().dimension().location().toString());
