@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.mixin.util;
+package me.srrapero720.watercore.mixin.client.util;
 
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelManager;
@@ -9,9 +9,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(ModelManager.class)
 public interface ModelManagerAccessor {
-    @Invoker
-    ModelBakery callPrepare(ResourceManager p_119413_, ProfilerFiller p_119414_);
-
-    @Invoker
-    void callApply(ModelBakery modelLoader, ResourceManager resourceManager, ProfilerFiller profiler);
+    @Invoker ModelBakery callPrepare(ResourceManager p_119413_, ProfilerFiller p_119414_);
+    @Invoker void callApply(ModelBakery modelLoader, ResourceManager resourceManager, ProfilerFiller profiler);
 }

@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.mixin;
+package me.srrapero720.watercore.mixin.common;
 
 import com.google.common.collect.Interner;
 import com.google.common.collect.Interners;

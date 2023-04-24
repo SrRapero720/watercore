@@ -1,8 +1,9 @@
-package me.srrapero720.watercore.mixin;
+package me.srrapero720.watercore.mixin.common;
 
 import me.srrapero720.watercore.custom.data.storage.IPlayerStorage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,7 +25,7 @@ public class EntityMixin implements IPlayerStorage {
     }
 
     @Inject(method = "load", at = @At(value = "HEAD"))
-    public void injectRead(CompoundTag tag, CallbackInfo ci) {
+    public void injectRead(@NotNull CompoundTag tag, CallbackInfo ci) {
         if (tag.contains("watercore.player_data", 10))
             persistentTag = tag.getCompound("watercore.player_data");
     }

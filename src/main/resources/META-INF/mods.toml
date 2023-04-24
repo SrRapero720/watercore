@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[40,)"
 license = "All rights reserved"
-issueTrackerURL = "https://www.curseforge.com/minecraft/mc-mods/watercore/issues"
+issueTrackerURL = "https://github.com/SrRapero720/WATERCoRE/issues"
 
 
 [[mods]]
@@ -9,7 +9,7 @@ modId = "watercore"
 version = "${file.jarVersion}"
 displayName = "WATERCoRE"
 logoFile = "pack.png"
-credits = "SrRapero720 | WATERCoRE"
+credits = "SrRapero720"
 authors = "SrRapero720"
 description = '''
 WATERCoRE, Tu herramienta de servidores (oficial de WATERMiNE) Integracion oficial de Dimensiones, posiones, monedas y otras cosas.

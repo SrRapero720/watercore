@@ -3,7 +3,6 @@ package me.srrapero720.watercore.internal;
 import me.srrapero720.watercore.api.placeholder.Placeholder;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.Vec3;
@@ -18,10 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.net.URL;
-import java.util.*;
 
 public class WCoreUtil {
-    public static final Set<FriendlyByteBuf> BUFFERS = Collections.synchronizedSet(new HashSet<>());
     public static final String OBJECT = "java/lang/Object";
     public static final String GD_URL = "https://drive.google.com/uc?id=%FILE_ID%&export=download";
     public static final File GAME_DIR = new File("");

@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.mixin;
+package me.srrapero720.watercore.mixin.common;
 
 import me.srrapero720.watercore.api.ego.PlayerName;
 import net.minecraft.network.chat.Component;

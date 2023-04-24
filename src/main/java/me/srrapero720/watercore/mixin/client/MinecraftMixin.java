@@ -3,7 +3,7 @@ package me.srrapero720.watercore.mixin.client;
 import com.mojang.blaze3d.platform.*;
 import io.netty.buffer.AbstractReferenceCountedByteBuf;
 import me.srrapero720.watercore.internal.WConsole;
-import me.srrapero720.watercore.internal.WCoreUtil;
+import me.srrapero720.watercore.internal.WCoreInternals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -34,10 +34,7 @@ public class MinecraftMixin {
 
     @Inject(method = "tick", at = @At("RETURN"))
     private void releaseAfterTick(CallbackInfo ci) {
-        WCoreUtil.BUFFERS.removeIf((buffer) -> {
-            if (buffer.source instanceof AbstractReferenceCountedByteBuf) return true;
-            return buffer.refCnt() == 0 && buffer.release();
-        });
+        WCoreInternals.buffers$flush();
     }
 
     // REDIRECTS GLUTIL TO SAVE THE ByteBuffer ANS USE IT LATER

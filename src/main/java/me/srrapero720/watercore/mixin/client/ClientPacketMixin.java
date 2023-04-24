@@ -1,5 +1,6 @@
 package me.srrapero720.watercore.mixin.client;
 
+import me.srrapero720.watercore.internal.WCoreInternals;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket;
@@ -14,19 +15,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @OnlyIn(Dist.CLIENT)
-@Mixin(value = ClientPacketListener.class, priority = 0)
+@Mixin(value = ClientPacketListener.class, priority = 72)
 public class ClientPacketMixin {
-    @Shadow private ClientLevel level;
-
-    // I change my old rusty Overwrite with a brand new Redirect
-    // Credits to Forget me chunk...
-    @Redirect(method = "queueLightUpdate(Lnet/minecraft/network/protocol/game/ClientboundForgetLevelChunkPacket;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;queueLightUpdate(Ljava/lang/Runnable;)V"))
-    private void redirectQueueLightUpdate(ClientLevel instance, Runnable runnable, ClientboundForgetLevelChunkPacket packet) {
-        instance.queueLightUpdate(() -> {
-            LevelLightEngine levellightengine = this.level.getLightEngine();
-
-            levellightengine.enableLightSources(new ChunkPos(packet.getX(), packet.getZ()), false);
-            this.level.setLightReady(packet.getX(), packet.getZ());
-        });
+    @Redirect(
+            method = "queueLightUpdate(Lnet/minecraft/network/protocol/game/ClientboundForgetLevelChunkPacket;)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;queueLightUpdate(Ljava/lang/Runnable;)V")
+    )
+    private void redirectQueueLightUpdate(ClientLevel clientLevel, Runnable runnable, ClientboundForgetLevelChunkPacket packet) {
+        WCoreInternals.leaks$forgetChunkLightUpdate(clientLevel, packet);
     }
 }

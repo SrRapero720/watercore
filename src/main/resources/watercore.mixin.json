@@ -6,19 +6,19 @@
   "refmap": "watercore.mixin-refmap.json",
   "plugin": "me.srrapero720.watercore.internal.WCoreMixinPlugin",
   "mixins": [
-    "BiomeMixin",
-    "CBCustomPayloadMixin",
-    "CommandMixin",
-    "EntityMixin",
-    "LivingEntityMixin",
-    "MinecraftServerMixin",
-    "PlayerListMixin",
-    "PlayerMixin",
-    "ServerGamePLMixin",
-    "ServerLevelMixin",
-    "ServerPlayerMixin",
-    "TagKeyMixin",
-    "WeatherCommandMixin",
+    "common.BiomeMixin",
+    "common.CBCustomPayloadMixin",
+    "common.CommandMixin",
+    "common.EntityMixin",
+    "common.LivingEntityMixin",
+    "common.MinecraftServerMixin",
+    "common.PlayerListMixin",
+    "common.PlayerMixin",
+    "common.ServerGamePLMixin",
+    "common.ServerLevelMixin",
+    "common.ServerPlayerMixin",
+    "common.TagKeyMixin",
+    "common.WeatherCommandMixin",
     "external.VM423535_VanishUtil"
   ],
   "client": [
@@ -31,7 +31,7 @@
     "client.TextureReloadLeak",
     "external.FM01_Options",
     "external.SL312664_PwScreen",
-    "util.ModelManagerAccessor"
+    "client.util.ModelManagerAccessor"
   ],
   "server": [
     "server.MinecraftServerMixin"

@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.mixin;
+package me.srrapero720.watercore.mixin.common;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.Brain;

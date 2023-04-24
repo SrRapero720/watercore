@@ -1,6 +1,6 @@
-package me.srrapero720.watercore.mixin;
+package me.srrapero720.watercore.mixin.common;
 
-import me.srrapero720.watercore.internal.WCoreUtil;
+import me.srrapero720.watercore.internal.WCoreInternals;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
@@ -16,5 +16,5 @@ public class CBCustomPayloadMixin {
     @Shadow @Final private FriendlyByteBuf data;
 
     @Inject(method = "handle(Lnet/minecraft/network/protocol/game/ClientGamePacketListener;)V", at = @At(value = "RETURN"))
-    public void injectHandle(ClientGamePacketListener packet, CallbackInfo ci) { WCoreUtil.BUFFERS.add(this.data); }
+    public void injectHandle(ClientGamePacketListener packet, CallbackInfo ci) { WCoreInternals.buffers$add(this.data); }
 }

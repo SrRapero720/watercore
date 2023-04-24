@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.mixin;
+package me.srrapero720.watercore.mixin.common;
 
 import com.mojang.serialization.Dynamic;
 import me.srrapero720.watercore.api.ego.PlayerName;
@@ -43,45 +43,46 @@ import java.util.*;
 @Mixin(value = PlayerList.class, priority = 72)
 public abstract class PlayerListMixin {
     @Shadow @Final private MinecraftServer server;
+    @Unique private final HashMap<String, ServerPlayer> PlayerMap = new HashMap<>();
+
+    @Shadow public abstract MinecraftServer getServer();
     @Shadow @Nullable public abstract CompoundTag load(ServerPlayer p_11225_);
     @Shadow public abstract void broadcastMessage(Component p_11265_, ChatType p_11266_, UUID p_11267_);
-    @Shadow public abstract MinecraftServer getServer();
-    @Unique private final HashMap<String, ServerPlayer> playersByNameWC = new HashMap<>();
 
     @Inject(method = "addPlayer", at = @At(value = "TAIL"), remap = false)
     public void injectAddPlayer(ServerPlayer player, CallbackInfoReturnable<Boolean> cir) {
-        playersByNameWC.put(player.getName().getString().toLowerCase(), player);
+        PlayerMap.put(player.getName().getString().toLowerCase(), player);
     }
 
     @Inject(method = "removePlayer", at = @At(value = "TAIL"), remap = false)
     public void injectRemovePlayer(@NotNull ServerPlayer player, CallbackInfoReturnable<Boolean> cir) {
-        playersByNameWC.remove(player.getName().getString().toLowerCase());
+        PlayerMap.remove(player.getName().getString().toLowerCase());
     }
 
     @Inject(method = "getPlayerByName", at = @At("HEAD"), cancellable = true)
     public void injectGetPlayerByName(@NotNull String name, @NotNull CallbackInfoReturnable<ServerPlayer> cir) {
-        cir.setReturnValue(playersByNameWC.get(name.toLowerCase()));
+        cir.setReturnValue(PlayerMap.get(name.toLowerCase()));
     }
 
     @Inject(method = "remove", at = @At(value = "HEAD"))
     public void injectorRemove(@NotNull ServerPlayer player, CallbackInfo ci) {
-        playersByNameWC.remove(player.getName().getString().toLowerCase());
+        PlayerMap.remove(player.getName().getString().toLowerCase());
     }
 
     @Inject(method = "getPlayersWithAddress", at = @At(value = "HEAD"), cancellable = true)
     public void injectGetPlayersWithAddress(String address, @NotNull CallbackInfoReturnable<List<ServerPlayer>> cir) {
-        var playerArray = new LinkedList<>(playersByNameWC.values());
+        var playerArray = new LinkedList<>(PlayerMap.values());
         playerArray.removeIf(serverPlayer -> !serverPlayer.getIpAddress().equals(address));
         cir.setReturnValue(playerArray);
     }
 
     @Inject(method = "getPlayerNamesArray", at = @At(value = "HEAD"), cancellable = true)
     public void injectGetPlayerNamesArray(@NotNull CallbackInfoReturnable<String[]> cir) {
-        cir.setReturnValue(playersByNameWC.keySet().toArray(new String[0]));
+        cir.setReturnValue(PlayerMap.keySet().toArray(new String[0]));
     }
 
     @Inject(method = "getPlayerCount", at = @At(value = "HEAD"), cancellable = true)
-    public void injectGetPlayerCount(@NotNull CallbackInfoReturnable<Integer> cir) { cir.setReturnValue(playersByNameWC.size()); }
+    public void injectGetPlayerCount(@NotNull CallbackInfoReturnable<Integer> cir) { cir.setReturnValue(PlayerMap.size()); }
 
     @ModifyVariable(method = "placeNewPlayer", at = @At(value = "STORE"))
     public ResourceKey<Level> injectLocalPlaceNewPlayer(ResourceKey<Level> levelResourceKey, Connection connection, ServerPlayer player) {
@@ -108,7 +109,7 @@ public abstract class PlayerListMixin {
 
     @Inject(method = "placeNewPlayer", at = @At(value = "INVOKE", remap = false, target = "Lnet/minecraft/server/players/PlayerList;addPlayer(Lnet/minecraft/server/level/ServerPlayer;)Z"))
     public void injectPlaceNewPlayerPutPlayer(Connection connection, ServerPlayer player, CallbackInfo ci) {
-        playersByNameWC.put(player.getName().getString().toLowerCase(), player);
+        PlayerMap.put(player.getName().getString().toLowerCase(), player);
     }
 
     @Redirect(method = "placeNewPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/ChatType;Ljava/util/UUID;)V"))
@@ -175,7 +176,7 @@ public abstract class PlayerListMixin {
 
     @Redirect(method = "respawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;setHealth(F)V"))
     public void injectTailRespawn(ServerPlayer instance, float v) {
-        this.playersByNameWC.put(instance.getName().getString().toLowerCase(), instance);
+        this.PlayerMap.put(instance.getName().getString().toLowerCase(), instance);
         instance.setHealth(v);
     }
 }
