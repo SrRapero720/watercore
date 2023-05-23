@@ -7,7 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.srrapero720.watercore.api.luckperms.LuckyNode;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
-import me.srrapero720.watercore.internal.WCoreUtil;
+import me.srrapero720.watercore.utility.Tools;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -16,7 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 
 public class BackComm extends AbstractComm {
-    public static LuckyNode COOLDOWN_NODE = LuckyNode.read("watercore.command.back.cooldown");
+    public static final LuckyNode COOLDOWN_NODE = LuckyNode.read("watercore.command.back.cooldown");
     public BackComm(CommandDispatcher<CommandSourceStack> dispatcher) {
         super(dispatcher);
 
@@ -65,7 +65,7 @@ public class BackComm extends AbstractComm {
                 return 0;
             }
 
-            player.teleportTo(WCoreUtil.fetchLevel(levels, post.getDimension()), post.getX(), post.getY(), post.getZ(), post.getRotY(), post.getRotX());
+            player.teleportTo(Tools.fetchLevel(levels, post.getDimension()), post.getX(), post.getY(), post.getZ(), post.getRotY(), post.getRotX());
             return 0;
         }, ThreadUtil::printStackTrace, 1);
     }

@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.mixin.client;
 
 import com.mojang.blaze3d.platform.*;
-import me.srrapero720.watercore.internal.WLogger;
+import me.srrapero720.watercore.utility.Logg;
 import me.srrapero720.watercore.internal.WCoreInternals;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -52,7 +52,7 @@ public class MinecraftMixin {
     // FIX MEMORYLEAK: WORLD KEEPS LOADED.
     @Inject(method = "updateScreenAndTick", at = @At(value = "INVOKE",target = "Lnet/minecraft/client/Minecraft;runTick(Z)V",shift = At.Shift.BEFORE))
     private void injectUpdateScreenAndTick(Screen screen, CallbackInfo ci) {
-        WLogger.log("Cleaning crosshair, hitresult and cameraEntity");
+        Logg.log("Cleaning crosshair, hitresult and cameraEntity");
         this.crosshairPickEntity = null;
         this.hitResult = null;
         this.cameraEntity = null;

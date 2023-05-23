@@ -1,9 +1,9 @@
 package me.srrapero720.watercore.custom.items;
 
+import me.srrapero720.watercore.WCoreRegistry;
 import me.srrapero720.watercore.api.placeholder.provider.Color;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
-import me.srrapero720.watercore.internal.WCoreRegistry;
-import me.srrapero720.watercore.internal.WLogger;
+import me.srrapero720.watercore.utility.Logg;
 import net.minecraft.Util;
 import net.minecraft.network.chat.*;
 import net.minecraft.server.players.UserBanListEntry;
@@ -14,11 +14,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import me.srrapero720.watercore.internal.WCoreUtil;
+import me.srrapero720.watercore.utility.Tools;
 
 public class BanHammer extends Item {
     public BanHammer() {
-        super(new Properties().tab(WCoreRegistry.tab("admin")).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
+        super(new Properties().tab(WCoreRegistry.getTabAdmin()).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
     }
 
     @Override
@@ -46,11 +46,11 @@ public class BanHammer extends Item {
                     playerList.getPlayerByName(player.getName().getString()).connection.disconnect(new TranslatableComponent("wc.response.banhammer"));
                     playerList.broadcastMessage(
                             new TranslatableComponent("item.watercore.banhammer.broadcast",
-                                    WCoreUtil.broadcastPrefix("&6"),
+                                    Tools.broadcastPrefix("&6"),
                                     Color.RED + banned.getName().getString(), Color.GOLD),
                             ChatType.SYSTEM, Util.NIL_UUID);
 
-                } catch (Exception e) { WLogger.warn("Ocurrio un error al banear al usuario"); }
+                } catch (Exception e) { Logg.warn("Ocurrio un error al banear al usuario"); }
             });
         } else entity.remove(Entity.RemovalReason.DISCARDED);
 

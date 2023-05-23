@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.api.thread;
 
 import com.mojang.logging.LogUtils;
-import me.srrapero720.watercore.internal.WLogger;
+import me.srrapero720.watercore.utility.Logg;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,7 +9,7 @@ public class ThreadUtil {
     private static Thread THREADLG = null;
     private static final org.slf4j.Logger LOGGER = LogUtils.getLogger();
     private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER = (t, e) ->
-            WLogger.error("Fatal exception on ThreadUtils - " + e);
+            Logg.error("Fatal exception on ThreadUtils - " + e);
 
     public static void printStackTrace(Exception e) { e.printStackTrace(); }
 
@@ -18,11 +18,16 @@ public class ThreadUtil {
     }
 
     public static <T> T tryAndReturn(ReturnableRunnable<T> runnable, @Nullable CatchRunnable catchRunnable, T defaultVar) {
-        try { return runnable.run(defaultVar);
+        return tryAndReturn(runnable, catchRunnable, null, defaultVar);
+    }
+
+    public static <T> T tryAndReturn(ReturnableRunnable<T> runnable, @Nullable CatchRunnable catchRunnable, @Nullable ReturnableFinallyRunnable<T> finallyRunnable, T defaultVar) {
+        var returned = defaultVar;
+        try { return returned = runnable.run(defaultVar);
         } catch (Exception exception) {
             if (catchRunnable != null) catchRunnable.run(exception);
             return defaultVar;
-        }
+        } finally { if (finallyRunnable != null) finallyRunnable.run(returned); }
     }
 
     public static void trySimple(SimpleTryRunnable runnable) { try { runnable.run(); } catch (Exception ignored) {} }
@@ -99,6 +104,7 @@ public class ThreadUtil {
     }
 
     public interface ReturnableRunnable<T> { T run(T defaultVar) throws Exception; }
+    public interface ReturnableFinallyRunnable<T> { void run(@NotNull T returnedVar); }
     public interface SimpleTryRunnable { void run() throws Exception; }
 
     public interface TryRunnableWithArgument<T> {  void run(T object) throws Exception; }

@@ -1,6 +1,8 @@
 package me.srrapero720.watercore.custom.tabs;
 
-import me.srrapero720.watercore.internal.WCoreRegistry;
+import me.srrapero720.watercore.WaterCore;
+import me.srrapero720.watercore.api.forge.registry.URegistry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -17,5 +19,5 @@ public class WCoreTab extends CreativeModeTab {
     }
 
     @Override
-    public @NotNull ItemStack makeIcon() { return new ItemStack(WCoreRegistry.findItemOnly(iconName)); }
+    public @NotNull ItemStack makeIcon() { return new ItemStack(URegistry.item(new ResourceLocation(WaterCore.ID, iconName))); }
 }

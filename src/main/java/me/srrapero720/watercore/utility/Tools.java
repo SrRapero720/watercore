@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.internal;
+package me.srrapero720.watercore.utility;
 
 import me.srrapero720.watercore.api.placeholder.Placeholder;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.net.URL;
 
-public class WCoreUtil {
+public class Tools {
     public static final String OBJECT = "java/lang/Object";
     public static final String GD_URL = "https://drive.google.com/uc?id=%FILE_ID%&export=download";
     public static final File GAME_DIR = new File("");
@@ -37,8 +37,8 @@ public class WCoreUtil {
     public static boolean isNoside() { return !isClientSide() && !isServerSide(); }
 
     // PREFIX BUILER
-    public static @NotNull String broadcastPrefix() { return Placeholder.parse(broadcastPrefix("&6")); }
-    public static @NotNull String broadcastPrefix(String color) { return "&e&l[&bWATERC&eo&bRE&e&l] " + color; }
+    public static @NotNull String broadcastPrefix() { return Placeholder.parse("&e&l[&bWATERC&eo&bRE&e&l] "); }
+    public static @NotNull String broadcastPrefix(String color) { return Placeholder.parse("&e&l[&bWATERC&eo&bRE&e&l] " + color) ; }
 
     @Contract(pure = true)
     @OnlyIn(Dist.CLIENT)
@@ -115,15 +115,5 @@ public class WCoreUtil {
             var paths = url1.getPath().split("/");
             return GD_URL.replace("%FILE_ID%", paths[2]);
         }, null);
-    }
-
-
-    // BUILD FORGE PERMISSION FROM COMMANDS
-    public static String getCommPerm(String command) {
-        return "command." + command;
-    }
-
-    public static String getCommPerm(String command, String concat) {
-        return "command." + command + "." + command;
     }
 }

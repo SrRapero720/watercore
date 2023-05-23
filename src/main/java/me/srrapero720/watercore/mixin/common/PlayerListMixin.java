@@ -4,8 +4,8 @@ import com.mojang.serialization.Dynamic;
 import me.srrapero720.watercore.api.ego.PlayerName;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
-import me.srrapero720.watercore.internal.WLogger;
-import me.srrapero720.watercore.internal.WCoreUtil;
+import me.srrapero720.watercore.utility.Logg;
+import me.srrapero720.watercore.utility.Tools;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -88,11 +88,11 @@ public abstract class PlayerListMixin {
     public ResourceKey<Level> injectLocalPlaceNewPlayer(ResourceKey<Level> levelResourceKey, Connection connection, ServerPlayer player) {
         var tag = this.load(player);
         var spawnData = PlayerSpawn.fetch(PlayerSpawn.Mode.WORLD, server);
-        var spawnLevel = WCoreUtil.fetchLevel(server.getAllLevels(), spawnData.getDimension());
+        var spawnLevel = Tools.fetchLevel(server.getAllLevels(), spawnData.getDimension());
         var spawnLevelRes = spawnLevel == null ? Level.OVERWORLD : spawnLevel.dimension();
 
         return tag != null
-                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(WLogger::justPrint).orElse(spawnLevelRes)
+                ? DimensionType.parseLegacy(new Dynamic<>(NbtOps.INSTANCE, tag.get("Dimension"))).resultOrPartial(Logg::justPrint).orElse(spawnLevelRes)
                 : spawnLevelRes;
     }
 
@@ -144,7 +144,7 @@ public abstract class PlayerListMixin {
 
         // WATERCORE LOBBY DATA
         var lobbyData = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, server);
-        var lobbyLevel = WCoreUtil.fetchLevel(server.getAllLevels(), lobbyData.getDimension());
+        var lobbyLevel = Tools.fetchLevel(server.getAllLevels(), lobbyData.getDimension());
 
         var level = this.server.getLevel(player.getRespawnDimension());
         Optional<Vec3> optional = (level != null && respawnPos != null)
@@ -165,7 +165,7 @@ public abstract class PlayerListMixin {
         if (optional.isPresent()) return;
 
         var lobbyData = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, server);
-        var lobbyLevel = WCoreUtil.fetchLevel(server.getAllLevels(), lobbyData.getDimension());
+        var lobbyLevel = Tools.fetchLevel(server.getAllLevels(), lobbyData.getDimension());
 
         freshPlayer.setPos(lobbyData.getX(), lobbyData.getY(), lobbyData.getZ());
         freshPlayer.setXRot(lobbyData.getRotX());

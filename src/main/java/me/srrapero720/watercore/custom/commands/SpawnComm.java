@@ -3,9 +3,9 @@ package me.srrapero720.watercore.custom.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.srrapero720.watercore.WCoreRegistry;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
-import me.srrapero720.watercore.internal.WCoreRegistry;
-import me.srrapero720.watercore.internal.WCoreUtil;
+import me.srrapero720.watercore.utility.Tools;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 
@@ -24,7 +24,7 @@ public class SpawnComm extends AbstractComm {
     //========================================== //
     public static int teleportPlayerToLobby(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
-        var level = player.server.getLevel(WCoreRegistry.findDimension("lobby"));
+        var level = player.server.getLevel(WCoreRegistry.getWorldDimension("lobby"));
         player.teleportTo(level, 0, 128, 0, 0, 0);
         return 0;
     }
@@ -33,7 +33,7 @@ public class SpawnComm extends AbstractComm {
         var player = context.getSource().getPlayerOrException();
 
         var spawn = PlayerSpawn.fetch(PlayerSpawn.Mode.LOBBY, player.server);
-        var result = WCoreUtil.fetchLevel(player.server.getAllLevels(), spawn.getDimension());
+        var result = Tools.fetchLevel(player.server.getAllLevels(), spawn.getDimension());
 
         player.teleportTo(result, spawn.getX(), spawn.getY(), spawn.getZ(), spawn.getRotY(), spawn.getRotX());
         return 0;

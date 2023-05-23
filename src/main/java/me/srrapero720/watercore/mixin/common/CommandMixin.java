@@ -3,7 +3,6 @@ package me.srrapero720.watercore.mixin.common;
 import com.mojang.brigadier.AmbiguityConsumer;
 import com.mojang.brigadier.CommandDispatcher;
 import me.srrapero720.watercore.internal.WCoreInternals;
-import me.srrapero720.watercore.internal.WCoreRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.spongepowered.asm.mixin.Mixin;

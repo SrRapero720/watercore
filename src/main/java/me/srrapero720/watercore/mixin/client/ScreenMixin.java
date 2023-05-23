@@ -19,6 +19,6 @@ public class ScreenMixin {
 
     @Inject(method = { "m_7787_", "addWidget" }, remap = false, at = @At(value = "RETURN"))
     protected <T extends GuiEventListener & NarratableEntry> void addWidget(T widget, CallbackInfoReturnable<T> cir) {
-        if ((widget instanceof Widget renderable) && !renderables.contains(renderable)) this.renderables.add(renderable);
+//        if ((widget instanceof Widget renderable) && !renderables.contains(renderable)) this.renderables.add(renderable);
     }
 }

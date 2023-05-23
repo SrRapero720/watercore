@@ -1,4 +1,4 @@
-package me.srrapero720.gifs;
+package me.srrapero720.watercore.api.ego;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

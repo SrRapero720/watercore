@@ -7,7 +7,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.srrapero720.watercore.api.ego.PlayerName;
 import me.srrapero720.watercore.api.luckperms.LuckyMeta;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
-import me.srrapero720.watercore.internal.WCoreUtil;
+import me.srrapero720.watercore.utility.Tools;
+import me.srrapero720.watercore.utility.Logg;
+import me.srrapero720.watercore.internal.forge.W$Permissions;
 import me.srrapero720.watercore.internal.forge.W$SConfig;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -47,29 +49,60 @@ public class WatercoreComm extends AbstractComm {
     public static int threadLoggerExecution(CommandContext<CommandSourceStack> context) {
         if (ThreadUtil.threadLoggerEnabled()) ThreadUtil.threadLoggerKill();
         else ThreadUtil.threadLogger();
-        context.getSource().sendSuccess(new TranslatableComponent("wc.command.watercore.threads.logger", WCoreUtil.broadcastPrefix()), false);
+        context.getSource().sendSuccess(new TranslatableComponent("wc.command.watercore.threads.logger", Tools.broadcastPrefix()), false);
         return 0;
     }
 
     public static int threadListExecution(CommandContext<CommandSourceStack> context) {
         ThreadUtil.showThreads();
-        context.getSource().sendSuccess(new TranslatableComponent("wc.command.watercore.threads.list", WCoreUtil.broadcastPrefix()), false);
+        context.getSource().sendSuccess(new TranslatableComponent("wc.command.watercore.threads.list", Tools.broadcastPrefix()), false);
         return 0;
     }
 
     public static int runTest(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        context.getSource().sendSuccess(new TextComponent(WCoreUtil.broadcastPrefix().concat("Running...")), true);
+        context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix().concat("Running...")), true);
         var player = context.getSource().getPlayerOrException();
 
         // BENCH 1
-        var backCooldown = LuckyMeta.getIntMetaNodeValue(player, BackComm.COOLDOWN_NODE.getNode(), W$SConfig.backCooldown());
-        context.getSource().sendSuccess(new TextComponent(WCoreUtil.broadcastPrefix() + "Benchmark-1: Result of back cooldown is " + backCooldown), true);
+        ThreadUtil.trySimple(() -> {
+            var backCooldown = LuckyMeta.getIntMetaNodeValue(player, BackComm.COOLDOWN_NODE.getNode(), W$SConfig.backCooldown());
+            context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-1: Result of back cooldown is " + backCooldown), true);
+        }, (e) -> {
+            context.getSource().sendFailure(new TextComponent(Tools.broadcastPrefix("&c") + "Benchmark-1: Failed to continue bench"));
+            Logg.log("Benchmark-1: Exception detected {}", e);
+        });
+
+        // BENCH 1.1
+        ThreadUtil.trySimple(() -> {
+            var backCooldown = W$Permissions.playerPermissionInt(player.getUUID(), W$Permissions.BACK_COOLDOWN);
+            context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-1.1: Result of back cooldown is " + backCooldown), true);
+        }, (e) -> {
+            context.getSource().sendFailure(new TextComponent(Tools.broadcastPrefix("&c") + "Benchmark-1.1: Failed to continue bench"));
+            Logg.log("Benchmark-1.1: Exception detected {}", e);
+        });
 
         // BENCH 2
-        var displayName = LuckyMeta.getMetaNodeValue(player, PlayerName.DISPLAYNAME.getNode(), null);
-        context.getSource().sendSuccess(new TextComponent(WCoreUtil.broadcastPrefix() + "Benchmark-2: Result of displayname is " + displayName), true);
-        context.getSource().sendSuccess(new TextComponent(WCoreUtil.broadcastPrefix() + "Benchmark-2: Running PlayerName.displayname()"), true);
-        context.getSource().sendSuccess(new TextComponent(WCoreUtil.broadcastPrefix() + "Benchmark-2: Result of running that is " + PlayerName.displayname(player)), true);
+        ThreadUtil.trySimple(() -> {
+            var displayName = LuckyMeta.getMetaNodeValue(player, PlayerName.DISPLAYNAME.getNode(), "Non specified");
+            context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-2: Result of displayname is " + displayName), true);
+            context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-2: Running PlayerName.displayname()"), true);
+            context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-2: Result of running that is " + PlayerName.displayname(player).getString()), true);
+        }, (e) -> {
+            context.getSource().sendFailure(new TextComponent(Tools.broadcastPrefix("&c") + "Benchmark-2: Failed to continue bench"));
+            Logg.log("Benchmark-2: Exception detected {}", e);
+        });
+
+        // BENCH 2.2
+        ThreadUtil.trySimple(() -> {
+            var displayName = W$Permissions.playerPermissionString(player.getUUID(), W$Permissions.DISPLAYNAME_VALUE);
+            context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-2.1: Result of displayname is " + displayName), true);
+            context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-2.1: Running PlayerName.displayname()"), true);
+            context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-2.1: Result of running that is " + PlayerName.displayname(player).getString()), true);
+        }, (e) -> {
+            context.getSource().sendFailure(new TextComponent(Tools.broadcastPrefix("&c") + "Benchmark-2.1: Failed to continue bench"));
+            Logg.log("Benchmark-2.1: Exception detected {}", e);
+        });
+
         return 0;
     }
 }

@@ -1,9 +1,9 @@
-package me.srrapero720.watercore.internal;
+package me.srrapero720.watercore.utility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WLogger {
+public class Logg {
     private static final String PREFIX = "WATERCoRE";
     private static final Logger LOGGER = LoggerFactory.getLogger(PREFIX);
 

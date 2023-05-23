@@ -1,5 +1,6 @@
 package me.srrapero720.watercore.internal;
 
+import me.srrapero720.watercore.utility.Tools;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -16,9 +17,9 @@ public class WCoreMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String target, String mixin) {
-        if (mixin.contains("SL312664")) return WCoreUtil.isModFMLoading("simplelogin");
-        if (mixin.contains("VM423535")) return WCoreUtil.isModFMLoading("vmod");
-        if (mixin.contains("FM01")) return WCoreUtil.isModFMLoading("fancymenu");
+        if (mixin.contains("SL312664")) return Tools.isModFMLoading("simplelogin");
+        if (mixin.contains("VM423535")) return Tools.isModFMLoading("vmod");
+        if (mixin.contains("FM01")) return Tools.isModFMLoading("fancymenu");
         return true;
     }
 

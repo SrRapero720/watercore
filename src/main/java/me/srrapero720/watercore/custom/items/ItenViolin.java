@@ -1,7 +1,8 @@
 package me.srrapero720.watercore.custom.items;
 
-import me.srrapero720.watercore.internal.WCoreRegistry;
-import me.srrapero720.watercore.internal.WLogger;
+import me.srrapero720.watercore.WCoreRegistry;
+import me.srrapero720.watercore.api.forge.registry.URegistry;
+import me.srrapero720.watercore.utility.Logg;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,7 +22,7 @@ public class ItenViolin extends Item {
     private boolean playing = false;
     private final float pitch;
     public ItenViolin(float pitch) {
-        super(new Properties().rarity(Rarity.EPIC).tab(WCoreRegistry.tab("main")));
+        super(new Properties().rarity(Rarity.EPIC).tab(WCoreRegistry.getTabMain()));
         this.pitch = pitch;
     }
 
@@ -38,14 +39,14 @@ public class ItenViolin extends Item {
 
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-        final var soundEv = WCoreRegistry.findSoundOnly("violin");
+        final var soundEv = WCoreRegistry.getViolinSound();
         context.getLevel().playSound(context.getPlayer(), context.getPlayer(), soundEv, SoundSource.PLAYERS, 0.75f, pitch);
         return super.onItemUseFirst(stack, context);
     }
 
     @Override
     public void onUsingTick(ItemStack stack, LivingEntity player, int count) {
-        WLogger.warn("Running onUsingTick");
+        Logg.warn("Running onUsingTick");
         super.onUsingTick(stack, player, count);
     }
 
@@ -64,7 +65,7 @@ public class ItenViolin extends Item {
 
     @Override
     public boolean useOnRelease(ItemStack stack) {
-        WLogger.warn("Running useOnRelease");
+        Logg.warn("Running useOnRelease");
         return super.useOnRelease(stack);
     }
 }

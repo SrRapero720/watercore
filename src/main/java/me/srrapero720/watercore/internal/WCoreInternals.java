@@ -1,12 +1,14 @@
 package me.srrapero720.watercore.internal;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.logging.LogUtils;
 import io.netty.buffer.AbstractReferenceCountedByteBuf;
+import me.srrapero720.watercore.WCoreRegistry;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
 import me.srrapero720.watercore.mixin.client.util.ModelManagerAccessor;
+import me.srrapero720.watercore.utility.Logg;
+import me.srrapero720.watercore.utility.Tools;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.commands.CommandSourceStack;
@@ -49,7 +51,7 @@ public final class WCoreInternals {
      *                CORE LOADING COMMANDS
      * ==================================================== */
     public static void core$loadAllComands(CommandDispatcher<CommandSourceStack> dispatcher) {
-        for (var comm: WCoreRegistry.getCommandRegistry()) comm.load(dispatcher);
+//        for (var comm: GlobalRegistry.getCommandRegistry()) comm.load(dispatcher);
     }
 
     public static void core$prepareDimensionSetup(MinecraftServer server) {
@@ -57,18 +59,18 @@ public final class WCoreInternals {
         var spawn = PlayerSpawn.fetch(PlayerSpawn.Mode.WORLD, server);
 
         if (lobby.invalid()) {
-            WLogger.warn("No found any WORLDSPAWN pos. using default worldspawn");
+            Logg.warn("No found any WORLDSPAWN pos. using default worldspawn");
             lobby.setDimension(Level.OVERWORLD);
             lobby.setCoordinates(server.getLevel(Level.OVERWORLD).getSharedSpawnPos(), 0, 0);
         }
 
         if (spawn.invalid()) {
-            WLogger.warn("No found any LOBBYSPAWN pos. using default worldspawn");
+            Logg.warn("No found any LOBBYSPAWN pos. using default worldspawn");
             spawn.setDimension(Level.OVERWORLD);
             spawn.setCoordinates(server.getLevel(Level.OVERWORLD).getSharedSpawnPos(), 0, 0);
         }
 
-        var lobbyLevel = server.getLevel(WCoreRegistry.findDimension("lobby"));
+        var lobbyLevel = server.getLevel(WCoreRegistry.getWorldDimension("lobby"));
         var statelobby = lobbyLevel.getBlockState(new BlockPos(0, 128, 0));
         if (statelobby.is(Blocks.AIR))
             lobbyLevel.setBlock(new BlockPos(0, 128, 0), Blocks.BEDROCK.defaultBlockState(), 0);
@@ -91,11 +93,11 @@ public final class WCoreInternals {
      * ==================================================== */
     @SuppressWarnings("unchecked")
     private static void leaks$flushClassInfo() throws NoSuchFieldException, IllegalAccessException, SecurityException {
-        WLogger.warn("Cleaning ClassInfo cache...");
+        Logg.warn("Cleaning ClassInfo cache...");
 
         // Craftitrace ensure working
-        if (WCoreUtil.isModFMLoading("craftitrace") || WCoreUtil.isModLoaded("craftitrace")) {
-            WLogger.error("Cleaning cache is disabled if craftitrace is installed (keeps working that mod)");
+        if (Tools.isModFMLoading("craftitrace") || Tools.isModLoaded("craftitrace")) {
+            Logg.error("Cleaning cache is disabled if craftitrace is installed (keeps working that mod)");
             return;
         }
 
@@ -103,13 +105,13 @@ public final class WCoreInternals {
         cField.setAccessible(true);
 
         var cache = ((Map<String, ClassInfo>) cField.get(null));
-        ClassInfo info = cache.get(WCoreUtil.OBJECT);
+        ClassInfo info = cache.get(Tools.OBJECT);
         cache.clear();
-        cache.put(WCoreUtil.OBJECT, info);
+        cache.put(Tools.OBJECT, info);
     }
 
     public static void leaks$flushSpongePoweredMixinCache() {
-        WLogger.warn("Force-loading all classes with pending mixins and cleaning sponge cache");
+        Logg.warn("Force-loading all classes with pending mixins and cleaning sponge cache");
 
         MixinEnvironment.getCurrentEnvironment().audit();
         ThreadUtil.trySimple(() -> {
@@ -125,7 +127,7 @@ public final class WCoreInternals {
             //CLEARS SPONGEPOWERED MIXIN CACHE
             ((List<?>) membersField.get(noGroup)).clear();
             leaks$flushClassInfo();
-            WLogger.log("All classes with mixins are loaded and flushed");
+            Logg.log("All classes with mixins are loaded and flushed");
         }, ThreadUtil::printStackTrace);
     }
 
