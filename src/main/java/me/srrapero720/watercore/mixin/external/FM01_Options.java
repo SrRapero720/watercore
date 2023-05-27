@@ -4,7 +4,10 @@ import de.keksuccino.fancymenu.FancyMenu;
 import de.keksuccino.fancymenu.menu.fancy.MenuCustomizationEvents;
 import de.keksuccino.konkrete.file.FileUtils;
 import net.minecraft.client.Options;
+import org.slf4j.Logger;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
@@ -14,6 +17,7 @@ import java.io.IOException;
 @Deprecated(since = "Keks confirm a fix", forRemoval = true)
 @Mixin(Options.class)
 public class FM01_Options {
+    @Shadow @Final private static Logger LOGGER;
     private static final int scale;
     static {
         FancyMenu.updateConfig();
@@ -36,7 +40,7 @@ public class FM01_Options {
                     e1.printStackTrace();
                 }
 
-                //LOGGER.info("########################### FANCYMENU: SETTING DEFAULT GUI SCALE!");
+                LOGGER.info("########################### FANCYMENU x WATERCoRE: SETTING DEFAULT GUI SCALE!");
                 return scale;
             }
         }

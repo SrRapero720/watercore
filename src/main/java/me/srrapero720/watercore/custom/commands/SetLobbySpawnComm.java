@@ -3,6 +3,7 @@ package me.srrapero720.watercore.custom.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.srrapero720.watercore.api.minecraft.TeleportTarget;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.utility.Tools;
 import net.minecraft.commands.CommandSourceStack;
@@ -26,11 +27,11 @@ public class SetLobbySpawnComm extends AbstractComm {
     public static int saveSpawn(PlayerSpawn.Mode mode, CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
         var server = player.getServer();
-        var position = Tools.calculateNearbyCenter(player.getX(), player.getY(), player.getZ());
+        var position = TeleportTarget.getNearbyCenter(player.getX(), player.getY(), player.getZ());
 
         PlayerSpawn.fetch(mode, server)
                 .setDimension(player.getLevel().dimension())
-                .setCoordinates(position, Tools.fixAngle(player.getXRot()), Tools.fixAngle(player.getYRot()));
+                .setCoordinates(position, TeleportTarget.getFixAngle(player.getXRot()), TeleportTarget.getFixAngle(player.getYRot()));
 
 
         // TODO: Implement something on MCFormat
@@ -38,7 +39,7 @@ public class SetLobbySpawnComm extends AbstractComm {
                 "§c" + Tools.twoDecimal(position.x),
                 "§c" + Tools.twoDecimal(position.y),
                 "§c" + Tools.twoDecimal(position.z),
-                "§c" + Tools.fixAngle(player.getYRot()),
+                "§c" + TeleportTarget.getFixAngle(player.getYRot()),
                 "§c" + player.getLevel().dimension().location()), true);
 
         return 0;

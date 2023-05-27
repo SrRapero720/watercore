@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.api.forge;
+package me.srrapero720.watercore.api.minecraft;
 
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;

@@ -2,7 +2,7 @@ package me.srrapero720.watercore.custom.data.storage;
 
 import me.srrapero720.watercore.api.luckperms.LuckyMeta;
 import me.srrapero720.watercore.custom.data.BackData;
-import me.srrapero720.watercore.internal.forge.W$SConfig;
+import me.srrapero720.watercore.WaterConfig;
 import me.srrapero720.watercore.utility.Tools;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +21,7 @@ public class SimplePlayerStorage {
     }
     public static boolean updateBackCooldown(ServerPlayer player) {
         if (System.nanoTime() >= loadBackCooldown(player)) {
-            int cooldown = LuckyMeta.getIntMetaNodeValue(player, "watercore.command.back.cooldown", W$SConfig.backCooldown());
+            int cooldown = LuckyMeta.getIntMetaNodeValue(player, "watercore.command.back.cooldown", WaterConfig.backCooldown());
             PLAYER_BACKCOOLDOWN.put(player.getName().getString(), System.nanoTime() + Tools.secToMillis(cooldown));
             return true;
         }

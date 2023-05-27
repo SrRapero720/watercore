@@ -1,12 +1,12 @@
 package me.srrapero720.watercore.custom.items;
 
-import me.srrapero720.watercore.WCoreRegistry;
+import me.srrapero720.watercore.WaterRegistry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 
 public class ItemCoin extends Item {
-    public ItemCoin(Rarity rarity) { super(new Properties().tab(WCoreRegistry.getTabMain()).stacksTo(64).rarity(rarity)); }
+    public ItemCoin(Rarity rarity) { super(new Properties().tab(WaterRegistry.getTabMain()).stacksTo(64).rarity(rarity)); }
 
     @Override
     public int getItemStackLimit(ItemStack stack) {

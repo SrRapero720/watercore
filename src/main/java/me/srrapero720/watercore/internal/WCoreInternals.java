@@ -2,7 +2,7 @@ package me.srrapero720.watercore.internal;
 
 import com.mojang.brigadier.CommandDispatcher;
 import io.netty.buffer.AbstractReferenceCountedByteBuf;
-import me.srrapero720.watercore.WCoreRegistry;
+import me.srrapero720.watercore.WaterRegistry;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
@@ -32,7 +32,7 @@ import java.util.function.Predicate;
  * This class is only designed to center every method on mixins right here
  * (keep mixins only to be mixins)
  * Please, if this class mess up with something in your code open an issue on Github
- * DO NOT USE METHODS FROM HERE
+ * DO NOT USE METHODS FROM HERE... NEVER EVER. NEVER!!!
  */
 public final class WCoreInternals {
     /* ====================================================
@@ -70,10 +70,20 @@ public final class WCoreInternals {
             spawn.setCoordinates(server.getLevel(Level.OVERWORLD).getSharedSpawnPos(), 0, 0);
         }
 
-        var lobbyLevel = server.getLevel(WCoreRegistry.getWorldDimension("lobby"));
+        // TODO: INVESTIGATE HOW THE FUCK STOP DOING THIS
+        var lobbyLevel = server.getLevel(WaterRegistry.getWorldDimension("lobby"));
         var statelobby = lobbyLevel.getBlockState(new BlockPos(0, 128, 0));
-        if (statelobby.is(Blocks.AIR))
+        if (statelobby.is(Blocks.AIR)) {
+            lobbyLevel.setBlock(new BlockPos(0, 128, 1), Blocks.BEDROCK.defaultBlockState(), 0);
             lobbyLevel.setBlock(new BlockPos(0, 128, 0), Blocks.BEDROCK.defaultBlockState(), 0);
+            lobbyLevel.setBlock(new BlockPos(0, 128, -1), Blocks.BEDROCK.defaultBlockState(), 0);
+            lobbyLevel.setBlock(new BlockPos(1, 128, 1), Blocks.BEDROCK.defaultBlockState(), 0);
+            lobbyLevel.setBlock(new BlockPos(1, 128, 0), Blocks.BEDROCK.defaultBlockState(), 0);
+            lobbyLevel.setBlock(new BlockPos(1, 128, -1), Blocks.BEDROCK.defaultBlockState(), 0);
+            lobbyLevel.setBlock(new BlockPos(-1, 128, 1), Blocks.BEDROCK.defaultBlockState(), 0);
+            lobbyLevel.setBlock(new BlockPos(-1, 128, 0), Blocks.BEDROCK.defaultBlockState(), 0);
+            lobbyLevel.setBlock(new BlockPos(-1, 128, -1), Blocks.BEDROCK.defaultBlockState(), 0);
+        }
     }
 
     public static void core$onPlayerTeleport(ServerPlayer player) {
@@ -97,7 +107,7 @@ public final class WCoreInternals {
 
         // Craftitrace ensure working
         if (Tools.isModFMLoading("craftitrace") || Tools.isModLoaded("craftitrace")) {
-            Logg.error("Cleaning cache is disabled if craftitrace is installed (keeps working that mod)");
+            Logg.error("Cleaning ClassInfo is disabled when craftitrace is installed (keeps all working together)");
             return;
         }
 

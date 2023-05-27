@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Commands.class)
 public class CommandMixin {
+    // FORCES WATERCoRE OVERRIDES ANY DUPLICATED COMMAND.
     @Redirect(method = "<init>", at = @At(value = "INVOKE", remap = false, target = "Lcom/mojang/brigadier/CommandDispatcher;findAmbiguities(Lcom/mojang/brigadier/AmbiguityConsumer;)V"))
     public void redirectCommands(CommandDispatcher<CommandSourceStack> instance, AmbiguityConsumer<CommandSourceStack> consumer) {
         WCoreInternals.core$loadAllComands(instance);

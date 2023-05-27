@@ -1,6 +1,6 @@
 package me.srrapero720.watercore;
 
-import me.srrapero720.watercore.api.forge.registry.URegistry;
+import me.srrapero720.watercore.api.minecraft.URegistry;
 import me.srrapero720.watercore.custom.commands.*;
 import me.srrapero720.watercore.custom.items.BanHammer;
 import me.srrapero720.watercore.custom.items.ItemCoin;
@@ -10,7 +10,6 @@ import me.srrapero720.watercore.custom.potions.BlessedPotion;
 import me.srrapero720.watercore.custom.potions.CursedPotion;
 import me.srrapero720.watercore.custom.tabs.WCoreTab;
 import me.srrapero720.watercore.utility.Tools;
-import me.srrapero720.watercore.internal.forge.W$SConfig;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -20,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.config.ModConfig;
 import org.checkerframework.common.value.qual.IntRange;
 
-public class WCoreRegistry {
+public class WaterRegistry {
     public static final URegistry REGISTRY = new URegistry(WaterCore.ID).register(WaterCore.BUS);
 
     public static void init() {
@@ -74,7 +73,7 @@ public class WCoreRegistry {
         REGISTRY.registerComm(WatercoreComm::new);
 
         /* CONFIG */
-        REGISTRY.registerConfig(ModConfig.Type.SERVER, W$SConfig.SPEC, WaterCore.ID);
+        REGISTRY.registerConfig(ModConfig.Type.SERVER, WaterConfig.SPEC, WaterCore.ID);
     }
 
     public static CreativeModeTab getTabMain() { return URegistry.tab(new ResourceLocation(WaterCore.ID, "main")); }

@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-
+@Deprecated(forRemoval = true)
+// THIS GONNA BE MOVED TO PLACEHOLDER PROTOCOL
 public class Placeholder {
     public static final Map<String, CharSequence> HOLDERS = new HashMap<>();
     static {

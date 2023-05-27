@@ -4,7 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import me.srrapero720.watercore.api.placeholder.Placeholder;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
-import me.srrapero720.watercore.internal.forge.W$SConfig;
+import me.srrapero720.watercore.WaterConfig;
 import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -23,7 +23,7 @@ public class BroadcastComm extends AbstractComm {
         dispatcher.register(Commands.literal("broadcast")
                 .requires((req) -> req.hasPermission(3))
                 .then(Commands.argument("message", MessageArgument.message())
-                        .executes((context -> broadcastToServer(context, Placeholder.parse(W$SConfig.getBroadcastPrefix())))))
+                        .executes((context -> broadcastToServer(context, Placeholder.parse(WaterConfig.getBroadcastPrefix())))))
         );
 
         dispatcher.register(Commands.literal("broadcast-raw")

@@ -3,7 +3,7 @@ package me.srrapero720.watercore.custom.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import me.srrapero720.watercore.WCoreRegistry;
+import me.srrapero720.watercore.WaterRegistry;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.utility.Tools;
 import net.minecraft.commands.CommandSourceStack;
@@ -24,8 +24,8 @@ public class SpawnComm extends AbstractComm {
     //========================================== //
     public static int teleportPlayerToLobby(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         var player = context.getSource().getPlayerOrException();
-        var level = player.server.getLevel(WCoreRegistry.getWorldDimension("lobby"));
-        player.teleportTo(level, 0, 128, 0, 0, 0);
+        var level = player.server.getLevel(WaterRegistry.getWorldDimension("lobby"));
+        player.teleportTo(level, 0, 130, 0, 0, 0);
         return 0;
     }
 

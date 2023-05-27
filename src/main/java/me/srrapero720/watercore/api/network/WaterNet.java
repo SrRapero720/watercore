@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.api;
+package me.srrapero720.watercore.api.network;
 
 import me.srrapero720.watercore.WaterCore;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,7 +12,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class WLNetwork {
+public class WaterNet {
     private static int MSGID = 0;
     private static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(WaterCore.ID, "main"),

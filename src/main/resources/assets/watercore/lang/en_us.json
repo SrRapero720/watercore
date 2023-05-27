@@ -66,5 +66,6 @@
   "wc.command.back.failed": "§cNo hay ubicacion anterior disponible",
   "wc.command.back.cooldown": "§cTienes que esperar %s segundos antes de volver a usar este comando",
   "wc.command.watercore.threads.list": "%s§6La lista de Hilos activos se ha enviado a la consola",
-  "wc.command.watercore.threads.logger": "%s§6Thread loggger actualizado"
+  "wc.command.watercore.threads.logger": "%s§6Thread loggger actualizado",
+  "wc.command.watercore.set.config.success": "%sConfiguracion actualizada exitosamente"
 }

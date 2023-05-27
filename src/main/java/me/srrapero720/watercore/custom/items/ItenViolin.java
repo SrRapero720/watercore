@@ -1,7 +1,6 @@
 package me.srrapero720.watercore.custom.items;
 
-import me.srrapero720.watercore.WCoreRegistry;
-import me.srrapero720.watercore.api.forge.registry.URegistry;
+import me.srrapero720.watercore.WaterRegistry;
 import me.srrapero720.watercore.utility.Logg;
 import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +21,7 @@ public class ItenViolin extends Item {
     private boolean playing = false;
     private final float pitch;
     public ItenViolin(float pitch) {
-        super(new Properties().rarity(Rarity.EPIC).tab(WCoreRegistry.getTabMain()));
+        super(new Properties().rarity(Rarity.EPIC).tab(WaterRegistry.getTabMain()));
         this.pitch = pitch;
     }
 
@@ -39,7 +38,7 @@ public class ItenViolin extends Item {
 
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-        final var soundEv = WCoreRegistry.getViolinSound();
+        final var soundEv = WaterRegistry.getViolinSound();
         context.getLevel().playSound(context.getPlayer(), context.getPlayer(), soundEv, SoundSource.PLAYERS, 0.75f, pitch);
         return super.onItemUseFirst(stack, context);
     }

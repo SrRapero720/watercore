@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.custom.data;
 
 import me.srrapero720.watercore.WaterCore;
-import me.srrapero720.watercore.api.data.TeleportToMC;
+import me.srrapero720.watercore.api.minecraft.TeleportTarget;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerSpawn extends SavedData {
     // DATA MANAGMENT
-    private final TeleportToMC teleport;
+    private final TeleportTarget teleport;
     public PlayerSpawn() {
-        this.teleport = new TeleportToMC() {
+        this.teleport = new TeleportTarget() {
             @Override
             protected void onDataUpdated() { PlayerSpawn.this.setDirty(); }
         };
@@ -54,7 +54,7 @@ public class PlayerSpawn extends SavedData {
 
     // FETCH WHAT DATA
     @Deprecated
-    public static TeleportToMC fetch(Mode mode, @NotNull MinecraftServer server) {
+    public static TeleportTarget fetch(Mode mode, @NotNull MinecraftServer server) {
         var self = server.overworld().getDataStorage().computeIfAbsent(PlayerSpawn::load, PlayerSpawn::create, mode.toString());
         return self.teleport;
     }

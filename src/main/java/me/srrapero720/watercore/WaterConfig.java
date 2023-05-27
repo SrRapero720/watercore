@@ -1,9 +1,9 @@
-package me.srrapero720.watercore.internal.forge;
+package me.srrapero720.watercore;
 
 import me.srrapero720.watercore.utility.Tools;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class W$SConfig {
+public class WaterConfig {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
 
@@ -17,9 +17,15 @@ public class W$SConfig {
     private static final ForgeConfigSpec.ConfigValue<String> DISPLAYNAME_NICK_FORMAT;
 
     // GETTERS
-    public static String joinFormat() { return JOIN_FORMAT.get(); }
-    public static String leaveFormat() { return LEAVE_FORMAT.get(); }
-    public static String chatFormat() { return CHAT_FORMAT.get(); }
+    public static String getJoinFormat() { return JOIN_FORMAT.get(); }
+    public static String getLeaveFormat() { return LEAVE_FORMAT.get(); }
+    public static String getChatFormat() { return CHAT_FORMAT.get(); }
+
+    // SETTERS
+    public static void setJoinFormat(String value) { JOIN_FORMAT.set(value); }
+    public static void setLeaveFormat(String value) { LEAVE_FORMAT.set(value); }
+    public static void setChatFormat(String value) { CHAT_FORMAT.set(value); }
+
     public static String displaynameFormat() { return DISPLAYNAME_FORMAT.get(); }
     public static String displaynameNickFormat() { return DISPLAYNAME_NICK_FORMAT.get(); }
 
@@ -62,7 +68,7 @@ public class W$SConfig {
         LEAVE_FORMAT = BUILDER.comment(
                 "Modify message of leaving players",
                 "Placeholders: {displayname} {playername} {profilename}"
-        ).define("leave_format", "&e&l[&b{displayname}&e&l] &cLeave");
+        ).define("leave_format", "&e&l[&b&c-&l] &c{displayname}");
 
         CHAT_FORMAT = BUILDER.comment(
                 "Modify chat format",

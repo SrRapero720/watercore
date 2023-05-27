@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.custom.tabs;
 
 import me.srrapero720.watercore.WaterCore;
-import me.srrapero720.watercore.api.forge.registry.URegistry;
+import me.srrapero720.watercore.api.minecraft.URegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;

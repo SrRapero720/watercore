@@ -5,7 +5,6 @@ import me.srrapero720.watercore.api.thread.ThreadUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
@@ -47,34 +46,7 @@ public class Tools {
     @OnlyIn(Dist.CLIENT)
     public static float toDeltaFrames() { return mc().isPaused() ? 1.0F : mc().getFrameTime(); }
 
-    @Contract("_, _, _ -> new")
-    public static @NotNull Vec3 calculateNearbyCenter(double x, double y, double z) {
-        var deltaX = x - (int) x;
-        var currentX = ((deltaX > -0.75D && deltaX < -0.25D)) ? (int) x - 0.5D : (deltaX > 0.25D && deltaX < 0.75D) ? (int) x + 0.5D : Math.round(x);
-
-        var deltaZ = z - (int) z;
-        var currentZ = ((deltaZ > -0.75D && deltaZ < -0.25D)) ? (int) z - 0.5D : (deltaZ > 0.25D && deltaZ < 0.75D) ? (int) z + 0.5D : Math.round(z);
-
-        var centerY = (int) y + 0.1D;
-        return new Vec3(currentX, centerY, currentZ);
-    }
-
     public static long secToMillis(final long sec) { return sec * 1000; }
-    public static int fixAngle(final float input) { return fixAngle(Math.round(input)); }
-    public static int fixAngle(final int input) {
-        var angle = input;
-
-        if (angle >= 0 && angle <= 45) angle = 0;
-        else if (angle >= 45 && angle <= 90) angle = 90;
-        else if (angle >= 90 && angle <= 135) angle = 90;
-        else if (angle >= 135 && angle <= 180) angle = 180;
-        else if (angle >= -180 && angle <= -135) angle = -180;
-        else if (angle >= -135 && angle <= -90) angle = -90;
-        else if (angle >= -90 && angle <= -45) angle = -90;
-        else if (angle >= -45 && angle <= 0) angle = 0;
-
-        return angle;
-    }
 
     public static @Nullable ServerLevel fetchLevel(@NotNull Iterable<ServerLevel> levels, ResourceLocation hint) {
         for (var lvl: levels) if (lvl.dimension().location().toString().equals(hint.toString())) return lvl;

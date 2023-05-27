@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin.external;
 
-import me.srrapero720.watercore.api.ego.PlayerName;
+import me.srrapero720.watercore.internal.PlayerName;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;

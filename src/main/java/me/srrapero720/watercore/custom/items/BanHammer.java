@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.custom.items;
 
-import me.srrapero720.watercore.WCoreRegistry;
+import me.srrapero720.watercore.WaterRegistry;
 import me.srrapero720.watercore.api.placeholder.provider.Color;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.utility.Logg;
@@ -18,7 +18,7 @@ import me.srrapero720.watercore.utility.Tools;
 
 public class BanHammer extends Item {
     public BanHammer() {
-        super(new Properties().tab(WCoreRegistry.getTabAdmin()).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
+        super(new Properties().tab(WaterRegistry.getTabAdmin()).stacksTo(1).rarity(Rarity.EPIC).fireResistant().setNoRepair().defaultDurability(1));
     }
 
     @Override

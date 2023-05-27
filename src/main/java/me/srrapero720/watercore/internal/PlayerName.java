@@ -1,11 +1,11 @@
-package me.srrapero720.watercore.api.ego;
+package me.srrapero720.watercore.internal;
 
 import me.srrapero720.watercore.api.luckperms.LuckyCore;
 import me.srrapero720.watercore.api.luckperms.LuckyMeta;
 import me.srrapero720.watercore.api.luckperms.LuckyNode;
 import me.srrapero720.watercore.api.placeholder.Placeholder;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
-import me.srrapero720.watercore.internal.forge.W$SConfig;
+import me.srrapero720.watercore.WaterConfig;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Contract;
@@ -28,12 +28,13 @@ public class PlayerName {
     }
 
     @Contract("_ -> new")
+    @Deprecated(forRemoval = true, since = "2.0.0-alpha1")
     public static @NotNull TextComponent displayname(Player player) {
         return ThreadUtil.tryAndReturn(defaultVar -> {
             if (!LuckyCore.isPresent()) return new TextComponent(player.getName().getString());
             var nodeValue = LuckyMeta.getMetaNodeValue(player, DISPLAYNAME.getNode());
 
-            String format = nodeValue != null ? nodeValue : W$SConfig.displaynameFormat();
+            String format = nodeValue != null ? nodeValue : WaterConfig.displaynameFormat();
             if (format == null) return defaultVar;
 
             for (var holder : HOLDERS.values())
@@ -44,8 +45,6 @@ public class PlayerName {
 
     @Contract("_, _, _ -> new")
     public static @NotNull TextComponent parse(String format, Player player, String... extras) {
-        if (!LuckyCore.isPresent()) return new TextComponent(player.getName().getString());
-
         var mFormat = format;
         for (var holder : HOLDERS.values()) mFormat = mFormat.replaceAll(holder.id(), holder.parse(player));
 
@@ -73,9 +72,9 @@ public class PlayerName {
     public interface PlayerSupplier { String get(Player player); }
 
     public enum Format {
-        CHAT(W$SConfig::chatFormat),
-        JOIN(W$SConfig::joinFormat),
-        LEAVE(W$SConfig::leaveFormat);
+        CHAT(WaterConfig::getChatFormat),
+        JOIN(WaterConfig::getJoinFormat),
+        LEAVE(WaterConfig::getLeaveFormat);
 
         final Supplier<String> formatName;
         Format(Supplier<String> formatName) { this.formatName = formatName; }

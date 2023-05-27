@@ -19,6 +19,7 @@ import top.seraphjack.simplelogin.client.SetPasswordScreen;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(value = SetPasswordScreen.class)
+@Deprecated(forRemoval = true, since = "Planned self login system")
 public abstract class SL312664_PwScreen extends Screen {
     @Shadow(remap = false) private EditBox password;
 
@@ -29,7 +30,7 @@ public abstract class SL312664_PwScreen extends Screen {
 
     /**
      * @author SrRapero720
-     * @reason uhhhh
+     * @reason This makes compatible SimpleLogin with FancyMenu
      */
     @Overwrite
     @Override

@@ -9,7 +9,7 @@ import me.srrapero720.watercore.utility.Tools;
 public class LuckyCore {
     static net.luckperms.api.LuckPerms LP;
     private static final String NAME = "LuckyCore";
-    public static boolean isPresent() { return LP != null || !Tools.isClientSide(); }
+    public static boolean isPresent() { return LP != null; }
     public static net.luckperms.api.LuckPerms instance() { return LP; }
 
     public static void init() {

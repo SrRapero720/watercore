@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.IntStream;
 
+@Deprecated(forRemoval = true)
+// THIS GONNA BE MOVED TO PLACEHOLDER PROTOCOL
 public enum Color implements CharSequence {
     BLACK("0", "§0"),
     DARK_BLUE("1", "§1"),

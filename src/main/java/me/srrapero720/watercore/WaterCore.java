@@ -1,6 +1,6 @@
 package me.srrapero720.watercore;
 
-import me.srrapero720.watercore.api.forge.Forge;
+import me.srrapero720.watercore.api.minecraft.Forge;
 import me.srrapero720.watercore.api.placeholder.Placeholder;
 import me.srrapero720.watercore.utility.Tools;
 import me.srrapero720.watercore.utility.Logg;
@@ -18,7 +18,7 @@ public class WaterCore {
     public static final IEventBus BUS = Forge.getEventBus();
     public WaterCore() {
         Forge.addFMLListener(ValidateState::new);
-        WCoreRegistry.init();
+        WaterRegistry.init();
         Logg.warn(":: Setup completed :::");
     }
 

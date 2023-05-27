@@ -1,4 +1,4 @@
-package me.srrapero720.watercore.api.forge.registry;
+package me.srrapero720.watercore.api.minecraft;
 
 import com.mojang.brigadier.CommandDispatcher;
 import me.srrapero720.watercore.utility.Logg;
@@ -18,6 +18,7 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -37,6 +38,8 @@ import java.util.function.Supplier;
 
 @SuppressWarnings({"unchecked", "unused"})
 @Mod.EventBusSubscriber
+@Deprecated(forRemoval = true)
+// THIS NEEDS TO BE REWRITED OR BEGIN A SIMPLE UTIL.
 public class URegistry {
     private final String ID;
     private static boolean isInit = false;

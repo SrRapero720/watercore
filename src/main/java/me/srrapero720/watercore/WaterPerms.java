@@ -1,6 +1,5 @@
-package me.srrapero720.watercore.internal.forge;
+package me.srrapero720.watercore;
 
-import me.srrapero720.watercore.WaterCore;
 import me.srrapero720.watercore.api.placeholder.Placeholder;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import net.minecraft.network.chat.TextComponent;
@@ -10,7 +9,7 @@ import net.minecraftforge.server.permission.nodes.PermissionTypes;
 
 import java.util.UUID;
 
-public class W$Permissions {
+public class WaterPerms {
 
     public static final PermissionNode<Integer> BACK_COOLDOWN;
     public static final PermissionNode<String> DISPLAYNAME_VALUE;
@@ -24,7 +23,7 @@ public class W$Permissions {
 
     static {
         BACK_COOLDOWN = create("watercore.command.back.cooldown", 20, "back cooldown usage", "Set custom back cooldown usage");
-        DISPLAYNAME_VALUE = create("watercore.player.displayname.format", W$SConfig.displaynameFormat(), "back cooldown usage", "Set custom back cooldown usage");
+        DISPLAYNAME_VALUE = create("watercore.player.displayname.format", WaterConfig.displaynameFormat(), "back cooldown usage", "Set custom back cooldown usage");
 
         CHAT_COLORS = create("watercore.chat.colors", true, "Chat colors", "Enables/Disables colors in chat");
         CHAT_MARKDOWN = create("watercore.chat.styles", true, "Chat markdown styling", "Enables/Disables markdown styling in chat");

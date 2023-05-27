@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.mixin.common;
 
-import me.srrapero720.watercore.api.ego.PlayerName;
+import me.srrapero720.watercore.internal.PlayerName;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -22,6 +22,7 @@ public class ServerGamePLMixin {
         return PlayerName.format(PlayerName.Format.LEAVE, player);
     }
 
+    // FORCES TO FORGE USES WATERCORE FORMAT OVER OTHER MODS
     @Redirect(method = "handleChat(Lnet/minecraft/server/network/TextFilter$FilteredText;)V", at = @At(
             value = "INVOKE",
             remap = false,

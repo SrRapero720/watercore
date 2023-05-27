@@ -2,18 +2,21 @@ package me.srrapero720.watercore.custom.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import me.srrapero720.watercore.api.ego.PlayerName;
+import me.srrapero720.watercore.internal.PlayerName;
 import me.srrapero720.watercore.api.luckperms.LuckyMeta;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.utility.Tools;
 import me.srrapero720.watercore.utility.Logg;
-import me.srrapero720.watercore.internal.forge.W$Permissions;
-import me.srrapero720.watercore.internal.forge.W$SConfig;
+import me.srrapero720.watercore.WaterPerms;
+import me.srrapero720.watercore.WaterConfig;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
@@ -40,6 +43,12 @@ public class WatercoreComm extends AbstractComm {
                 // TEST FOR LUCKPERMS
                 .then(Commands.literal("luckperms-bench")
                         .executes(WatercoreComm::runTest))
+
+                // SETTERS
+                .then(Commands.literal("set")
+                        .then(Commands.literal("join_format") .then(Commands.argument("format", StringArgumentType.greedyString()).executes(context -> updateFormat(context, PlayerName.Format.JOIN))))
+                        .then(Commands.literal("leave_format").then(Commands.argument("format", StringArgumentType.greedyString()).executes(context -> updateFormat(context, PlayerName.Format.LEAVE))))
+                        .then(Commands.literal("chat_format") .then(Commands.argument("format", StringArgumentType.greedyString()).executes(context -> updateFormat(context, PlayerName.Format.CHAT)))))
         );
     }
 
@@ -59,13 +68,26 @@ public class WatercoreComm extends AbstractComm {
         return 0;
     }
 
+    public static int updateFormat(CommandContext<CommandSourceStack> context, PlayerName.Format format) {
+        var result = StringArgumentType.getString(context, "format");
+        switch (format) {
+            case JOIN -> WaterConfig.setJoinFormat(result);
+            case LEAVE -> WaterConfig.setLeaveFormat(result);
+            case CHAT -> WaterConfig.setChatFormat(result);
+        }
+
+        // TODO: update this bullshit success messages
+        context.getSource().sendSuccess(new TranslatableComponent("wc.command.watercore.set.config.success", Tools.broadcastPrefix()).withStyle(ChatFormatting.GREEN), true);
+        return 0;
+    }
+
     public static int runTest(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix().concat("Running...")), true);
         var player = context.getSource().getPlayerOrException();
 
         // BENCH 1
         ThreadUtil.trySimple(() -> {
-            var backCooldown = LuckyMeta.getIntMetaNodeValue(player, BackComm.COOLDOWN_NODE.getNode(), W$SConfig.backCooldown());
+            var backCooldown = LuckyMeta.getIntMetaNodeValue(player, BackComm.COOLDOWN_NODE.getNode(), WaterConfig.backCooldown());
             context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-1: Result of back cooldown is " + backCooldown), true);
         }, (e) -> {
             context.getSource().sendFailure(new TextComponent(Tools.broadcastPrefix("&c") + "Benchmark-1: Failed to continue bench"));
@@ -74,7 +96,7 @@ public class WatercoreComm extends AbstractComm {
 
         // BENCH 1.1
         ThreadUtil.trySimple(() -> {
-            var backCooldown = W$Permissions.playerPermissionInt(player.getUUID(), W$Permissions.BACK_COOLDOWN);
+            var backCooldown = WaterPerms.playerPermissionInt(player.getUUID(), WaterPerms.BACK_COOLDOWN);
             context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-1.1: Result of back cooldown is " + backCooldown), true);
         }, (e) -> {
             context.getSource().sendFailure(new TextComponent(Tools.broadcastPrefix("&c") + "Benchmark-1.1: Failed to continue bench"));
@@ -94,7 +116,7 @@ public class WatercoreComm extends AbstractComm {
 
         // BENCH 2.2
         ThreadUtil.trySimple(() -> {
-            var displayName = W$Permissions.playerPermissionString(player.getUUID(), W$Permissions.DISPLAYNAME_VALUE);
+            var displayName = WaterPerms.playerPermissionString(player.getUUID(), WaterPerms.DISPLAYNAME_VALUE);
             context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-2.1: Result of displayname is " + displayName), true);
             context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-2.1: Running PlayerName.displayname()"), true);
             context.getSource().sendSuccess(new TextComponent(Tools.broadcastPrefix() + "Benchmark-2.1: Result of running that is " + PlayerName.displayname(player).getString()), true);

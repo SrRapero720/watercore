@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.mixin.common;
 
 import com.mojang.serialization.Dynamic;
-import me.srrapero720.watercore.api.ego.PlayerName;
+import me.srrapero720.watercore.internal.PlayerName;
 import me.srrapero720.watercore.custom.data.PlayerSpawn;
 import me.srrapero720.watercore.custom.data.storage.SimplePlayerStorage;
 import me.srrapero720.watercore.utility.Logg;
