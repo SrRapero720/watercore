@@ -1,6 +1,6 @@
 package me.srrapero720.watercore.custom.data;
 
-import me.srrapero720.watercore.api.data.MCTeleportal;
+import me.srrapero720.watercore.api.data.TeleportToMC;
 import me.srrapero720.watercore.custom.data.storage.IPlayerStorage;
 import me.srrapero720.watercore.utility.Logg;
 import net.minecraft.resources.ResourceLocation;
@@ -8,7 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public final class BackData extends MCTeleportal {
+public final class BackData extends TeleportToMC {
     public BackData(ResourceLocation dim, double x, double y, double z, float xRot, float yRot) {
         super(dim, new double[] { x, y, z }, new float[] { xRot, yRot });
     }

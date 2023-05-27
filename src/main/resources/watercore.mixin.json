@@ -27,7 +27,6 @@
     "client.MinecraftMainMixin",
     "client.MinecraftMixin",
     "client.VideoSettingsScreenMixin",
-    "client.ScreenMixin",
     "client.TextureReloadLeak",
     "external.FM01_Options",
     "external.SL312664_PwScreen",

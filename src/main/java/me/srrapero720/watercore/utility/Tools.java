@@ -29,6 +29,7 @@ public class Tools {
     // IS LOADED SOMETHING
     public static boolean isModFMLoading(String id) { return FMLLoader.getLoadingModList().getModFileById(id) != null; }
     public static boolean isModLoaded(String id) { return ModList.get().isLoaded(id); }
+    public static boolean isModInstalled(String id) { return false; } //TODO: make a file check
     public static boolean isPackageLoaded(String id) { return Package.getPackage(id) != null; }
 
     // SIDE CHECK

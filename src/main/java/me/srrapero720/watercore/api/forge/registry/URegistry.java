@@ -104,8 +104,9 @@ public class URegistry {
     }
 
     public CreativeModeTab registerTab(String id, Supplier<CreativeModeTab> tab) {
-        TABS.put(new ResourceLocation(ID, id), tab.get());
-        return tab.get();
+        final var t = tab.get();
+        TABS.put(new ResourceLocation(ID, id), t);
+        return t;
     }
 
     /* ====================================================

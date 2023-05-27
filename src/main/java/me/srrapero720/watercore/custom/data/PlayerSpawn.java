@@ -1,7 +1,7 @@
 package me.srrapero720.watercore.custom.data;
 
 import me.srrapero720.watercore.WaterCore;
-import me.srrapero720.watercore.api.data.MCTeleportal;
+import me.srrapero720.watercore.api.data.TeleportToMC;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerSpawn extends SavedData {
     // DATA MANAGMENT
-    private final MCTeleportal teletransportation;
+    private final TeleportToMC teleport;
     public PlayerSpawn() {
-        this.teletransportation = new MCTeleportal() {
+        this.teleport = new TeleportToMC() {
             @Override
             protected void onDataUpdated() { PlayerSpawn.this.setDirty(); }
         };
@@ -21,12 +21,12 @@ public class PlayerSpawn extends SavedData {
     // SAVE / LOAD ENDPOINT
     @Override
     public @NotNull CompoundTag save(@NotNull CompoundTag tag) {
-        tag.putString("dimension", teletransportation.getDimension().toString());
-        tag.putDouble("x", teletransportation.getX());
-        tag.putDouble("y", teletransportation.getY());
-        tag.putDouble("z", teletransportation.getZ());
-        tag.putFloat("rotX", teletransportation.getRotX());
-        tag.putFloat("rotY", teletransportation.getRotY());
+        tag.putString("dimension", teleport.getDimension().toString());
+        tag.putDouble("x", teleport.getX());
+        tag.putDouble("y", teleport.getY());
+        tag.putDouble("z", teleport.getZ());
+        tag.putFloat("rotX", teleport.getRotX());
+        tag.putFloat("rotY", teleport.getRotY());
         this.setDirty(false);
         return tag;
     }
@@ -36,8 +36,8 @@ public class PlayerSpawn extends SavedData {
         var dimension = tag.getString("dimension");
 
         if (!dimension.isEmpty()) {
-            self.teletransportation.setDimension(dimension);
-            self.teletransportation.setCoordinates(
+            self.teleport.setDimension(dimension);
+            self.teleport.setCoordinates(
                     tag.getDouble("x"),
                     tag.getDouble("y"),
                     tag.getDouble("z"),
@@ -53,9 +53,10 @@ public class PlayerSpawn extends SavedData {
 
 
     // FETCH WHAT DATA
-    public static MCTeleportal fetch(Mode mode, @NotNull MinecraftServer server) {
+    @Deprecated
+    public static TeleportToMC fetch(Mode mode, @NotNull MinecraftServer server) {
         var self = server.overworld().getDataStorage().computeIfAbsent(PlayerSpawn::load, PlayerSpawn::create, mode.toString());
-        return self.teletransportation;
+        return self.teleport;
     }
 
     // SEPARATORS
