@@ -22,4 +22,6 @@ public class BlessedPotion extends Potion {
                 new MobEffectInstance(MobEffects.SATURATION, t * l, 255, false, false)
         );
     }
+
+
 }

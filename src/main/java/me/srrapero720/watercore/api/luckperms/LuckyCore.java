@@ -1,9 +1,13 @@
 package me.srrapero720.watercore.api.luckperms;
 
 import jdk.jfr.Experimental;
+import me.srrapero720.watercore.WaterCore;
 import me.srrapero720.watercore.api.thread.ThreadUtil;
 import me.srrapero720.watercore.utility.Logg;
 import me.srrapero720.watercore.utility.Tools;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.server.permission.nodes.PermissionNode;
+import net.minecraftforge.server.permission.nodes.PermissionType;
 
 @Experimental
 public class LuckyCore {
@@ -16,7 +20,6 @@ public class LuckyCore {
         ThreadUtil.threadTry(() -> {
             var clazz = Class.forName("net.luckperms.api.LuckPermsProvider");
             LP = (net.luckperms.api.LuckPerms) clazz.getMethod("get").invoke(null);
-
             Logg.log("Luckperms is present");
         }, (e) -> Logg.log("Failed to load Luckperms. Is even installed? or we are in bukkit?"), null);
     }
