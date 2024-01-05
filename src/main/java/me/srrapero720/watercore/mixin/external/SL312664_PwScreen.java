@@ -22,9 +22,7 @@ import java.util.UUID;
 @Mixin(SetPasswordScreen.class)
 public abstract class SL312664_PwScreen extends Screen {
     @Shadow private EditBox password;
-
     @Shadow private Button buttonRandom;
-
     @Shadow private Button buttonComplete;
 
     /**

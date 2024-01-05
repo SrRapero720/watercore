@@ -1,38 +1,37 @@
 modLoader = "javafml"
 loaderVersion = "[40,)"
 license = "All rights reserved"
-issueTrackerURL = "https://github.com/SrRapero720/WATERCoRE/issues"
-
+issueTrackerURL = "https://github.com/${github_project}/issues"
 
 [[mods]]
-modId = "watercore"
-version = "${file.jarVersion}"
-displayName = "WATERCoRE"
-logoFile = "pack.png"
-credits = "SrRapero720"
-authors = "SrRapero720"
-description = '''
-WATERCoRE, Tu herramienta de servidores (oficial de WATERMiNE) Integracion oficial de Dimensiones, posiones, monedas y otras cosas.
-'''
+    modId="${modid}"
+    version="${modversion}"
+    displayName="${modname}"
+    logoFile="pack.png" #optional
+    displayURL="https://www.curseforge.com/minecraft/mc-mods/watercore" #optional
+    authors="${modauthor}" #optional
+    credits="${modcredits}" #optional
+    displayTest="MATCH_VERSION"
+    clientSideO1nly=true
+    description = '''${mod_description}'''
 
-
-[[dependencies.watercore]]
-modId = "forge"
-mandatory = true
-versionRange = "[40,)"
-ordering = "NONE"
-side = "BOTH"
-
-[[dependencies.watercore]]
-modId = "luckperms"
-mandatory = false
-versionRange = "[5.4,)"
-ordering = "NONE"
-side = "SERVER"
+[[dependencies.${modid}]]
+    modId = "forge"
+    mandatory = true
+    versionRange = "[40,)"
+    ordering = "NONE"
+    side = "BOTH"
 
 [[dependencies.watercore]]
-modId = "create"
-mandatory = false
-versionRange = "[0.5,)"
-ordering = "NONE"
-side = "BOTH"
+    modId = "luckperms"
+    mandatory = false
+    versionRange = "[5.4,)"
+    ordering = "NONE"
+    side = "SERVER"
+
+[[dependencies.watercore]]
+    modId = "create"
+    mandatory = false
+    versionRange = "[0.5,)"
+    ordering = "NONE"
+    side = "BOTH"

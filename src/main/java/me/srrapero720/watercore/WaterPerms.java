@@ -62,7 +62,7 @@ public class WaterPerms {
      *             SIMPLE VALUE CASTERS
      * ==================================================== */
     public static int playerPermissionInt(UUID uuid, PermissionNode<Integer> node) {
-        return ThreadUtil.tryAndReturn((defaultVar) -> PermissionAPI.getOfflinePermission(uuid, node), ThreadUtil::printStackTrace, -1);
+        return ThreadUtil.tryAndReturn((defaultVar) ->   PermissionAPI.getOfflinePermission(uuid, node), ThreadUtil::printStackTrace, -1);
     }
 
     public static String playerPermissionString(UUID uuid, PermissionNode<String> node) {
@@ -72,6 +72,4 @@ public class WaterPerms {
     public static boolean playerHasPermission(UUID uuid, PermissionNode<Boolean> node) {
         return ThreadUtil.tryAndReturn((defaultVar) -> PermissionAPI.getOfflinePermission(uuid, node), ThreadUtil::printStackTrace, false);
     }
-
-
 }

@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 @Mixin(value = Biome.class, priority = 72)
 public class BiomeMixin {
     // NO COMPATIBLE WITH SATURN
+
     private static final ThreadLocal<Long2FloatLinkedOpenHashMap> TEMP_CACHE = ThreadLocal.withInitial(BiomeMixin::supplier);
 
     private static @NotNull Long2FloatLinkedOpenHashMap supplier() {
